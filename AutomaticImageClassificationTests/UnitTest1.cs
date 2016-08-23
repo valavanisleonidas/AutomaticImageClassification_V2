@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using boclibrary;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AutomaticImageClassification.Utilities;
+using Feature;
 using java.awt.image;
+using ModelLibraries.BocLibrary;
 using net.sf.javaml.core.kdtree;
-
+using Utilities;
 
 namespace AutomaticImageClassificationTests
 {
@@ -38,7 +39,7 @@ namespace AutomaticImageClassificationTests
             int[][] palete = BoCLibrary.createPalette(paleteFile, sampleImgs, resize, patches, NumOfcolors, true, colorspace);
             List<double[]> colors = AutomaticImageClassification.Utilities.Arrays.ConvertIntArrayToDoubleList(palete);
             Files.WriteFile(paleteFile, colors);
-
+            
             //Create Dictionary
             KDTree tree = AutomaticImageClassification.Utilities.KDTreeImplementation.createTree(colors);
             Clusterer dictionary = BoCLibrary.createDictionary(dictionaryFile, sampleImgs, resize, patches, noOfVWords, palete,
@@ -49,7 +50,7 @@ namespace AutomaticImageClassificationTests
             List<double[]> trainFeatures = new List<double[]>();
             foreach (string train in Files.GetFilesFrom(trainPath))
             {
-                BufferedImage image = IO.getImage(train);
+                BufferedImage image = ImageUtility.getImage(train);
                 double[] vec = BoCLibrary.getLBoC(image, palete, dictionary, resize, patches, colorspace, tree);
                 trainFeatures.Add(vec);
             }
@@ -58,7 +59,7 @@ namespace AutomaticImageClassificationTests
             List<double[]> testFeatures = new List<double[]>();
             foreach (string test in Files.GetFilesFrom(testPath))
             {
-                BufferedImage image = IO.getImage(test);
+                BufferedImage image = ImageUtility.getImage(test);
                 double[] vec = BoCLibrary.getLBoC(image, palete, dictionary, resize, patches, colorspace, tree);
                 testFeatures.Add(vec);
             }

@@ -35,9 +35,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BocLibrary, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libs\ikvm-8.1.5717.0\bin\BocLibrary.dll</HintPath>
+    <Reference Include="DescriptorsLibrary">
+      <HintPath>..\Libs\ikvm-8.1.5717.0\bin\DescriptorsLibrary.dll</HintPath>
     </Reference>
     <Reference Include="IKVM.OpenJDK.Core">
       <HintPath>..\Libs\ikvm-8.1.5717.0\bin\IKVM.OpenJDK.Core.dll</HintPath>
@@ -48,6 +47,9 @@
     </Reference>
     <Reference Include="IKVM.Runtime">
       <HintPath>..\Libs\ikvm-8.1.5717.0\bin\IKVM.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="LibSVMLibrary">
+      <HintPath>..\Libs\ikvm-8.1.5717.0\bin\LibSVMLibrary.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>

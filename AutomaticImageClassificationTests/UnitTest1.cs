@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using AutomaticImageClassification.Properties;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AutomaticImageClassification.Utilities;
 using java.awt.image;
-using Cluster;
-using Feature;
-using ModelLibraries.BocLibrary;
-using net.sf.javaml.core.kdtree;
-using Utilities;
+using MathWorks.MATLAB.NET.Arrays;
+using MatlabAPI;
+
 
 namespace AutomaticImageClassificationTests
 {
@@ -21,21 +20,21 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void CanCreateLBOC()
         {
-            ICluster cluster = new Lire_Kmeans();
+            //ICluster cluster = new Lire_Kmeans();
 
-            int noOfVWords = 10;
-            int NumOfcolors = 10;
-            int resize = 16;
-            int patches = 16;
-            ColorConversion.ColorSpace colorspace = ColorConversion.ColorSpace.RGB;
-            string paleteFile = @"C:\Users\l.valavanis\Desktop\palete.txt";
-            string dictionaryFile = @"C:\Users\l.valavanis\Desktop\dictionary.txt";
-            string trainFile= @"C:\Users\l.valavanis\Desktop\train.txt";
-            string testFile = @"C:\Users\l.valavanis\Desktop\test.txt";
+            //int noOfVWords = 10;
+            //int NumOfcolors = 10;
+            //int resize = 16;
+            //int patches = 16;
+            //ColorConversion.ColorSpace colorspace = ColorConversion.ColorSpace.RGB;
+            //string paleteFile = @"C:\Users\l.valavanis\Desktop\palete.txt";
+            //string dictionaryFile = @"C:\Users\l.valavanis\Desktop\dictionary.txt";
+            //string trainFile= @"C:\Users\l.valavanis\Desktop\train.txt";
+            //string testFile = @"C:\Users\l.valavanis\Desktop\test.txt";
 
-            string baseFolder = @"C:\Users\l.valavanis\Desktop\Leo Files\DBs\Clef2013\Compound";
-            string trainPath = Path.Combine(baseFolder, "Train");
-            string testPath = Path.Combine(baseFolder, "Test");
+            //string baseFolder = @"C:\Users\l.valavanis\Desktop\Leo Files\DBs\Clef2013\Compound";
+            //string trainPath = Path.Combine(baseFolder, "Train");
+            //string testPath = Path.Combine(baseFolder, "Test");
 
             ////Create Palette
             //var sampleImgs = Files.GetFilesFrom(trainPath, 2);
@@ -72,18 +71,22 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void matlab()
         {
-            ////liblinear.LibLinear svm = new LibLinear();
-            ////svm.applyKernelMapping()
-            //int[,] _arr1 = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } }; //Matrix 1
-            //MWNumericArray arr1 = new MWNumericArray(5);
-            //MWNumericArray arr2 = new MWNumericArray(5);
-
-            //MatlabAPI_DLL.Utils util = new Utils();
-            //Object[] result = util.PearsonCorrelationCoefficient(1,arr1, arr2);
             
+            string baseFolder = @"C:\Users\l.valavanis\Desktop\Leo Files\DBs\Clef2013\Compound";
+            string trainPath = Path.Combine(baseFolder, "Train");
+            string testPath = Path.Combine(baseFolder, "Test");
+            var sampleImgs = Files.GetFilesFrom(trainPath, 2);
 
-            //double output = ( (MWNumericArray)result[0]).ToScalarDouble();
 
+            int[,] _arr1 = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } }; //Matrix 1
+          
+            PHOW phow = new PHOW();
+            List<double[]> colors = new List<double[]>();
+            foreach (var image in sampleImgs)
+            {
+                var features = phow.getPHOW(1, new MWCharArray(image)).ToList();
+                colors.AddRange(features.ToList());
+            }
 
         }
 
@@ -93,10 +96,10 @@ namespace AutomaticImageClassificationTests
             double[,] arr1 = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
             double[][] arr = Arrays.ToJaggedArray(ref arr1);
 
-            //FeatureNormalization.SqrtArray(ref arr[1]);
-            //var norm1 =FeatureNormalization.ComputeL1Norm(ref arr[0]);
-            //var norm2 = FeatureNormalization.ComputeL2Norm(ref arr[0]);
-            //FeatureNormalization.NormalizeArray(ref arr[0],ref norm1);
+            FeatureNormalization.SqrtArray(ref arr[1]);
+            var norm1 = FeatureNormalization.ComputeL1Norm(ref arr[0]);
+            var norm2 = FeatureNormalization.ComputeL2Norm(ref arr[0]);
+            FeatureNormalization.NormalizeArray(ref arr[0], ref norm1);
 
             FeatureNormalization.TFIDF(ref arr);
 
@@ -107,54 +110,60 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void CanCreateBovw()
         {
-            string baseFolder = @"C:\Users\l.valavanis\Desktop\Leo Files\DBs\Clef2013\Compound";
-            string trainPath = Path.Combine(baseFolder, "Train");
-            string testPath = Path.Combine(baseFolder, "Test");
-
-            string trainFile = @"C:\Users\l.valavanis\Desktop\train.txt";
-            string testFile = @"C:\Users\l.valavanis\Desktop\test.txt";
-            int clusterNum = 10;
-            string filename = @"C:\Users\l.valavanis\Desktop\clusters.txt";
 
 
-            ICluster cluster = new Lire_Kmeans(100000);
 
-            IFeatures feature = new Phow();
-            //Clusteriiiiiiiiiiing
+            //string baseFolder = @"C:\Users\l.valavanis\Desktop\Leo Files\DBs\Clef2013\Compound";
+            //string trainPath = Path.Combine(baseFolder, "Train");
+            //string testPath = Path.Combine(baseFolder, "Test");
+
+            //string trainFile = @"C:\Users\l.valavanis\Desktop\train.txt";
+            //string testFile = @"C:\Users\l.valavanis\Desktop\test.txt";
+            //int clusterNum = 10;
+            //string filename = @"C:\Users\l.valavanis\Desktop\clusters.txt";
+
+
+            //ICluster cluster = new Lire_Kmeans(100000);
+
+            ////IFeatures feature = new Sift();
+            //IFeatures feature = new Phow();
+            ////Clusteriiiiiiiiiiing
+
+            //var sampleImgs = Files.GetFilesFrom(trainPath, 2);
+
+            //var clusters = new java.util.ArrayList();
+
+
+            //for (int i = 0; i < sampleImgs.Length; i++)
+            //{
+            //    clusters.addAll(feature.extractDescriptors(sampleImgs[i]));
+            //}
+
+            //ICluster kmeans = new Lire_Kmeans(1000);
+            //var finalClusters = kmeans.CreateClusters(clusters, clusterNum);
+            //KDTree tree = Utilities.KDTreeImplementation.createTree(finalClusters);
+
+            ////feature = new Sift(tree, clusterNum);
+            //feature = new Phow(finalClusters);
+  
             
-            var sampleImgs = Files.GetFilesFrom(trainPath, 2);
+            ////Feature extraction bovw
+            //List<double[]> trainFeatures = new List<double[]>();
+            //foreach (string train in Files.GetFilesFrom(trainPath))
+            //{
+            //    double[] vec = feature.extractHistogram(train);
+            //    trainFeatures.Add(vec);
+            //}
+            //Files.WriteFile(trainFile, trainFeatures);
 
-            var clusters = new java.util.ArrayList();
-
-            
-            for (int i = 0; i < sampleImgs.Length; i++)
-            {
-                clusters.addAll(feature.extractDescriptors(sampleImgs[i]));
-            }
-
-            ICluster kmeans = new Lire_Kmeans();
-            var finalClusters = kmeans.CreateClusters(clusters,clusterNum);
-            KDTree tree = Utilities.KDTreeImplementation.createTree( finalClusters );
-
-            feature = new Phow(finalClusters);
-            
-            //Feature extraction bovw
-            List<double[]> trainFeatures = new List<double[]>();
-            foreach (string train in Files.GetFilesFrom(trainPath))
-            {
-                double[] vec = feature.extractHistogram(train);
-                trainFeatures.Add(vec);
-            }
-            Files.WriteFile(trainFile, trainFeatures);
-
-            //Feature extraction bovw
-            List<double[]> testFeatures = new List<double[]>();
-            foreach (string test in Files.GetFilesFrom(testPath))
-            {
-                double[] vec = feature.extractHistogram(test);
-                testFeatures.Add(vec);
-            }
-            Files.WriteFile(testFile, testFeatures);
+            ////Feature extraction bovw
+            //List<double[]> testFeatures = new List<double[]>();
+            //foreach (string test in Files.GetFilesFrom(testPath))
+            //{
+            //    double[] vec = feature.extractHistogram(test);
+            //    testFeatures.Add(vec);
+            //}
+            //Files.WriteFile(testFile, testFeatures);
 
 
         }

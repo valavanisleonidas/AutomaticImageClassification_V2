@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -47,7 +48,7 @@ namespace AutomaticImageClassification.Utilities
                 content += "\r\n";
             }
             // Write the string to a file.
-            File.WriteAllText(fileToWrite, content);
+            File.WriteAllText(fileToWrite, content,Encoding.UTF8);
         }
 
         public static List<double[]> ReadFileToList(string path)
@@ -57,14 +58,10 @@ namespace AutomaticImageClassification.Utilities
 
         public static double[][] ReadFileToArray(string path)
         {
-            string[] content = File.ReadAllLines(path);
-           
-            
-
-            var result = File.ReadAllLines(path)
-                .Select(l => l.Split(' ').Select(i => double.Parse(i)).ToArray())
+            return File.ReadAllLines(path)
+                .Select(l => l.Split(new [] { ' '},StringSplitOptions.RemoveEmptyEntries).Select(i => double.Parse(i, CultureInfo.InvariantCulture)).ToArray())
                 .ToArray();
-            return result;
+            
         }
     }
 }

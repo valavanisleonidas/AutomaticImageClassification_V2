@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using AutomaticImageClassification.Classifiers;
+using AutomaticImageClassification.Cluster;
+using AutomaticImageClassification.Feature;
 using AutomaticImageClassification.Properties;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AutomaticImageClassification.Utilities;
 using java.awt.image;
 using MathWorks.MATLAB.NET.Arrays;
-using MatlabAPI;
 
 
 namespace AutomaticImageClassificationTests
@@ -69,25 +71,106 @@ namespace AutomaticImageClassificationTests
         }
 
         [TestMethod]
-        public void matlab()
+        public void CanCluster()
+        {
+            string baseFolder = @"C:\Users\l.valavanis\Desktop\Leo Files\DBs\Clef2013\Compound";
+            string trainPath = Path.Combine(baseFolder, "Train");
+
+            var numOfClusters = 10;
+            var sampleImgs = Files.GetFilesFrom(trainPath, 1);
+
+            IFeatures phow = new Phow();
+            ICluster cluster = new VlFeatEm(10000);
+            List<double[]> colors = new List<double[]>();
+            int counter = 0;
+            foreach (var image in sampleImgs)
+            {
+                if (counter == 2)
+                {
+                    break;
+                }
+                counter++;
+                colors.AddRange(phow.ExtractDescriptors(image));
+            }
+            List<double[]> vocab = cluster.CreateClusters(colors, numOfClusters);
+            phow = new Phow(vocab);
+            //QUERY must have the same storage class as DATA. ara vocab must be single above
+            foreach (var image in sampleImgs)
+            {
+                phow.ExtractHistogram(image);
+            }
+        }
+
+        [TestMethod]
+        public void CanUseLibLinear()
+        {
+            string trainDataPath = @"C:\Users\l.valavanis\Desktop\train1.txt";
+            string testDataPath = @"C:\Users\l.valavanis\Desktop\test1.txt";
+
+            List<double[]> train_feat = Files.ReadFileToArray(trainDataPath).ToList();
+            double[] trainlabels = { 1,0,0,1,1,1,0,0,2,1,0,2,1,0,1,0,2,1,1,1,2,2,2,0,1,0,1,0,1,0
+                ,1,0,0,1,1,1,0,0,2,1,0,2,1,0,1,0,2,1,1,1,2,2,2,0,1,0,1,0,1,0,1,0,0,1,1,1,0,0,2,1,0,2,1,0,1,0,2,1,1,1,2,2,2,0,1,0,1,0,1,0
+                ,1,0,0,1,1,1,0,0,2,1,0,2,1,0,1,0,2,1,1,1,2,2,2,0,1,0,1,0,1,0,1,0,0,1,1,1,0,0,2,1,0,2,1,0,1,0,2,1,1,1,2,2,2,0,1,0,1,0,1,0
+                ,1,0,0,0,0,0,0};
+
+            double[] testlabels = { 1, 0, 1, 0, 1, 2, 1, 0, 2, 1, 0, 2, 1, 0, 1, 0, 1, 1, 1, 1, 2, 2, 2, 0, 1, 0, 1, 0, 1, 0 };
+            List<double[]> test_feat = Files.ReadFileToArray(testDataPath).ToList();
+
+
+            //List<double[]> train_feat_arr = { { 1, 2, 3 }, { 2, 3, 4 }, { 3, 2, 1 } };
+            //double[] trainlabels = { 0, 1, 1 };
+
+            //		System.out.println(train_feat_arr.length +" : "+ train_feat_arr[0].length);
+            //		System.out.println(test_feat_arr.length +" : "+ test_feat_arr[0].length);
+
+
+            Parameters _params = new Parameters();
+            _params.Gamma= 0.5;
+            _params.Homker = "KCHI2";
+            _params.Kernel = "chi2";
+            _params.Cost = 1;
+            _params.BiasMultiplier = 1;
+            _params.Solver = "liblinear"; //liblinear
+            _params.SolverType = 0;
+
+            LibLinearLib classifier = new LibLinearLib(_params);
+
+
+            // APPLY KERNEL MAPPING
+            classifier.ApplyKernelMapping(ref train_feat);
+            classifier.ApplyKernelMapping(ref test_feat);
+
+            classifier.GridSearch(ref train_feat,ref trainlabels);
+            classifier.Train(ref train_feat,ref trainlabels);
+
+            classifier.Predict(ref test_feat );
+
+
+        }
+
+        [TestMethod]
+        public void phow_test()
         {
             
             string baseFolder = @"C:\Users\l.valavanis\Desktop\Leo Files\DBs\Clef2013\Compound";
             string trainPath = Path.Combine(baseFolder, "Train");
             string testPath = Path.Combine(baseFolder, "Test");
-            var sampleImgs = Files.GetFilesFrom(trainPath, 2);
-
-
-            int[,] _arr1 = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } }; //Matrix 1
-          
-            PHOW phow = new PHOW();
+            var sampleImgs = Files.GetFilesFrom(trainPath, 1);
+            
+            IFeatures phow = new Phow();
             List<double[]> colors = new List<double[]>();
             foreach (var image in sampleImgs)
             {
-                var features = phow.getPHOW(1, new MWCharArray(image)).ToList();
-                colors.AddRange(features.ToList());
+                colors.AddRange(phow.ExtractDescriptors(image));
             }
-
+            phow = new Phow(colors);
+            foreach (var image in sampleImgs)
+            {
+                var features = phow.ExtractHistogram(image);
+            }
+            
+            Console.WriteLine(colors.Count);
+            
         }
 
         [TestMethod]

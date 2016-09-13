@@ -52,6 +52,14 @@
     <Reference Include="IKVM.Runtime">
       <HintPath>..\Libs\ikvm-8.1.5717.0\bin\IKVM.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="MatlabAPI, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libs\ikvm-8.1.5717.0\bin\MatlabAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="MWArray, Version=2.16.0.0, Culture=neutral, PublicKeyToken=e1d84a0da19db86f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libs\ikvm-8.1.5717.0\bin\MWArray.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Forms" />
@@ -73,6 +81,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Classifiers\IClassifier.cs" />
+    <Compile Include="Classifiers\LibLinearLib.cs" />
+    <Compile Include="Classifiers\LibSVM.cs" />
+    <Compile Include="Classifiers\Parameters.cs" />
+    <Compile Include="Cluster\ICluster.cs" />
+    <Compile Include="Cluster\VlFeatEm.cs" />
+    <Compile Include="Cluster\VlFeatKmeans.cs" />
+    <Compile Include="Feature\IFeatures.cs" />
+    <Compile Include="Feature\Phow.cs" />
     <Compile Include="Utilities\Arrays.cs" />
     <Compile Include="Utilities\FeatureNormalization.cs" />
     <Compile Include="Utilities\Files.cs" />
@@ -119,6 +136,7 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

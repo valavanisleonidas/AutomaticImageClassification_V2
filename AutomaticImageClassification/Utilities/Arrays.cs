@@ -3,16 +3,47 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MathWorks.MATLAB.NET.Arrays;
 
 namespace AutomaticImageClassification.Utilities
 {
     public class Arrays
     {
-        public static List<double[]> ConvertIntArrayToDoubleList(ref int[][] array)
+        public static double[][] ConvertIntArrayToDoubleList(ref int[][] array)
         {
-            return array.ToList().Select<int[], double[]>(i => i.Select(x => (double)x).ToArray()).ToList();
+            return array.ToList().Select(i => i.Select(x => (double)x).ToArray()).ToArray();
         }
-        
+
+        public static List<double[]> ConvertSingleToDoubleArray(ref float[,] array)
+        {
+            List<double[]> list = new List<double[]>();
+            foreach (float[] floatset in Arrays.ToJaggedArray(ref array).ToList())
+            {
+                list.Add(floatset.ToList().Select<float, double>(i => i).ToArray());
+            }
+            return list;
+        }
+
+        public static double[] ConvertJagged2DToDouble1D(ref double[,] array)
+        {
+            //double[] arr = new double[array.Length * array.Length];
+            //for (int i = 0; i < array.Length; i++)
+            //{
+            //    for (int j = 0; j < array[i].; j++)
+            //    {
+            //        arr[j] = array[i][j];
+            //    }
+                
+            //}
+            //foreach (double d in array)
+            //{
+                
+            //}
+
+            return null;
+        }
+
+
         public static T[][] TransposeMatrix<T>(ref T[][] matrix)
         {
             int m = matrix.Length;
@@ -69,9 +100,34 @@ namespace AutomaticImageClassification.Utilities
             return jaggedArray;
         }
 
+        //public static void GetSubsetOfFeatures(ref List<double[]> descriptorFeatures, int numberOfFeatures)
+        //{
+        //    try
+        //    {
+        //        MatlabAPI.Phow phow = new MatlabAPI.Phow();
+
+        //        MWArray[] result = phow.getSubsetDescriptors(
+        //            1,
+        //            new MWNumericArray(descriptorFeatures.ToArray()),
+        //            new MWNumericArray(numberOfFeatures));
+
+        //        descriptorFeatures.Clear();
+        //        var features = (Single[,]) result[0].ToArray();
+        //        descriptorFeatures = ConvertSingleToDoubleArray(ref features).ToList();
+
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        throw e;
+        //    }
+        //}
+        public static void GetSubsetOfFeatures(ref List<double[]> descriptorFeatures, int numberOfFeatures)
+        {
+            descriptorFeatures = descriptorFeatures.OrderBy(x => Guid.NewGuid()).Take(numberOfFeatures).ToList();
+        }
     }
 
-   
+
 
 
 }

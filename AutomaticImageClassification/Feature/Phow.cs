@@ -13,8 +13,7 @@ namespace AutomaticImageClassification.Feature
     {
         private string _extractionColor = "gray", _quantizer = "kdtree";
         private List<double[]> _vocab;
-        private int[] _numSpatialX = { 1, 2, 4 }, _numSpatialY = { 1, 2, 4 };
-        private MatlabAPI.Phow _phow = new MatlabAPI.Phow();
+        private int[,] _numSpatialX = { { 1, 2, 4 } }, _numSpatialY = { { 1, 2, 4 } };
 
         public Phow() { }
         
@@ -23,7 +22,7 @@ namespace AutomaticImageClassification.Feature
             _vocab = vocab;
         }
 
-        public Phow(string extractionColor, string quantizer, int[] numSpatialX, int[] numSpatialY,
+        public Phow(string extractionColor, string quantizer, int[,] numSpatialX, int[,] numSpatialY,
             List<double[]> vocab)
         {
             _extractionColor = extractionColor;
@@ -38,14 +37,19 @@ namespace AutomaticImageClassification.Feature
         {
             try
             {
-                MWArray[] result = _phow.extractFeatures(1,
+                var phow = new MatlabAPI.Phow();
+                
+                MWArray[] result = phow.extractFeatures(1,
                      new MWCharArray(input),
                      new MWNumericArray(_vocab.ToArray()),
                      _quantizer,
                      new MWNumericArray(_numSpatialX),
                      new MWNumericArray(_numSpatialY),
                      _extractionColor);
-                return (double[])result[0].ToArray();
+
+                phow.Dispose();
+
+                return (double[])((MWNumericArray)result[0]).ToVector(MWArrayComponent.Real);
             }
             catch (Exception e)
             {
@@ -57,10 +61,15 @@ namespace AutomaticImageClassification.Feature
         {
             try
             {
+                var phow = new MatlabAPI.Phow();
+
                 //return frames descriptors( features )
-                MWArray[] result = _phow.getPHOW(2, new MWCharArray(input));
+                MWArray[] result = phow.getPHOW(2, new MWCharArray(input));
                 var features = (double[,])result[1].ToArray();
 
+                result = null;
+                phow.Dispose();
+                
                 return Arrays.ToJaggedArray(ref features).ToList();
             }
             catch (Exception e)

@@ -14,7 +14,7 @@
             <ColumnDefinition Width="521*"/>
             <ColumnDefinition Width="152*"/>
         </Grid.ColumnDefinitions>
-        <TabControl x:Name="tabControl"  Grid.Column="2" HorizontalAlignment="Stretch" Height="431" Margin="9,29,-4,0" VerticalAlignment="Top" Grid.ColumnSpan="2">
+        <TabControl x:Name="TabControl"  Grid.Column="2" HorizontalAlignment="Stretch" Height="431" Margin="9,29,-4,0" VerticalAlignment="Top" Grid.ColumnSpan="2">
             <TabItem Header="Home" Height="23" VerticalAlignment="Bottom">
                 <Grid Width="650" Height="400"/>
             </TabItem>
@@ -70,7 +70,7 @@
                         </TextBox.Style>
                     </TextBox>
 
-                    <TextBox x:Name="testSetTextBox" TextWrapping="Wrap"  Width="120" Margin="137,71,30,309" Grid.Column="1" IsEnabled="True">
+                    <TextBox x:Name="TestSetTextBox" TextWrapping="Wrap"  Width="120" Margin="137,71,30,309" Grid.Column="1" IsEnabled="True">
                         <TextBox.Style>
                             <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
                                 <Style.Resources>
@@ -108,7 +108,7 @@
 
 
         </TabControl>
-        <Menu x:Name="menu" HorizontalAlignment="Left" Height="24" Margin="2,0,-3,0" VerticalAlignment="Top" Width="677" Grid.Column="1" Grid.ColumnSpan="3">
+        <Menu x:Name="Menu" HorizontalAlignment="Left" Height="24" Margin="2,0,-3,0" VerticalAlignment="Top" Width="677" Grid.Column="1" Grid.ColumnSpan="3">
             <MenuItem Header="Info">
                 <MenuItem Header="One..." HorizontalAlignment="Left" Width="140"
 			  Click="MenuItem_Click"/>

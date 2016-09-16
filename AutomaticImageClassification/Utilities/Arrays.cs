@@ -66,12 +66,12 @@ namespace AutomaticImageClassification.Utilities
         {
             try
             {
-                int FirstDim = source.Length;
-                int SecondDim = source.GroupBy(row => row.Length).Single().Key; // throws InvalidOperationException if source is not rectangular
+                int firstDim = source.Length;
+                int secondDim = source.GroupBy(row => row.Length).Single().Key; // throws InvalidOperationException if source is not rectangular
 
-                var result = new T[FirstDim, SecondDim];
-                for (var i = 0; i < FirstDim; ++i)
-                    for (var j = 0; j < SecondDim; ++j)
+                var result = new T[firstDim, secondDim];
+                for (var i = 0; i < firstDim; ++i)
+                    for (var j = 0; j < secondDim; ++j)
                         result[i, j] = source[i][j];
 
                 return result;

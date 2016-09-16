@@ -4,12 +4,12 @@ using System.IO;
 using System.Linq;
 using AutomaticImageClassification.Classifiers;
 using AutomaticImageClassification.Cluster;
+using AutomaticImageClassification.Cluster.KDTree;
 using AutomaticImageClassification.Feature;
 using AutomaticImageClassification.Properties;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AutomaticImageClassification.Utilities;
-using java.awt.image;
-using MathWorks.MATLAB.NET.Arrays;
+
 
 
 namespace AutomaticImageClassificationTests
@@ -19,8 +19,9 @@ namespace AutomaticImageClassificationTests
     {
         //TODO THEMA OTAN GRAFW DECIMAL KAI DIAVAZW ME TELEIES KAI KOMMATA
         //TODO cannot read Dictionary
+        //TODO NEED TO CHECK vsexecution problem.exe PROBLEM
         [TestMethod]
-        public void CanCreateLBOC()
+        public void CanCreateLboc()
         {
             //ICluster cluster = new Lire_Kmeans();
 
@@ -70,109 +71,7 @@ namespace AutomaticImageClassificationTests
 
         }
 
-        [TestMethod]
-        public void CanCluster()
-        {
-            string baseFolder = @"C:\Users\l.valavanis\Desktop\Leo Files\DBs\Clef2013\Compound";
-            string trainPath = Path.Combine(baseFolder, "Train");
-
-            var numOfClusters = 10;
-            var sampleImgs = Files.GetFilesFrom(trainPath, 1);
-
-            IFeatures phow = new Phow();
-            ICluster cluster = new VlFeatEm(10000);
-            List<double[]> colors = new List<double[]>();
-            int counter = 0;
-            foreach (var image in sampleImgs)
-            {
-                if (counter == 2)
-                {
-                    break;
-                }
-                counter++;
-                colors.AddRange(phow.ExtractDescriptors(image));
-            }
-            List<double[]> vocab = cluster.CreateClusters(colors, numOfClusters);
-            phow = new Phow(vocab);
-            //QUERY must have the same storage class as DATA. ara vocab must be single above
-            foreach (var image in sampleImgs)
-            {
-                phow.ExtractHistogram(image);
-            }
-        }
-
-        [TestMethod]
-        public void CanUseLibLinear()
-        {
-            string trainDataPath = @"C:\Users\l.valavanis\Desktop\train1.txt";
-            string testDataPath = @"C:\Users\l.valavanis\Desktop\test1.txt";
-
-            List<double[]> train_feat = Files.ReadFileToArray(trainDataPath).ToList();
-            double[] trainlabels = { 1,0,0,1,1,1,0,0,2,1,0,2,1,0,1,0,2,1,1,1,2,2,2,0,1,0,1,0,1,0
-                ,1,0,0,1,1,1,0,0,2,1,0,2,1,0,1,0,2,1,1,1,2,2,2,0,1,0,1,0,1,0,1,0,0,1,1,1,0,0,2,1,0,2,1,0,1,0,2,1,1,1,2,2,2,0,1,0,1,0,1,0
-                ,1,0,0,1,1,1,0,0,2,1,0,2,1,0,1,0,2,1,1,1,2,2,2,0,1,0,1,0,1,0,1,0,0,1,1,1,0,0,2,1,0,2,1,0,1,0,2,1,1,1,2,2,2,0,1,0,1,0,1,0
-                ,1,0,0,0,0,0,0};
-
-            double[] testlabels = { 1, 0, 1, 0, 1, 2, 1, 0, 2, 1, 0, 2, 1, 0, 1, 0, 1, 1, 1, 1, 2, 2, 2, 0, 1, 0, 1, 0, 1, 0 };
-            List<double[]> test_feat = Files.ReadFileToArray(testDataPath).ToList();
-
-
-            //List<double[]> train_feat_arr = { { 1, 2, 3 }, { 2, 3, 4 }, { 3, 2, 1 } };
-            //double[] trainlabels = { 0, 1, 1 };
-
-            //		System.out.println(train_feat_arr.length +" : "+ train_feat_arr[0].length);
-            //		System.out.println(test_feat_arr.length +" : "+ test_feat_arr[0].length);
-
-
-            Parameters _params = new Parameters();
-            _params.Gamma= 0.5;
-            _params.Homker = "KCHI2";
-            _params.Kernel = "chi2";
-            _params.Cost = 1;
-            _params.BiasMultiplier = 1;
-            _params.Solver = "liblinear"; //liblinear
-            _params.SolverType = 0;
-
-            LibLinearLib classifier = new LibLinearLib(_params);
-
-
-            // APPLY KERNEL MAPPING
-            classifier.ApplyKernelMapping(ref train_feat);
-            classifier.ApplyKernelMapping(ref test_feat);
-
-            classifier.GridSearch(ref train_feat,ref trainlabels);
-            classifier.Train(ref train_feat,ref trainlabels);
-
-            classifier.Predict(ref test_feat );
-
-
-        }
-
-        [TestMethod]
-        public void phow_test()
-        {
-            
-            string baseFolder = @"C:\Users\l.valavanis\Desktop\Leo Files\DBs\Clef2013\Compound";
-            string trainPath = Path.Combine(baseFolder, "Train");
-            string testPath = Path.Combine(baseFolder, "Test");
-            var sampleImgs = Files.GetFilesFrom(trainPath, 1);
-            
-            IFeatures phow = new Phow();
-            List<double[]> colors = new List<double[]>();
-            foreach (var image in sampleImgs)
-            {
-                colors.AddRange(phow.ExtractDescriptors(image));
-            }
-            phow = new Phow(colors);
-            foreach (var image in sampleImgs)
-            {
-                var features = phow.ExtractHistogram(image);
-            }
-            
-            Console.WriteLine(colors.Count);
-            
-        }
-
+        
         [TestMethod]
         public void TestNormalization()
         {
@@ -184,7 +83,7 @@ namespace AutomaticImageClassificationTests
             var norm2 = FeatureNormalization.ComputeL2Norm(ref arr[0]);
             FeatureNormalization.NormalizeArray(ref arr[0], ref norm1);
 
-            FeatureNormalization.TFIDF(ref arr);
+            FeatureNormalization.Tfidf(ref arr);
 
             Console.WriteLine(arr);
 
@@ -288,6 +187,170 @@ namespace AutomaticImageClassificationTests
             string fileToWrite = @"C:\Users\l.valavanis\Desktop\testpalete.txt";
             Files.WriteFile(fileToWrite, result.ToList());
 
+        }
+
+
+        //TODO NEED TO CHECK vsexecution problem.exe PROBLEM
+        //pass vlfeat kmeans,vlfeat em , accord kmeans
+        [TestMethod]
+        public void CanCluster()
+        {
+            string baseFolder = @"C:\Users\l.valavanis\Desktop\Leo Files\DBs\Clef2013\Compound";
+            string trainPath = Path.Combine(baseFolder, "Train");
+
+            var numOfClusters = 10;
+            var sampleImgs = Files.GetFilesFrom(trainPath, 1);
+
+            IFeatures phow = new Phow();
+            ICluster cluster = new AccordKmeans(10000);
+            List<double[]> colors = new List<double[]>();
+            int counter = 0;
+            foreach (var image in sampleImgs)
+            {
+                if (counter == 2)
+                {
+                    break;
+                }
+                counter++;
+                colors.AddRange(phow.ExtractDescriptors(image));
+            }
+            List<double[]> vocab = cluster.CreateClusters(colors, numOfClusters);
+
+        }
+
+        //pass liblinear
+        [TestMethod]
+        public void CanUseLibLinear()
+        {
+            string trainDataPath = @"C:\Users\l.valavanis\Desktop\train1.txt";
+            string testDataPath = @"C:\Users\l.valavanis\Desktop\test1.txt";
+
+            List<double[]> trainFeat = Files.ReadFileToArray(trainDataPath).ToList();
+            double[] trainlabels = { 1,0,0,1,1,1,0,0,2,1,0,2,1,0,1,0,2,1,1,1,2,2,2,0,1,0,1,0,1,0
+                ,1,0,0,1,1,1,0,0,2,1,0,2,1,0,1,0,2,1,1,1,2,2,2,0,1,0,1,0,1,0,1,0,0,1,1,1,0,0,2,1,0,2,1,0,1,0,2,1,1,1,2,2,2,0,1,0,1,0,1,0
+                ,1,0,0,1,1,1,0,0,2,1,0,2,1,0,1,0,2,1,1,1,2,2,2,0,1,0,1,0,1,0,1,0,0,1,1,1,0,0,2,1,0,2,1,0,1,0,2,1,1,1,2,2,2,0,1,0,1,0,1,0
+                ,1,0,0,0,0,0,0};
+
+            double[] testlabels = { 1, 0, 1, 0, 1, 2, 1, 0, 2, 1, 0, 2, 1, 0, 1, 0, 1, 1, 1, 1, 2, 2, 2, 0, 1, 0, 1, 0, 1, 0 };
+            List<double[]> testFeat = Files.ReadFileToArray(testDataPath).ToList();
+
+
+            //List<double[]> train_feat_arr = { { 1, 2, 3 }, { 2, 3, 4 }, { 3, 2, 1 } };
+            //double[] trainlabels = { 0, 1, 1 };
+
+            //		System.out.println(train_feat_arr.length +" : "+ train_feat_arr[0].length);
+            //		System.out.println(test_feat_arr.length +" : "+ test_feat_arr[0].length);
+
+
+            Parameters _params = new Parameters();
+            _params.Gamma = 0.5;
+            _params.Homker = "KCHI2";
+            _params.Kernel = "chi2";
+            _params.Cost = 1;
+            _params.BiasMultiplier = 1;
+            _params.Solver = "liblinear"; //liblinear
+            _params.SolverType = 0;
+            _params.IsManualCv = false;
+
+            LibLinearLib classifier = new LibLinearLib(_params);
+
+
+            // APPLY KERNEL MAPPING
+            classifier.ApplyKernelMapping(ref trainFeat);
+            classifier.ApplyKernelMapping(ref testFeat);
+
+            classifier.GridSearch(ref trainFeat, ref trainlabels);
+            classifier.Train(ref trainFeat, ref trainlabels);
+
+            classifier.Predict(ref testFeat);
+
+
+        }
+        //Passed Phow extraction 
+        [TestMethod]
+        public void phow_test()
+        {
+
+            string baseFolder = @"C:\Users\l.valavanis\Desktop\Leo Files\DBs\Clef2013\Compound";
+            string trainPath = Path.Combine(baseFolder, "Train");
+
+            var numOfClusters = 10;
+            var sampleImgs = Files.GetFilesFrom(trainPath, 1);
+
+            IFeatures phow = new Phow();
+            ICluster cluster = new VlFeatKmeans(10000);
+            List<double[]> colors = new List<double[]>();
+            int counter = 0;
+            foreach (var image in sampleImgs)
+            {
+                if (counter == 2)
+                {
+                    //break;
+                }
+                counter++;
+                colors.AddRange(phow.ExtractDescriptors(image));
+            }
+            List<double[]> vocab = cluster.CreateClusters(colors, numOfClusters);
+            phow = new Phow(vocab);
+
+            foreach (var image in sampleImgs)
+            {
+                Console.WriteLine("extracting image "+image);
+                double[] vector = phow.ExtractHistogram(image);
+            }
+
+        }
+
+        //pass test
+        [TestMethod]
+        public void CanUseAccordKdTree()
+        {
+
+            List<double[]> centers= new List<double[]>();
+            centers.Add(new[] {1.0, 2.0, 3.0 });
+            centers.Add(new[] { 10.0, 20.0, 30.0 });
+            centers.Add(new[] { 100.0, 200.0, 300.0 });
+            centers.Add(new[] { 1000.0, 2000.0, 3000.0 });
+            centers.Add(new[] { 10000.0, 20000.0, 30000.0 });
+
+            IKdTree kdtree = new AccordKdTree();
+            kdtree.CreateTree(centers);
+            double[] search = {50.0, 50.0, 50.0};
+            int index = kdtree.SearchTree(search);
+
+
+        }
+
+        //pass test
+        [TestMethod]
+        public void CanUseAccordSurf()
+        {
+            string imagePath = @"C:\Users\l.valavanis\Desktop\Leo Files\images\believe.jpg";
+            string imagePath1 = @"C:\Users\l.valavanis\Desktop\Leo Files\images\titan.png";
+
+            IFeatures surf = new AccordSurf();
+            List<double[]> featu = surf.ExtractDescriptors(imagePath1);
+        }
+
+        //pass test
+        [TestMethod]
+        public void CanUseJOpenSurf()
+        {
+            string imagePath = @"C:\Users\l.valavanis\Desktop\Leo Files\images\believe.jpg";
+            string imagePath1 = @"C:\Users\l.valavanis\Desktop\Leo Files\images\titan.png";
+
+            IFeatures surf = new JOpenSurf();
+            List<double[]> featu = surf.ExtractDescriptors(imagePath1);
+        }
+
+        [TestMethod]
+        public void CanUseEmguSift()
+        {
+            string imagePath = @"C:\Users\l.valavanis\Desktop\Leo Files\images\believe.jpg";
+            string imagePath1 = @"C:\Users\l.valavanis\Desktop\Leo Files\images\titan.png";
+
+            IFeatures sift = new EmguSift();
+            List<double[]> featu = sift.ExtractDescriptors(imagePath1);
         }
 
     }

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AutomaticImageClassification.Utilities;
 using MathWorks.MATLAB.NET.Arrays;
 using MatlabAPI;
@@ -13,7 +11,6 @@ namespace AutomaticImageClassification.Cluster
     {
         private bool _isRandomInit;
         private int _numberOfFeatures;
-        private Clustering cluster = new Clustering();
 
         public VlFeatEm()
         {
@@ -23,17 +20,17 @@ namespace AutomaticImageClassification.Cluster
 
         public VlFeatEm(bool isRandomInit)
         {
-            this._isRandomInit = isRandomInit;
+            _isRandomInit = isRandomInit;
         }
         public VlFeatEm(int numberOfFeatures)
         {
-            this._numberOfFeatures = numberOfFeatures;
+            _numberOfFeatures = numberOfFeatures;
         }
 
         public VlFeatEm(bool isRandomInit, int numberOfFeatures)
         {
-            this._isRandomInit = isRandomInit;
-            this._numberOfFeatures = numberOfFeatures;
+            _isRandomInit = isRandomInit;
+            _numberOfFeatures = numberOfFeatures;
         }
 
 
@@ -41,6 +38,7 @@ namespace AutomaticImageClassification.Cluster
         {
             try
             {
+                var cluster = new MatlabAPI.Cluster();
                 if (descriptorFeatures.Count > _numberOfFeatures)
                 {
                     //TODO check results because vl_colSubset was removed
@@ -53,7 +51,8 @@ namespace AutomaticImageClassification.Cluster
                     new MWLogicalArray(_isRandomInit));
 
                 var features = (double[,])result[0].ToArray();
-
+                result = null;
+                cluster.Dispose();
                 return Arrays.ToJaggedArray(ref features).ToList();
             }
             catch (Exception e)

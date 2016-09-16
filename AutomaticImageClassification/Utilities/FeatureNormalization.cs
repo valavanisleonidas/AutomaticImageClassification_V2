@@ -155,25 +155,25 @@ namespace AutomaticImageClassification.Utilities
         }
 
         //wrapper for tfidf for list<double[]>
-        public static List<double[]> TFIDF(List<double[]> features)
+        public static List<double[]> Tfidf(List<double[]> features)
         {
             var featuresArr= features.ToArray();
-            return TFIDF(ref featuresArr).ToList();
+            return Tfidf(ref featuresArr).ToList();
         }
 
-        public static double[][] TFIDF(ref double[][] features)
+        public static double[][] Tfidf(ref double[][] features)
         {
             int numOfDocs = features.Length;
             // compute document frequency for features
-            double[] DF = ComputeDf(ref features);
+            double[] df = ComputeDf(ref features);
             // compute inverse words freq
-            double[] IDF = ComputeIdf(ref DF,ref numOfDocs);
+            double[] idf = ComputeIdf(ref df,ref numOfDocs);
             // compute tfidf
-            features = ComputeTFIDF(ref features, ref IDF);
+            features = ComputeTfidf(ref features, ref idf);
             return features;
         }
 
-        public static double[][] ComputeTFIDF(ref double[][] array, ref double[] idf)
+        public static double[][] ComputeTfidf(ref double[][] array, ref double[] idf)
         {
             for (int i = 0; i < array.Length; i++)
             {

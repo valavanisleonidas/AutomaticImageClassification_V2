@@ -29,8 +29,8 @@ namespace AutomaticImageClassification
 
         private void parentControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            tabControl.Height = MainGrid.ActualHeight;
-            tabControl.Width = MainGrid.ActualWidth;
+            TabControl.Height = MainGrid.ActualHeight;
+            TabControl.Width = MainGrid.ActualWidth;
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
@@ -62,7 +62,7 @@ namespace AutomaticImageClassification
         private void GetTestSet(object sender, RoutedEventArgs e)
         {
             string path = GetFolderBrowserPath();
-            this.testSetTextBox.Text = string.Join("\\",path.Split('\\').Reverse().Take(2).Reverse());
+            this.TestSetTextBox.Text = string.Join("\\",path.Split('\\').Reverse().Take(2).Reverse());
         }
 
 

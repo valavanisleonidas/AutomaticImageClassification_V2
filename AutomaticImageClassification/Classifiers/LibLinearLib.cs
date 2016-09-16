@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AutomaticImageClassification.Utilities;
-using ikvm.extensions;
 using MathWorks.MATLAB.NET.Arrays;
 using MatlabAPI;
 
@@ -16,14 +13,12 @@ namespace AutomaticImageClassification.Classifiers
         private Model _model = new Model();
         private Results _results = new Results();
         private Parameters _params = new Parameters();
-        private LibLinear _classifier = new LibLinear();
 
         public LibLinearLib()
         {
             //default parameters
             _params.Gamma = 0.5;
             _params.Cost = 1;
-
             _params.Homker = "KCHI2";
             _params.Kernel = "chi2";
             _params.BiasMultiplier = 1;
@@ -40,13 +35,18 @@ namespace AutomaticImageClassification.Classifiers
         {
             try
             {
-                MWArray[] result = _classifier.applyKernelMapping(1,
+                var classifier = new LibLinear();
+
+                MWArray[] result = classifier.applyKernelMapping(1,
                     new MWNumericArray(features.ToArray()),
                     _params.Kernel,
                     _params.Homker,
                     _params.Gamma);
 
                 var mappedFeatures = (double[,])((MWNumericArray)result[0]).ToArray();
+
+                result = null;
+                classifier.Dispose();
                 features = Arrays.ToJaggedArray(ref mappedFeatures).ToList();
             }
             catch (Exception e)
@@ -60,7 +60,9 @@ namespace AutomaticImageClassification.Classifiers
 
             try
             {
-                MWArray[] result = _classifier.train_liblinear(2,
+                var classifier = new LibLinear();
+
+                MWArray[] result = classifier.train_liblinear(2,
                         new MWNumericArray(features.ToArray()),
                         new MWNumericArray(labels),
                         _params.Cost,
@@ -68,9 +70,12 @@ namespace AutomaticImageClassification.Classifiers
                         _params.Solver,
                         _params.SolverType);
 
-                var weights = (double[,])((MWNumericArray)result[0]).ToArray();
+                var weights = (double[,])((MWNumericArray)result[0]).ToArray(MWArrayComponent.Real);
                 _model.Weights = Arrays.ToJaggedArray(ref weights);
-                _model.Bias = (double[,])((MWNumericArray)result[1]).ToArray();
+                _model.Bias = (double[])((MWNumericArray)result[1]).ToVector(MWArrayComponent.Real);
+
+                result = null;
+                classifier.Dispose();
 
             }
             catch (Exception e)
@@ -84,27 +89,47 @@ namespace AutomaticImageClassification.Classifiers
         {
             try
             {
-                string options = "-s " + _params.SolverType + " -B " + _params.BiasMultiplier;
+                double bestCv = -1;
+                double bestCost = -1;
+
                 //only 0 and 2 support automatic cross validation
                 if (!_params.IsManualCv && (_params.SolverType == 0 || _params.SolverType == 2))
                 {
-                    options = options + " -C 10";
+                    string parameters = "-s " + _params.SolverType + " -B " + _params.BiasMultiplier + " -C 10";
+
+                    //automatic cross validation
+                    double[] results = CrossValidation(ref features, ref labels, parameters);
+                    bestCost = results[0];
+                    bestCv = results[1];
+                }
+                else if (_params.IsManualCv)
+                {
+                    //pattern to replace cost value
+                    //string pattern = "\\-c\\ ([0-9,\\.]+)\\ -q";
+                    //options = options + " -v 10 -c 10 -q";
+                    // options = Regex.Replace(options, pattern, m => "-c " + cost + " -q");
+
+                    double[] costs = { 0.0625, 0.125, 0.25, 0.5, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024 };
+                    foreach (double cost in costs)
+                    {
+                        string parameters = "-s " + _params.SolverType + " -B " + _params.BiasMultiplier + " -v 10 -c " + cost + " -q";
+                        double[] results = CrossValidation(ref features, ref labels, parameters);
+                        double currentCv = results[1];
+
+                        if (bestCv < currentCv)
+                        {
+                            bestCost = cost;
+                            bestCv = currentCv;
+                        }
+                    }
+
                 }
                 else
                 {
-                    options = options + " -v 10 -c 10 -q";
+                    //ERROR
                 }
-
-                MWArray[] result = _classifier.CrossValidation(2,
-                        new MWNumericArray(features.ToArray()),
-                        new MWNumericArray(labels),
-                        options,
-                        new MWLogicalArray(_params.IsManualCv));
-
-                _params.Cost = ((MWNumericArray)result[0]).ToScalarDouble();
-                _params.CvAccuracy = ((MWNumericArray)result[1]).ToScalarDouble();
-
-
+                _params.Cost = bestCost;
+                _params.CvAccuracy = bestCv;
             }
             catch (Exception e)
             {
@@ -112,18 +137,42 @@ namespace AutomaticImageClassification.Classifiers
             }
         }
 
+        public double[] CrossValidation(ref List<double[]> features, ref double[] labels, string options)
+        {
+            var classifier = new LibLinear();
+            
+            MWArray[] result = classifier.CrossValidation(2,
+                        new MWNumericArray(features.ToArray()),
+                        new MWNumericArray(labels),
+                        options,
+                        new MWLogicalArray(_params.IsManualCv));
+
+            double bestCost = ((MWNumericArray)result[0]).ToScalarDouble();
+            double bestCv = ((MWNumericArray)result[1]).ToScalarDouble();
+
+            result = null;
+            classifier.Dispose();
+
+            return new[] { bestCost, bestCv };
+        }
+
         public void Predict(ref List<double[]> features)
         {
             try
             {
-                MWArray[] result = _classifier.predict_liblinear(3,
+                var classifier = new LibLinear();
+
+                MWArray[] result = classifier.predict_liblinear(3,
                         new MWNumericArray(features.ToArray()),
                         new MWNumericArray(_model.Weights),
                         new MWNumericArray(_model.Bias));
-                
-                _results.Probabilities = (double[])((MWNumericArray)result[0]).ToArray();
-                _results.PredictedLabels = (int[])((MWNumericArray)result[1]).ToArray();
-                
+
+                _results.Probabilities = (double[])((MWNumericArray)result[0]).ToVector(MWArrayComponent.Real);
+                _results.PredictedLabels = (double[])((MWNumericArray)result[1]).ToVector(MWArrayComponent.Real);
+
+                result = null;
+                classifier.Dispose();
+
             }
             catch (Exception e)
             {
@@ -136,7 +185,7 @@ namespace AutomaticImageClassification.Classifiers
             return _results.Probabilities;
         }
 
-        public int[] GetPredictedCategories()
+        public double[] GetPredictedCategories()
         {
             return _results.PredictedLabels;
         }
@@ -145,13 +194,13 @@ namespace AutomaticImageClassification.Classifiers
     public class Model
     {
         public double[][] Weights;
-        public double[,] Bias;
+        public double[] Bias;
     }
 
     public class Results
     {
         public double[] Probabilities;
-        public int[] PredictedLabels;
+        public double[] PredictedLabels;
     }
 
     public class Parameters : BaseParameters

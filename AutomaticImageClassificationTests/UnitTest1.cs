@@ -349,7 +349,7 @@ namespace AutomaticImageClassificationTests
             string imagePath = @"C:\Users\l.valavanis\Desktop\Leo Files\images\believe.jpg";
             string imagePath1 = @"C:\Users\l.valavanis\Desktop\Leo Files\images\titan.png";
 
-            IFeatures sift = new EmguSift();
+            IFeatures sift = new OpenCvSift();
             List<double[]> featu = sift.ExtractDescriptors(imagePath1);
         }
 

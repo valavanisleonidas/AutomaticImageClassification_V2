@@ -9,6 +9,7 @@ using AutomaticImageClassification.Feature;
 using AutomaticImageClassification.Properties;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AutomaticImageClassification.Utilities;
+using AutomaticImageClassificationTests.Properties;
 using LibSVMsharp;
 using LibSVMsharp.Extensions;
 using LibSVMsharp.Helpers;
@@ -72,7 +73,7 @@ namespace AutomaticImageClassificationTests
 
         }
 
-        
+
         [TestMethod]
         public void TestNormalization()
         {
@@ -128,8 +129,8 @@ namespace AutomaticImageClassificationTests
 
             ////feature = new Sift(tree, clusterNum);
             //feature = new Phow(finalClusters);
-  
-            
+
+
             ////Feature extraction bovw
             //List<double[]> trainFeatures = new List<double[]>();
             //foreach (string train in Files.GetFilesFrom(trainPath))
@@ -155,29 +156,29 @@ namespace AutomaticImageClassificationTests
         public void CanReadAllImagesFromFolder()
         {
             string searchFolder = @"C:\Users\l.valavanis\Desktop\Leo Files\DBs\clef2016\subfigure\SubfigureClassificationTraining2016_Enriched";
-           
+
             string[] files = Files.GetFilesFrom(searchFolder);
-            
+
             Console.WriteLine(files.Length);
             foreach (string file in files)
             {
                 Console.WriteLine(file);
             }
-            
+
         }
 
         [TestMethod]
         public void CanWriteFileToFolder()
         {
             List<double[]> features = new List<double[]>();
-            double[] lines = new [] {012 , 1.1 ,2.2};
+            double[] lines = new[] { 012, 1.1, 2.2 };
             double[] lines2 = new[] { 0.0, 5.1, 2.1 };
             features.Add(lines);
             features.Add(lines2);
 
             string fileToWrite = @"C:\Users\l.valavanis\Desktop\test.txt";
             Files.WriteFile(fileToWrite, features);
-            
+
         }
 
         [TestMethod]
@@ -296,7 +297,7 @@ namespace AutomaticImageClassificationTests
 
             foreach (var image in sampleImgs)
             {
-                Console.WriteLine("extracting image "+image);
+                Console.WriteLine("extracting image " + image);
                 double[] vector = phow.ExtractHistogram(image);
             }
 
@@ -307,8 +308,8 @@ namespace AutomaticImageClassificationTests
         public void CanUseAccordKdTree()
         {
 
-            List<double[]> centers= new List<double[]>();
-            centers.Add(new[] {1.0, 2.0, 3.0 });
+            List<double[]> centers = new List<double[]>();
+            centers.Add(new[] { 1.0, 2.0, 3.0 });
             centers.Add(new[] { 10.0, 20.0, 30.0 });
             centers.Add(new[] { 100.0, 200.0, 300.0 });
             centers.Add(new[] { 1000.0, 2000.0, 3000.0 });
@@ -316,7 +317,7 @@ namespace AutomaticImageClassificationTests
 
             IKdTree kdtree = new AccordKdTree();
             kdtree.CreateTree(centers);
-            double[] search = {50.0, 50.0, 50.0};
+            double[] search = { 50.0, 50.0, 50.0 };
             int index = kdtree.SearchTree(search);
 
 
@@ -337,30 +338,46 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void CanUseJOpenSurf()
         {
-            string imagePath = @"C:\Users\l.valavanis\Desktop\Leo Files\images\believe.jpg";
-            string imagePath1 = @"C:\Users\l.valavanis\Desktop\Leo Files\images\titan.png";
+            string imagePath = @"C:\Users\Leonidas\Desktop\images\03432.png";
+            
 
             IFeatures surf = new JOpenSurf();
-            List<double[]> featu = surf.ExtractDescriptors(imagePath1);
+            List<double[]> featu = surf.ExtractDescriptors(imagePath);
         }
 
+        //pass test
         [TestMethod]
-        public void CanUseEmguSift()
+        public void CanUseOpenCvSift()
         {
-            string imagePath = @"C:\Users\l.valavanis\Desktop\Leo Files\images\believe.jpg";
-            string imagePath1 = @"C:\Users\l.valavanis\Desktop\Leo Files\images\titan.png";
+            //string imagePath = @"C:\Users\l.valavanis\Desktop\Leo Files\images\believe.jpg";
+            //string imagePath1 = @"C:\Users\l.valavanis\Desktop\Leo Files\images\titan.png";
+            string imagePath = @"C:\Users\Leonidas\Desktop\images\03432.png";
 
             IFeatures sift = new OpenCvSift();
-            List<double[]> featu = sift.ExtractDescriptors(imagePath1);
+            List<double[]> featu = sift.ExtractDescriptors(imagePath);
         }
 
+        //pass test
+        [TestMethod]
+        public void CanUseOpenCvSurf()
+        {
+            //string imagePath = @"C:\Users\l.valavanis\Desktop\Leo Files\images\believe.jpg";
+            //string imagePath1 = @"C:\Users\l.valavanis\Desktop\Leo Files\images\titan.png";
+            string imagePath = @"C:\Users\Leonidas\Desktop\images\03432.png";
+
+            IFeatures suft = new OpenCvSurf();
+            List<double[]> featu = suft.ExtractDescriptors(imagePath);
+        }
+
+
+        //pass test
         [TestMethod]
         public void CanUseLibSvm()
         {
             // Load the datasets: In this example I use the same datasets for training and testing which is not suggested
-            //SVMProblem trainingSet = SVMProblemHelper.Load(@"Dataset\wine.txt");
-            //SVMProblem testSet = SVMProblemHelper.Load(@"Dataset\wine.txt");
-
+            //SVMProblem trainingSet = SVMProblemHelper.Load(Resources.wine.ToString());
+            //SVMProblem testSet = SVMProblemHelper.Load(Resources.wine);
+            
             List<double[]> features = new List<double[]>();
             features.Add(new double[] { 1, 2, 0, 3, 4, 0, 0, 0 });
             features.Add(new double[] { 0, 2, 0, 3, 4, 0, 0, 0 });
@@ -411,20 +428,20 @@ namespace AutomaticImageClassificationTests
             Console.WriteLine("\nConfusion matrix:\n");
 
             // Print formatted confusion matrix
-            Console.Write(String.Format("{0,6}", ""));
+            Console.Write(string.Format("{0,6}", ""));
             for (int i = 0; i < model.Labels.Length; i++)
-                Console.Write(String.Format("{0,5}", "(" + model.Labels[i] + ")"));
+                Console.Write(string.Format("{0,5}", "(" + model.Labels[i] + ")"));
             Console.WriteLine();
             for (int i = 0; i < confusionMatrix.GetLength(0); i++)
             {
-                Console.Write(String.Format("{0,5}", "(" + model.Labels[i] + ")"));
+                Console.Write(string.Format("{0,5}", "(" + model.Labels[i] + ")"));
                 for (int j = 0; j < confusionMatrix.GetLength(1); j++)
-                    Console.Write(String.Format("{0,5}", confusionMatrix[i, j]));
+                    Console.Write(string.Format("{0,5}", confusionMatrix[i, j]));
                 Console.WriteLine();
             }
 
             Console.WriteLine("\n\nPress any key to quit...");
-            Console.ReadLine();
+
         }
 
     }

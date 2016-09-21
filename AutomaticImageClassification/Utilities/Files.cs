@@ -59,7 +59,7 @@ namespace AutomaticImageClassification.Utilities
         public static double[][] ReadFileToArray(string path)
         {
             return File.ReadAllLines(path)
-                .Select(l => l.Split(new [] { ' '},StringSplitOptions.RemoveEmptyEntries).Select(i => double.Parse(i, CultureInfo.InvariantCulture)).ToArray())
+                .Select(l => l.Split(new []{' '},StringSplitOptions.RemoveEmptyEntries).Select(i => double.Parse(i, CultureInfo.InvariantCulture)).ToArray())
                 .ToArray();
             
         }

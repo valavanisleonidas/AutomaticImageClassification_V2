@@ -57,7 +57,6 @@ namespace AutomaticImageClassification.Classifiers
 
         public void Train(ref List<double[]> features, ref double[] labels)
         {
-
             try
             {
                 var classifier = new LibLinear();
@@ -140,7 +139,7 @@ namespace AutomaticImageClassification.Classifiers
         public double[] CrossValidation(ref List<double[]> features, ref double[] labels, string options)
         {
             var classifier = new LibLinear();
-            
+
             MWArray[] result = classifier.CrossValidation(2,
                         new MWNumericArray(features.ToArray()),
                         new MWNumericArray(labels),
@@ -203,7 +202,7 @@ namespace AutomaticImageClassification.Classifiers
         public double[] PredictedLabels;
     }
 
-    public class Parameters : BaseParameters
+    public partial class Parameters : BaseParameters
     {
         public string Kernel, Homker, Solver;
         public bool IsManualCv;

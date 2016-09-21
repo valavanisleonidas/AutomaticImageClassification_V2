@@ -79,6 +79,9 @@
     <Reference Include="IKVM.Runtime">
       <HintPath>..\Libs\ikvm-8.1.5717.0\bin\IKVM.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="LibSVMsharp">
+      <HintPath>..\Libs\LibSvmSharp\LibSVMsharp.dll</HintPath>
+    </Reference>
     <Reference Include="MathNet.Iridium">
       <HintPath>..\Libs\JOpenSurf\MathNet.Iridium.dll</HintPath>
     </Reference>
@@ -151,8 +154,11 @@
     <Compile Include="Feature\OpenCvSurf.cs" />
     <Compile Include="Feature\Phow.cs" />
     <Compile Include="Feature\AccordSurf.cs" />
+    <Compile Include="FusionTypes\EarlyFusion.cs" />
+    <Compile Include="FusionTypes\IFusion.cs" />
+    <Compile Include="FusionTypes\LateFusion.cs" />
     <Compile Include="Utilities\Arrays.cs" />
-    <Compile Include="Utilities\FeatureNormalization.cs" />
+    <Compile Include="Utilities\Normalization.cs" />
     <Compile Include="Utilities\Files.cs" />
     <Compile Include="Cluster\KDTree\KDTreeImplementation.cs" />
     <Page Include="MainWindow.xaml">
@@ -197,6 +203,9 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="libsvm.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Accord.3.2.0\build\Accord.targets" Condition="Exists('..\packages\Accord.3.2.0\build\Accord.targets')" />

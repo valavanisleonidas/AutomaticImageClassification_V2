@@ -5,7 +5,7 @@ using ikvm.extensions;
 
 namespace AutomaticImageClassification.Utilities
 {
-    public class FeatureNormalization
+    public class Normalization
     {
 
         public static double[] SqrtArray(ref double[] vector)

@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutomaticImageClassification.Utilities;
 using OpenCvSharp.CPlusPlus;
 
 
@@ -30,11 +31,11 @@ namespace AutomaticImageClassification.Feature
             _surf.Run(src1, null, out keypoints1, descriptors1);
 
             float[,] arr = descriptors1.ToRectangularArray();
-
-
-            Console.WriteLine();
-
-            return null;
+            //convert to list<double[]>
+            return Arrays.ToJaggedArray(ref arr)
+                    .ToList()
+                    .ConvertAll(
+                            des => Array.ConvertAll(des, x => (double)x));
         }
 
 

@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutomaticImageClassification.Utilities;
 using OpenCvSharp.CPlusPlus;
 
 
@@ -11,7 +12,7 @@ namespace AutomaticImageClassification.Feature
 {
     public class OpenCvSift : IFeatures
     {
-        private SIFT sift = new SIFT();
+        private SIFT _sift = new SIFT();
 
 
         public double[] ExtractHistogram(string input)
@@ -19,21 +20,19 @@ namespace AutomaticImageClassification.Feature
             throw new NotImplementedException();
         }
 
-
         public List<double[]> ExtractDescriptors(string input)
         {
-            Mat src1 = new Mat(input);
-            KeyPoint[] keypoints1;
-            MatOfFloat descriptors1 = new MatOfFloat();
+            Mat src = new Mat(input);
+            KeyPoint[] keuPoints;
+            MatOfFloat descriptors = new MatOfFloat();
 
-            sift.Run(src1, null, out keypoints1, descriptors1);
-            
-            float[,] arr = descriptors1.ToRectangularArray();
-            
-
-            Console.WriteLine();
-
-            return null;
+            _sift.Run(src, null, out keuPoints, descriptors);
+            float[,] arr = descriptors.ToRectangularArray();
+            //convert to list<double[]>
+            return Arrays.ToJaggedArray(ref arr)
+                .ToList()
+                .ConvertAll(
+                        des => Array.ConvertAll(des, x => (double)x));
         }
 
 

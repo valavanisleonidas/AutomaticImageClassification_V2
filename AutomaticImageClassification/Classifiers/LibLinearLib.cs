@@ -11,7 +11,7 @@ namespace AutomaticImageClassification.Classifiers
     {
 
         private Model _model = new Model();
-        private Results _results = new Results();
+        private ClassifierResults _results = new ClassifierResults();
         private Parameters _params = new Parameters();
 
         public LibLinearLib()
@@ -195,19 +195,14 @@ namespace AutomaticImageClassification.Classifiers
         public double[][] Weights;
         public double[] Bias;
     }
-
-    public class Results
-    {
-        public double[] Probabilities;
-        public double[] PredictedLabels;
-    }
-
-    public partial class Parameters : BaseParameters
+    
+    public class Parameters
     {
         public string Kernel, Homker, Solver;
         public bool IsManualCv;
-        public double BiasMultiplier;
+        public double BiasMultiplier, Gamma, Cost, CvAccuracy = 0;
         public int SolverType;
+
     }
 
 }

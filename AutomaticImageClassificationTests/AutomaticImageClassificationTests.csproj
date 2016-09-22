@@ -67,6 +67,7 @@
     <Compile Include="FeaturesTest.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UtilitiesTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AutomaticImageClassification\AutomaticImageClassification.csproj">

@@ -8,20 +8,21 @@ namespace AutomaticImageClassification.Utilities
     public class Normalization
     {
 
-        public static double[] SqrtArray(ref double[] vector)
+        public static T[] SqrtArray<T>(ref T[] vector)
         {
             for (var i = 0; i < vector.Length; i++)
             {
-                if (vector[i] != 0)
-                    vector[i] = Math.Sqrt(vector[i]);
+                dynamic feature = vector[i];
+                if (feature != 0)
+                    vector[i] = Math.Sqrt(feature);
             }
             return vector;
         }
 
         //computes L1 norm of double array
-        public static double ComputeL1Norm(ref double[] imgVocVector)
+        public static T ComputeL1Norm<T>(ref T[] imgVocVector)
         {
-            double sum = 0;
+            dynamic sum = 0;
             for (var i = 0; i < imgVocVector.Length; i++)
             {
                 sum += imgVocVector[i];
@@ -30,24 +31,26 @@ namespace AutomaticImageClassification.Utilities
         }
 
         //computes L2 norm of double array
-        public static double ComputeL2Norm(ref double[] imgVocVector)
+        public static T ComputeL2Norm<T>(ref T[] imgVocVector)
         {
-            double sum = 0;
+            dynamic sum = 0;
             for (var i = 0; i < imgVocVector.Length; i++)
             {
-                sum += imgVocVector[i] * imgVocVector[i];
+                dynamic feature = imgVocVector[i];
+                sum += feature * feature;
             }
             return Math.Sqrt(sum);
         }
 
         //normalize double array
-        public static double[] NormalizeArray(ref double[] imgVocVector,ref  double norm)
+        public static T[] NormalizeArray<T>(ref T[] imgVocVector, ref T norm)
         {
             for (int i = 0; i < imgVocVector.Length; i++)
             {
-                if (imgVocVector[i] != 0)
+                dynamic feature = imgVocVector[i];
+                if (feature != 0)
                 {
-                    imgVocVector[i] = imgVocVector[i]/norm;
+                    imgVocVector[i] = feature / norm;
                 }
             }
             return imgVocVector;
@@ -88,22 +91,23 @@ namespace AutomaticImageClassification.Utilities
             //1+log(rows./(DF+1));
             for (int i = 0; i < df.Length; i++)
             {
-                idf[i] = ComputeIdf(ref df[i],ref  numOfDocs);
+                idf[i] = ComputeIdf(ref df[i], ref numOfDocs);
             }
             return idf;
         }
 
-        public static double ComputeIdf(ref double df,ref  int numOfDocs)
+        public static double ComputeIdf(ref double df, ref int numOfDocs)
         {
             return 1 + Math.Log(numOfDocs / (df + 1));
         }
 
-        public static double ComputeTf(ref double[] array)
+        public static T ComputeTf<T>(ref T[] array)
         {
-            double tf = 0;
+            dynamic tf = 0;
             for (int i = 0; i < array.Length; i++)
             {
-                if (array[i] != 0)
+                dynamic feature = array[i];
+                if (feature != 0)
                 {
                     tf++;
                 }
@@ -157,7 +161,7 @@ namespace AutomaticImageClassification.Utilities
         //wrapper for tfidf for list<double[]>
         public static List<double[]> Tfidf(List<double[]> features)
         {
-            var featuresArr= features.ToArray();
+            var featuresArr = features.ToArray();
             return Tfidf(ref featuresArr).ToList();
         }
 
@@ -167,7 +171,7 @@ namespace AutomaticImageClassification.Utilities
             // compute document frequency for features
             double[] df = ComputeDf(ref features);
             // compute inverse words freq
-            double[] idf = ComputeIdf(ref df,ref numOfDocs);
+            double[] idf = ComputeIdf(ref df, ref numOfDocs);
             // compute tfidf
             features = ComputeTfidf(ref features, ref idf);
             return features;
@@ -185,7 +189,7 @@ namespace AutomaticImageClassification.Utilities
             }
             return array;
         }
-        
+
 
     }
 }

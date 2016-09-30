@@ -39,10 +39,10 @@ namespace AutomaticImageClassification.Utilities
             return filesFound.ToArray();
         }
 
-        public static void WriteFile(string fileToWrite,List<double[]> contentList )
+        public static void WriteFile<T>(string fileToWrite,List<T[]> contentList )
         {
             string content = "";
-            foreach (double[] feature in contentList)
+            foreach (T[] feature in contentList)
             {
                 content += string.Join(" ", feature);
                 content += "\r\n";

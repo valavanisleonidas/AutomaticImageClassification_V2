@@ -9,17 +9,13 @@ namespace AutomaticImageClassification.Utilities
 {
     public class Arrays
     {
-        public static double[][] ConvertIntArrayToDoubleList(ref int[][] array)
-        {
-            return array.ToList().Select(i => i.Select(x => (double)x).ToArray()).ToArray();
-        }
 
-        public static List<double[]> ConvertSingleToDoubleArray(ref float[,] array)
+        public static List<T[]> ConvertArrayToList<T>(ref T[,] array)
         {
-            List<double[]> list = new List<double[]>();
-            foreach (float[] floatset in Arrays.ToJaggedArray(ref array).ToList())
+            List<T[]> list = new List<T[]>();
+            foreach (T[] floatset in Arrays.ToJaggedArray(ref array).ToList())
             {
-                list.Add(floatset.ToList().Select<float, double>(i => i).ToArray());
+                list.Add(floatset.ToList().Select(i => i).ToArray());
             }
             return list;
         }
@@ -121,7 +117,7 @@ namespace AutomaticImageClassification.Utilities
         //        throw e;
         //    }
         //}
-        public static void GetSubsetOfFeatures(ref List<double[]> descriptorFeatures, int numberOfFeatures)
+        public static void GetSubsetOfFeatures<T>(ref List<T[]> descriptorFeatures, int numberOfFeatures)
         {
             descriptorFeatures = descriptorFeatures.OrderBy(x => Guid.NewGuid()).Take(numberOfFeatures).ToList();
         }

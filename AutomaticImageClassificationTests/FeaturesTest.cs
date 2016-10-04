@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AutomaticImageClassification.Cluster;
-using AutomaticImageClassification.Cluster.KDTree;
 using AutomaticImageClassification.Feature;
 using AutomaticImageClassification.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -87,6 +83,16 @@ namespace AutomaticImageClassificationTests
 
             IFeatures surf = new OpenCvSurf();
             List<double[]> featu = surf.ExtractDescriptors(imagePath);
+        }
+
+        [TestMethod]
+        public void CanUseLireAutoColorCorrelogram()
+        {
+            string imagePath = @"Data\einstein.jpg";
+
+            IFeatures colorCorrelo = new ColorCorrelogram();
+            double[] featu = colorCorrelo.ExtractHistogram(imagePath);
+            Files.WriteFile(@"C:\Users\l.valavanis\Desktop\colorCorre.txt", new List<double[]> { featu });
         }
 
 

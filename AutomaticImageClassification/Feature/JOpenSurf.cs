@@ -6,14 +6,36 @@ using System.Text;
 using System.Threading.Tasks;
 using Accord.Math;
 using OpenSURFcs;
+using AutomaticImageClassification.Cluster.KDTree;
 
 namespace AutomaticImageClassification.Feature
 {
     public class JOpenSurf : IFeatures
     {
+
+        private IKdTree _tree;
+        private int _clusterNum;
+
+        public JOpenSurf(IKdTree tree, int clusterNum)
+        {
+            _tree = tree;
+            _clusterNum = clusterNum;
+        }
+        public JOpenSurf() { }
+
         public double[] ExtractHistogram(string input)
         {
-            throw new NotImplementedException();
+            List<double[]> features = ExtractDescriptors(input);
+            double[] imgVocVector = new double[_clusterNum];//num of clusters
+
+            //for each centroid find min position in tree and increase corresponding index
+            foreach (var feature in features)
+            {
+                int positionofMin = _tree.SearchTree(feature);
+                imgVocVector[positionofMin]++;
+            }
+
+            return imgVocVector;
         }
 
         public List<double[]> ExtractDescriptors(string input)
@@ -36,7 +58,7 @@ namespace AutomaticImageClassification.Feature
                             new Converter<IPoint, double[]>(
                                 des => Array.ConvertAll(des.descriptor, x => (double)x)));
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw e;
             }

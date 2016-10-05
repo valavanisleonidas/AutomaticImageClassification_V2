@@ -1,5 +1,4 @@
 ﻿using java.awt.image;
-using java.io;
 using net.semanticmetadata.lire.imageanalysis;
 using net.semanticmetadata.lire.imageanalysis.correlogram;
 using System;
@@ -9,48 +8,41 @@ namespace AutomaticImageClassification.Feature
 {
     public class ColorCorrelogram : IFeatures
     {
-        private ExtractionMethod EXTRACTION_METHOD;
-        private IAutoCorrelogramFeatureExtractor extractionAlgorithm;
+        private ExtractionMethod _extractionMethod;
+        private IAutoCorrelogramFeatureExtractor _extractionAlgorithm;
 
         public ColorCorrelogram()
         {
-            EXTRACTION_METHOD = ExtractionMethod.NaiveHuangAlgorithm;
+            _extractionMethod = ExtractionMethod.NaiveHuangAlgorithm;
         }
 
-        public ColorCorrelogram(ExtractionMethod ExtractionMethod)
+        public ColorCorrelogram(ExtractionMethod extractionMethod)
         {
-            EXTRACTION_METHOD = ExtractionMethod;
+            _extractionMethod = extractionMethod;
         }
 
         public double[] ExtractHistogram(string input)
         {
-            //convert the image to jpg if it is png because the descriptor does not support png images
-            File image = ImageFilter.isPNG(input)
-                         ? ImageConverter.PNGtoJPG(input)
-                         : new File(input);
 
-            BufferedImage Bimage = ImageUtility.getImage(image.getAbsolutePath());
-            if (ImageFilter.isPNG(input))
-                image.delete();
+            var bimage = ImageUtility.getImage(input);
 
-
-            switch (EXTRACTION_METHOD)
+            switch (_extractionMethod)
             {
                 case ExtractionMethod.LireAlgorithm:
-                    extractionAlgorithm = new MLuxAutoCorrelogramExtraction();
+                    _extractionAlgorithm = new MLuxAutoCorrelogramExtraction();
                     break;
                 case ExtractionMethod.NaiveHuangAlgorithm:
-                    extractionAlgorithm = new NaiveAutoCorrelogramExtraction();
+                    _extractionAlgorithm = new NaiveAutoCorrelogramExtraction();
                     break;
                 case ExtractionMethod.DynamicProgrammingHuangAlgorithm:
-                    extractionAlgorithm = DynamicProgrammingAutoCorrelogramExtraction.getInstance();
+                    _extractionAlgorithm = DynamicProgrammingAutoCorrelogramExtraction.getInstance();
                     break;
             }
 
-            AutoColorCorrelogram color = new AutoColorCorrelogram(extractionAlgorithm);
-            Raster r = Bimage.getRaster();
-            int[][][] HsvImage = hsvImage(r);
-            color.extract(HsvImage);
+            AutoColorCorrelogram color = new AutoColorCorrelogram(_extractionAlgorithm);
+            Raster r = bimage.getRaster();
+            int[][][] hsvImage = ColorCorrelogram.HsvImage(r);
+            color.extract(hsvImage);
 
             return color.getDoubleHistogram();
         }
@@ -67,22 +59,21 @@ namespace AutomaticImageClassification.Feature
             DynamicProgrammingHuangAlgorithm
         }
 
-        private static int[][][] hsvImage(Raster r)
+        private static int[][][] HsvImage(Raster r)
         {
             int[][][] pixels = new int[r.getWidth()][][];
             // quantize colors for each pixel (done in HSV color space):
             //raster.getpixel returns red green blue and alpha but we want only rgb colors
             int[] pixel = new int[4];
-            
+
             for (int x = 0; x < r.getWidth(); x++)
             {
                 pixels[x] = new int[r.getHeight()][];
                 for (int y = 0; y < r.getHeight(); y++)
                 {
-                    int[] arr = r.getPixel(x, y, pixel);
                     // converting to HSV:
                     int[] hsv = new int[3];
-                    convertRgbToHsv(r.getPixel(x, y, pixel), hsv);
+                    ConvertRgbToHsv(r.getPixel(x, y, pixel), hsv);
                     // quantize the actual pixel:
                     pixels[x][y] = new int[3];
                     pixels[x][y] = hsv;
@@ -96,7 +87,7 @@ namespace AutomaticImageClassification.Feature
      * @param rgb RGB Values
      * @param hsv HSV values to set.
      */
-        private static void convertRgbToHsv(int[] rgb, int[] hsv)
+        private static void ConvertRgbToHsv(int[] rgb, int[] hsv)
         {     //TODO: Conversion
             if (hsv.Length < 3)
             {
@@ -144,7 +135,7 @@ namespace AutomaticImageClassification.Feature
                     hue += 360f;
             }
             // hue in [0,359]
-            hsv[0] = (int)(hue);
+            hsv[0] = (int)hue;
             // value in [0,255]
             hsv[2] = max;
         }

@@ -5,4 +5,5 @@
   &lt;Assembly Path="C:\Users\l.valavanis\Desktop\Leo Files\AutomaticImageClassification_V2\packages\Accord.MachineLearning.3.2.0\lib\net45\Accord.MachineLearning.dll" /&gt;&#xD;
   &lt;Assembly Path="C:\Users\l.valavanis\Desktop\Leo Files\AutomaticImageClassification_V2\packages\VVVV.EmguCV.2.4.2.1\build\net40\lib\Emgu.CV.dll" /&gt;&#xD;
   &lt;Assembly Path="C:\Users\l.valavanis\Desktop\Leo Files\AutomaticImageClassification_V2\packages\VVVV.EmguCV.2.4.2.1\build\net40\lib\Emgu.CV.ML.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\Users\l.valavanis\Desktop\AutomaticImageClassification\Libs\ImageUtilities.dll" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String></wpf:ResourceDictionary>

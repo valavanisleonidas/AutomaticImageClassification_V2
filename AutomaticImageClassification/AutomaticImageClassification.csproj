@@ -130,6 +130,9 @@
     <Reference Include="OpenSURFcs">
       <HintPath>..\Libs\JOpenSurf\OpenSURFcs.dll</HintPath>
     </Reference>
+    <Reference Include="Sift">
+      <HintPath>..\Libs\Sift.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -164,6 +167,7 @@
     <Compile Include="Cluster\VlFeatKmeans.cs" />
     <Compile Include="Feature\Boc.cs" />
     <Compile Include="Feature\ColorCorrelogram.cs" />
+    <Compile Include="Feature\JavaSift.cs" />
     <Compile Include="Feature\Lboc.cs" />
     <Compile Include="Feature\OpenCvSift.cs" />
     <Compile Include="Feature\IFeatures.cs" />

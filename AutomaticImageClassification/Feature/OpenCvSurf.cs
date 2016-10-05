@@ -6,18 +6,36 @@ using System.Text;
 using System.Threading.Tasks;
 using AutomaticImageClassification.Utilities;
 using OpenCvSharp.CPlusPlus;
-
+using AutomaticImageClassification.Cluster.KDTree;
 
 namespace AutomaticImageClassification.Feature
 {
     public class OpenCvSurf : IFeatures
     {
         private SURF _surf = new SURF();
+        private IKdTree _tree;
+        private int _clusterNum;
 
+        public OpenCvSurf(IKdTree tree, int clusterNum)
+        {
+            _tree = tree;
+            _clusterNum = clusterNum;
+        }
+        public OpenCvSurf() { }
 
         public double[] ExtractHistogram(string input)
         {
-            throw new NotImplementedException();
+            List<double[]> features = ExtractDescriptors(input);
+            double[] imgVocVector = new double[_clusterNum];//num of clusters
+
+            //for each centroid find min position in tree and increase corresponding index
+            foreach (var feature in features)
+            {
+                int positionofMin = _tree.SearchTree(feature);
+                imgVocVector[positionofMin]++;
+            }
+
+            return imgVocVector;
         }
 
 

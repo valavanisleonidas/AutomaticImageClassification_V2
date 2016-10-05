@@ -5,6 +5,7 @@ using AutomaticImageClassification.Cluster;
 using AutomaticImageClassification.Feature;
 using AutomaticImageClassification.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using AutomaticImageClassification.Cluster.KDTree;
 
 namespace AutomaticImageClassificationTests
 {
@@ -88,11 +89,31 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void CanUseLireAutoColorCorrelogram()
         {
-            string imagePath = @"Data\einstein.jpg";
+            string imagePath = @"Data\inner_piecepng.png";
 
             IFeatures colorCorrelo = new ColorCorrelogram();
             double[] featu = colorCorrelo.ExtractHistogram(imagePath);
             Files.WriteFile(@"C:\Users\l.valavanis\Desktop\colorCorre.txt", new List<double[]> { featu });
+        }
+
+        [TestMethod]
+        public void CanUseJavaSift()
+        {
+            IKdTree kdtree = new AccordKdTree();
+            IFeatures javasift = new JavaSift();
+
+            string imagePath = @"Data\einstein.jpg";
+            int clusterNum = 10;
+            
+
+            List<double[]> centroids = javasift.ExtractDescriptors(imagePath);
+
+            Arrays.GetSubsetOfFeatures(ref centroids,10);
+            kdtree.CreateTree(centroids);
+            javasift = new JavaSift(kdtree, clusterNum);
+
+            double[] featu = javasift.ExtractHistogram(imagePath);
+            Files.WriteFile(@"C:\Users\l.valavanis\Desktop\sift.txt", new List<double[]> { featu });
         }
 
 

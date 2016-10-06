@@ -1,11 +1,13 @@
 ﻿using java.awt.image;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutomaticImageClassification.Cluster.KDTree;
-using java.awt;
+using AutomaticImageClassification.Utilities;
+using Color = java.awt.Color;
 
 namespace AutomaticImageClassification.Feature
 {
@@ -15,6 +17,7 @@ namespace AutomaticImageClassification.Feature
         private int _resize, _patches;
         private ColorConversion.ColorSpace _cs;
         private IKdTree _tree;
+
 
         public Boc(int resize, ColorConversion.ColorSpace cs, int[][] palette, IKdTree tree)
         {
@@ -34,7 +37,7 @@ namespace AutomaticImageClassification.Feature
 
         public double[] ExtractHistogram(string input)
         {
-            BufferedImage img = ImageUtility.getImage(input);
+            var img = new BufferedImage(new Bitmap(input));
             img = ImageProcessor.resizeImage(img, _resize, _resize, false);
             return ExtractHistogram(img);
         }
@@ -62,13 +65,15 @@ namespace AutomaticImageClassification.Feature
         {
             var colors = new List<double[]>();
 
-            BufferedImage img = ImageUtility.getImage(input);
+            var img = new BufferedImage(new Bitmap(input));
             img = ImageProcessor.resizeImage(img, _resize, _resize, false);
             int[][] domColors = ImageProcessor.getDominantColors(img, _patches, _patches, _cs);
             foreach (var domColor in domColors)
             {
                 colors.Add(new double[] { domColor[0], domColor[1], domColor[2] });
             }
+            
+
             return colors;
         }
 

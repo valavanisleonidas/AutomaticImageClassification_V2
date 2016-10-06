@@ -91,7 +91,7 @@ namespace AutomaticImageClassificationTests
         //TODO NEED TO CHECK vsexecution problem.exe PROBLEM
         //pass vlfeat kmeans,vlfeat em , accord kmeans
         [TestMethod]
-        public void CanClusterVlfeatEM()
+        public void CanClusterVlfeatEm()
         {
             string baseFolder = @"Data";
             //string trainPath = Path.Combine(baseFolder, "Train");
@@ -114,6 +114,31 @@ namespace AutomaticImageClassificationTests
             }
             List<double[]> vocab = cluster.CreateClusters(colors, numOfClusters);
 
+        }
+
+        [TestMethod]
+        public void CanClusterLireKMeans()
+        {
+            string baseFolder = @"Data";
+            //string trainPath = Path.Combine(baseFolder, "Train");
+
+            var numOfClusters = 10;
+            var sampleImgs = Files.GetFilesFrom(baseFolder);
+
+            IFeatures colorFeatures = new AccordSurf();
+            ICluster cluster = new LireKmeans();
+            List<double[]> colors = new List<double[]>();
+            int counter = 0;
+            foreach (var image in sampleImgs)
+            {
+                if (counter == 2)
+                {
+                    break;
+                }
+                counter++;
+                colors.AddRange(colorFeatures.ExtractDescriptors(image));
+            }
+            List<double[]> vocab = cluster.CreateClusters(colors, numOfClusters);
         }
 
 

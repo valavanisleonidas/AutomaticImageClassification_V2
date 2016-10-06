@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutomaticImageClassification.Cluster.KDTree;
+using AutomaticImageClassification.Utilities;
 using java.awt.image;
 
 namespace AutomaticImageClassification.Feature
@@ -11,53 +13,55 @@ namespace AutomaticImageClassification.Feature
     public class Lboc : IFeatures
     {
 
-        private int[][] palette;
-        private int resize, patches;
-        private ColorConversion.ColorSpace cs;
-        private List<double[]> dictionary;
-        private IKdTree Boctree;
-        private IKdTree LBoctree;
+        private int[][] _palette;
+        private int _resize, _patches;
+        private ColorConversion.ColorSpace _cs;
+        private List<double[]> _dictionary;
+        private IKdTree _boctree;
+        private IKdTree _lBoctree;
+        private bool _isDistinctColors;
 
-        public Lboc(int resize, int patches, List<double[]> dictionary, ColorConversion.ColorSpace cs, int[][] palette, IKdTree boctree, IKdTree LBoctree)
+        public Lboc(int resize, int patches, List<double[]> dictionary, ColorConversion.ColorSpace cs, int[][] palette, IKdTree boctree, IKdTree lBoctree, bool isDistinctColors)
         {
-            this.resize = resize;
-            this.cs = cs;
-            this.palette = palette;
-            this.patches = patches;
-            this.dictionary = dictionary;
-            this.Boctree = boctree;
-            this.LBoctree = LBoctree;
-
+            _resize = resize;
+            _cs = cs;
+            _palette = palette;
+            _patches = patches;
+            _dictionary = dictionary;
+            _boctree = boctree;
+            _lBoctree = lBoctree;
+            _isDistinctColors = isDistinctColors;
         }
 
-        public Lboc(int resize, int patches, ColorConversion.ColorSpace cs, int[][] palette, IKdTree Boctree)
+        public Lboc(int resize, int patches, ColorConversion.ColorSpace cs, int[][] palette, IKdTree boctree, bool isDistinctColors)
         {
-            this.resize = resize;
-            this.cs = cs;
-            this.palette = palette;
-            this.patches = patches;
-            this.Boctree = Boctree;
+            _resize = resize;
+            _cs = cs;
+            _palette = palette;
+            _patches = patches;
+            _boctree = boctree;
+            _isDistinctColors = isDistinctColors;
         }
 
         public double[] ExtractHistogram(string input)
         {
-            BufferedImage bimg = ImageUtility.getImage(input);
+            var bimg = new BufferedImage(new Bitmap(input));
             return ExtractHistogram(bimg);
         }
 
         public double[] ExtractHistogram(BufferedImage input)
         {
-            input = ImageProcessor.resizeImage(input, resize, resize, false);
-            var vector = new double[dictionary.Count];
-            BufferedImage[] blocks = ImageProcessor.splitImage(input, patches, patches);
+            input = ImageProcessor.resizeImage(input, _resize, _resize, false);
+            var vector = new double[_dictionary.Count];
+            BufferedImage[] blocks = ImageProcessor.splitImage(input, _patches, _patches);
 
-            var boc = new Boc(resize, cs, palette, Boctree);
+            var boc = new Boc(_resize, _cs, _palette, _boctree );
             foreach (var b in blocks)
             {
                 double[] _boc = boc.ExtractHistogram(b);
 
-                int indx = LBoctree?.SearchTree(_boc) 
-                    ?? ClusterIndexOf(dictionary, _boc);
+                int indx = _lBoctree?.SearchTree(_boc) 
+                    ?? ClusterIndexOf(_dictionary, _boc);
 
                 vector[indx]++;
             }
@@ -68,15 +72,20 @@ namespace AutomaticImageClassification.Feature
         public List<double[]> ExtractDescriptors(string input)
         {
             List<double[]> colors = new List<double[]>();
-            BufferedImage img = ImageUtility.getImage(input);
-            img = ImageProcessor.resizeImage(img, resize, resize, false);
-            BufferedImage[] blocks = ImageProcessor.splitImage(img, patches, patches);
+            var img = new BufferedImage(new Bitmap(input));
+            img = ImageProcessor.resizeImage(img, _resize, _resize, false);
+            BufferedImage[] blocks = ImageProcessor.splitImage(img, _patches, _patches);
 
-            var boc = new Boc(resize,cs,palette,Boctree);
+            var boc = new Boc(_resize,_cs,_palette,_boctree);
             foreach (var b in blocks)
             {
                 colors.Add(boc.ExtractHistogram(b));
             }
+            if (_isDistinctColors)
+            {
+                Arrays.GetDistinctColors(ref colors);
+            }
+
             return colors;
         }
 

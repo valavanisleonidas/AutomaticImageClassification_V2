@@ -3,6 +3,7 @@ using gr.iti.mklab.visual.extraction;
 using java.awt.image;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,7 +25,7 @@ namespace AutomaticImageClassification.Feature
 
         public List<double[]> ExtractDescriptors(string input)
         {
-            var bimage = ImageUtility.getImage(input);
+            var bimage = new BufferedImage(new Bitmap(input));
             double[][] siftFeatures = _sift.extractFeatures(bimage);
             return siftFeatures.ToList();
         }

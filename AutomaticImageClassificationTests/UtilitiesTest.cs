@@ -68,5 +68,27 @@ namespace AutomaticImageClassificationTests
 
         }
 
+        [TestMethod]
+        public void TestDistinctColors()
+        {
+            List<double[]> list = new List<double[]>();
+            list.Add(new double[] { 5, 2, 3 });
+            list.Add(new double[] { 5, 2, 3 });
+
+            list.Add(new double[] { 5, 1, 3 });
+
+            list.Add(new double[] { 5, 4, 3 });
+            list.Add(new double[] { 5, 4, 3 });
+
+            list.Add(new double[] { 2, 4, 1 });
+
+            list.Add(new double[] { 3, 2, 3 });
+
+            Arrays.GetDistinctColors(ref list);
+
+
+
+        }
+
     }
 }

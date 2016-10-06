@@ -3,6 +3,8 @@ using net.semanticmetadata.lire.imageanalysis;
 using net.semanticmetadata.lire.imageanalysis.correlogram;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using java.awt;
 
 namespace AutomaticImageClassification.Feature
 {
@@ -23,8 +25,14 @@ namespace AutomaticImageClassification.Feature
 
         public double[] ExtractHistogram(string input)
         {
+            var bimage = new BufferedImage(new Bitmap(input));
 
-            var bimage = ImageUtility.getImage(input);
+            BufferedImage newImage = new BufferedImage(bimage.getWidth(), bimage.getHeight(), 5);
+
+            Graphics2D g = newImage.createGraphics();
+            g.drawImage(bimage, 0, 0, null);
+            g.dispose();
+
 
             switch (_extractionMethod)
             {

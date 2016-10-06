@@ -163,6 +163,7 @@
     <Compile Include="Cluster\ICluster.cs" />
     <Compile Include="Cluster\KDTree\IKdTree.cs" />
     <Compile Include="Cluster\KDTree\AccordKdTree.cs" />
+    <Compile Include="Cluster\LireKmeans.cs" />
     <Compile Include="Cluster\VlFeatEm.cs" />
     <Compile Include="Cluster\VlFeatKmeans.cs" />
     <Compile Include="Feature\Boc.cs" />

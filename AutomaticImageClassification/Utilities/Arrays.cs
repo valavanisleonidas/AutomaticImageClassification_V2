@@ -3,12 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using java.util;
 using MathWorks.MATLAB.NET.Arrays;
 
 namespace AutomaticImageClassification.Utilities
 {
     public class Arrays
     {
+
+        public static int[][] ConvertDoubleListToIntArray(ref List<double[]> list)
+        {
+            return list.ConvertAll(
+                            des => Array.ConvertAll(des, x => (int)x)).ToArray();
+        }
 
         public static List<T[]> ConvertArrayToList<T>(ref T[,] array)
         {
@@ -20,6 +27,46 @@ namespace AutomaticImageClassification.Utilities
             return list;
         }
 
+        public static List ConvertGenericListToArrayList(ref List<double[]> list)
+        {
+            ArrayList arrayList = new ArrayList();
+            foreach (var descriptorFeature in list)
+            {
+                arrayList.add(descriptorFeature);
+            }
+            return arrayList;
+        }
+
+        public static List<double[]> ConvertArrayListToGenericList(ref List arraylist)
+        {
+            List<double[]> list = new List<double[]>();
+
+            var it = arraylist.iterator();
+            while (it.hasNext())
+            {
+                list.Add((double[])it.next());
+            }
+            return list;
+        }
+
+
+        public static void GetDistinctColors(ref List<double[]> colors)
+        {
+            if (colors.Count == 0)
+            {
+                throw new ArgumentException("List is empty");
+            }
+
+            if (colors[0].Length != 3)
+            {
+                throw new ArgumentException("Argument given does not have 3 colors ");
+            }
+            colors = colors.Select(x => new { Red = x[0], Green = x[1], Blue = x[2] })
+                                 .Distinct()
+                                 .Select(x => new[] { x.Red, x.Green, x.Blue })
+                                 .ToList();
+        }
+
         public static double[] ConvertJagged2DToDouble1D(ref double[,] array)
         {
             //double[] arr = new double[array.Length * array.Length];
@@ -29,11 +76,11 @@ namespace AutomaticImageClassification.Utilities
             //    {
             //        arr[j] = array[i][j];
             //    }
-                
+
             //}
             //foreach (double d in array)
             //{
-                
+
             //}
 
             return null;

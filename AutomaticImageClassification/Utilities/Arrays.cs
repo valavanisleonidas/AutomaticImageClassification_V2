@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Accord.Math.Comparers;
 using java.util;
 using MathWorks.MATLAB.NET.Arrays;
 
@@ -56,16 +57,10 @@ namespace AutomaticImageClassification.Utilities
             {
                 throw new ArgumentException("List is empty");
             }
-
-            if (colors[0].Length != 3)
-            {
-                throw new ArgumentException("Argument given does not have 3 colors ");
-            }
-            colors = colors.Select(x => new { Red = x[0], Green = x[1], Blue = x[2] })
-                                 .Distinct()
-                                 .Select(x => new[] { x.Red, x.Green, x.Blue })
-                                 .ToList();
+            colors = colors.Distinct(new ColorsComparator()).ToList();
         }
+
+
 
         public static double[] ConvertJagged2DToDouble1D(ref double[,] array)
         {

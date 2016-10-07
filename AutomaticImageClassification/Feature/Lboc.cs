@@ -19,9 +19,8 @@ namespace AutomaticImageClassification.Feature
         private List<double[]> _dictionary;
         private IKdTree _boctree;
         private IKdTree _lBoctree;
-        private bool _isDistinctColors;
 
-        public Lboc(int resize, int patches, List<double[]> dictionary, ColorConversion.ColorSpace cs, int[][] palette, IKdTree boctree, IKdTree lBoctree, bool isDistinctColors)
+        public Lboc(int resize, int patches, List<double[]> dictionary, ColorConversion.ColorSpace cs, int[][] palette, IKdTree boctree, IKdTree lBoctree)
         {
             _resize = resize;
             _cs = cs;
@@ -30,17 +29,15 @@ namespace AutomaticImageClassification.Feature
             _dictionary = dictionary;
             _boctree = boctree;
             _lBoctree = lBoctree;
-            _isDistinctColors = isDistinctColors;
         }
 
-        public Lboc(int resize, int patches, ColorConversion.ColorSpace cs, int[][] palette, IKdTree boctree, bool isDistinctColors)
+        public Lboc(int resize, int patches, ColorConversion.ColorSpace cs, int[][] palette, IKdTree boctree)
         {
             _resize = resize;
             _cs = cs;
             _palette = palette;
             _patches = patches;
             _boctree = boctree;
-            _isDistinctColors = isDistinctColors;
         }
 
         public double[] ExtractHistogram(string input)
@@ -81,12 +78,7 @@ namespace AutomaticImageClassification.Feature
             {
                 colors.Add(boc.ExtractHistogram(b));
             }
-            if (_isDistinctColors)
-            {
-                Arrays.GetDistinctColors(ref colors);
-            }
-
-            return colors;
+           return colors;
         }
 
         public static int ClusterIndexOf(List<double[]> clusters, double[] p)

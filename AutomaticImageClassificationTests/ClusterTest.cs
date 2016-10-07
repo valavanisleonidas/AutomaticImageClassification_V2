@@ -27,12 +27,34 @@ namespace AutomaticImageClassificationTests
             centers.Add(new[] { 1000.0, 2000.0, 3000.0 });
             centers.Add(new[] { 10000.0, 20000.0, 30000.0 });
 
-            IKdTree kdtree = new AccordKdTree();
+            IKdTree kdtree = new AccordKdTree(centers);
             kdtree.CreateTree(centers);
-            double[] search = { 50.0, 50.0, 50.0 };
+            double[] search = { 50000.0, 50000.0, 50000.0 };
+
             int index = kdtree.SearchTree(search);
 
         }
+
+        [TestMethod]
+        public void CanUseJavaMlKdTree()
+        {
+
+            List<double[]> centers = new List<double[]>();
+            centers.Add(new[] { 1.0, 2.0, 3.0 });
+            centers.Add(new[] { 10.0, 20.0, 30.0 });
+            centers.Add(new[] { 100.0, 200.0, 300.0 });
+            centers.Add(new[] { 1000.0, 2000.0, 3000.0 });
+            centers.Add(new[] { 10000.0, 20000.0, 30000.0 });
+
+            IKdTree kdtree = new JavaMlKdTree();
+            kdtree.CreateTree(centers);
+            double[] search = { 5000.0, 5000.0, 5000.0 };
+
+            int index = kdtree.SearchTree(search);
+
+        }
+
+
 
         [TestMethod]
         public void CanClusterAccordKmeans()

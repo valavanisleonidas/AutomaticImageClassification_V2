@@ -19,23 +19,17 @@ namespace AutomaticImageClassificationTests
         public void phow_test()
         {
 
-            string baseFolder = @"C:\Users\l.valavanis\Desktop\Leo Files\DBs\Clef2013\Compound";
-            string trainPath = Path.Combine(baseFolder, "Train");
+            string baseFolder = @"Data";
 
             var numOfClusters = 10;
-            var sampleImgs = Files.GetFilesFrom(trainPath, 1);
+            var sampleImgs = Files.GetFilesFrom(baseFolder, 2);
 
             IFeatures phow = new Phow();
             ICluster cluster = new VlFeatKmeans(10000);
             List<double[]> colors = new List<double[]>();
-            int counter = 0;
+
             foreach (var image in sampleImgs)
             {
-                if (counter == 2)
-                {
-                    //break;
-                }
-                counter++;
                 colors.AddRange(phow.ExtractDescriptors(image));
             }
             List<double[]> vocab = cluster.CreateClusters(colors, numOfClusters);
@@ -48,7 +42,6 @@ namespace AutomaticImageClassificationTests
             }
 
         }
-
 
         //pass test
         [TestMethod]
@@ -284,7 +277,66 @@ namespace AutomaticImageClassificationTests
 
         }
 
+        [TestMethod]
+        public void CanCreateBovw()
+        {
 
+
+
+            //string baseFolder = @"C:\Users\l.valavanis\Desktop\Leo Files\DBs\Clef2013\Compound";
+            //string trainPath = Path.Combine(baseFolder, "Train");
+            //string testPath = Path.Combine(baseFolder, "Test");
+
+            //string trainFile = @"C:\Users\l.valavanis\Desktop\train.txt";
+            //string testFile = @"C:\Users\l.valavanis\Desktop\test.txt";
+            //int clusterNum = 10;
+            //string filename = @"C:\Users\l.valavanis\Desktop\clusters.txt";
+
+
+            //ICluster cluster = new Lire_Kmeans(100000);
+
+            ////IFeatures feature = new Sift();
+            //IFeatures feature = new Phow();
+            ////Clusteriiiiiiiiiiing
+
+            //var sampleImgs = Files.GetFilesFrom(trainPath, 2);
+
+            //var clusters = new java.util.ArrayList();
+
+
+            //for (int i = 0; i < sampleImgs.Length; i++)
+            //{
+            //    clusters.addAll(feature.extractDescriptors(sampleImgs[i]));
+            //}
+
+            //ICluster kmeans = new Lire_Kmeans(1000);
+            //var finalClusters = kmeans.CreateClusters(clusters, clusterNum);
+            //KDTree tree = Utilities.KDTreeImplementation.createTree(finalClusters);
+
+            ////feature = new Sift(tree, clusterNum);
+            //feature = new Phow(finalClusters);
+
+
+            ////Feature extraction bovw
+            //List<double[]> trainFeatures = new List<double[]>();
+            //foreach (string train in Files.GetFilesFrom(trainPath))
+            //{
+            //    double[] vec = feature.extractHistogram(train);
+            //    trainFeatures.Add(vec);
+            //}
+            //Files.WriteFile(trainFile, trainFeatures);
+
+            ////Feature extraction bovw
+            //List<double[]> testFeatures = new List<double[]>();
+            //foreach (string test in Files.GetFilesFrom(testPath))
+            //{
+            //    double[] vec = feature.extractHistogram(test);
+            //    testFeatures.Add(vec);
+            //}
+            //Files.WriteFile(testFile, testFeatures);
+
+
+        }
 
     }
 }

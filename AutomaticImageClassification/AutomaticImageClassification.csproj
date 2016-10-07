@@ -189,6 +189,8 @@
     <Compile Include="Utilities\Normalization.cs" />
     <Compile Include="Utilities\Files.cs" />
     <Compile Include="Cluster\KDTree\JavaMlKdTree.cs" />
+    <Compile Include="Utilities\XmlReaderClass.cs" />
+    <Compile Include="Utilities\XmlSerializationExtensions.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

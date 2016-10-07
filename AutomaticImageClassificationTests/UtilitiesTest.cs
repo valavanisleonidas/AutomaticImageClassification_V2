@@ -86,9 +86,15 @@ namespace AutomaticImageClassificationTests
 
             Arrays.GetDistinctColors(ref list);
 
-
-
         }
+
+        [TestMethod]
+        public void CanReadXml()
+        {
+            string file = @"Data\test_figures.xml";
+            Figures images = XmlReaderClass.ReadXml(file);
+        }
+
 
     }
 }

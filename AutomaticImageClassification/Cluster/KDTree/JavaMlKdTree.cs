@@ -13,7 +13,7 @@ namespace AutomaticImageClassification.Cluster.KDTree
         public void CreateTree(List<double[]> centers)
         {
             _tree = new net.sf.javaml.core.kdtree.KDTree(centers[0].Length);
-            for (int i = 0; i < centers.Count; i++)
+            for (var i = 0; i < centers.Count; i++)
             {
                 _tree.insert(centers[i], i);
             }

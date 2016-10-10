@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Accord.Collections;
-using Accord.MachineLearning;
+﻿using System.Collections.Generic;
 
 namespace AutomaticImageClassification.Cluster.KDTree
 {
     public class AccordKdTree : IKdTree
     {
         private static Accord.Collections.KDTree<double[]> _kdtree;
-        private List<double[]> _features;
+        private List<double[]> _centers;
 
-        public AccordKdTree(List<double[]> features)
+        public AccordKdTree(List<double[]> centers)
         {
-            _features = features;
+            _centers = centers;
         }
 
         public void CreateTree(List<double[]> centers)
@@ -27,9 +21,9 @@ namespace AutomaticImageClassification.Cluster.KDTree
         //returns nearest object of array centroid in tree
         public int SearchTree(double[] centroid)
         {
+            //find nearest object to query (centroid)
             var a = _kdtree.Nearest(centroid, 1);
-            return _features.FindIndex(da => da[0] == a.Nearest.Position[0] && da[1] == a.Nearest.Position[1] && da[2] == a.Nearest.Position[2]);
-
+            return _centers.FindIndex(da => da[0] == a.Nearest.Position[0] && da[1] == a.Nearest.Position[1] && da[2] == a.Nearest.Position[2]);
         }
 
 

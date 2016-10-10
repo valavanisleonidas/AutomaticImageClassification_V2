@@ -41,12 +41,12 @@ namespace AutomaticImageClassification.Utilities
 
         public static List<T[]> ConvertArrayListToGenericList<T>(ref List arraylist)
         {
-            List<T[]> list = new List<T[]>();
+            var list = new List<T[]>();
 
             var it = arraylist.iterator();
             while (it.hasNext())
             {
-                list.Add(  (T[]) it.next());
+                list.Add( (T[])it.next());
             }
             return list;
         }

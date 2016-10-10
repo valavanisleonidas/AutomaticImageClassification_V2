@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace AutomaticImageClassification.Utilities
 {
 
-    public class ColorsComparator : IEqualityComparer<double[]>
+    public class ColorsComparator<T> : IEqualityComparer<T[]>
     {
-        public bool Equals(double[] x, double[] y)
+        public bool Equals(T[] x, T[] y)
         {
             if (ReferenceEquals(x, y))
                 return true;
@@ -20,16 +20,16 @@ namespace AutomaticImageClassification.Utilities
             return x.SequenceEqual(y);
         }
 
-        public int GetHashCode(double[] obj)
+        public int GetHashCode(T[] obj)
         {
             if (obj == null)
                 return 0;
 
-            int hash = 17;
+            var hash = 17;
 
             unchecked
             {
-                foreach (double s in obj)
+                foreach (T s in obj)
                     hash = hash * 23 + ((s == null) ? 0 : s.GetHashCode());
             }
 

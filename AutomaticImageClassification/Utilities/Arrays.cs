@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Accord.Math.Comparers;
 using java.util;
 using MathWorks.MATLAB.NET.Arrays;
+using AutomaticImageClassification.Utilities;
 
 namespace AutomaticImageClassification.Utilities
 {
@@ -15,7 +16,7 @@ namespace AutomaticImageClassification.Utilities
         public static int[][] ConvertDoubleListToIntArray(ref List<double[]> list)
         {
             return list.ConvertAll(
-                            des => Array.ConvertAll(des, x => (int)x)).ToArray();
+                            des => Array.ConvertAll(des, x => (int)x ) ).ToArray();
         }
 
         public static List<T[]> ConvertArrayToList<T>(ref T[,] array)
@@ -28,7 +29,7 @@ namespace AutomaticImageClassification.Utilities
             return list;
         }
 
-        public static List ConvertGenericListToArrayList(ref List<double[]> list)
+        public static List ConvertGenericListToArrayList<T>(ref List<T[]> list)
         {
             ArrayList arrayList = new ArrayList();
             foreach (var descriptorFeature in list)
@@ -38,26 +39,26 @@ namespace AutomaticImageClassification.Utilities
             return arrayList;
         }
 
-        public static List<double[]> ConvertArrayListToGenericList(ref List arraylist)
+        public static List<T[]> ConvertArrayListToGenericList<T>(ref List arraylist)
         {
-            List<double[]> list = new List<double[]>();
+            List<T[]> list = new List<T[]>();
 
             var it = arraylist.iterator();
             while (it.hasNext())
             {
-                list.Add((double[])it.next());
+                list.Add(  (T[]) it.next());
             }
             return list;
         }
 
 
-        public static void GetDistinctColors(ref List<double[]> colors)
+        public static void GetDistinctColors<T>(ref List<T[]> colors)
         {
             if (colors.Count == 0)
             {
                 throw new ArgumentException("List is empty");
             }
-            colors = colors.Distinct(new ColorsComparator()).ToList();
+            colors = colors.Distinct(new ColorsComparator<T>()).ToList();
         }
 
 

@@ -37,7 +37,7 @@ namespace AutomaticImageClassification.Cluster
             //get centers 
             List javaCenters = mean.getMeans();
             //convert to generics list
-            return Arrays.ConvertArrayListToGenericList(ref javaCenters);      
+            return Arrays.ConvertArrayListToGenericList<double>(ref javaCenters);      
         }
     }
 }

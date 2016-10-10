@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,45 +18,32 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void CanUseLibLinear()
         {
-            string trainDataPath = @"Data\train1.txt";
-            string testDataPath = @"Data\test1.txt";
+            string trainDataPath = @"Data\Features\boc_train.txt";
+            string testDataPath = @"Data\Features\boc_test.txt";
 
-            List<double[]> trainFeat = Files.ReadFileToArray(trainDataPath).ToList();
-            double[] trainlabels = { 1,0,0,1,1,1,0,0,2,1,0,2,1,0,1,0,2,1,1,1,2,2,2,0,1,0,1,0,1,0
-                ,1,0,0,1,1,1,0,0,2,1,0,2,1,0,1,0,2,1,1,1,2,2,2,0,1,0,1,0,1,0,1,0,0,1,1,1,0,0,2,1,0,2,1,0,1,0,2,1,1,1,2,2,2,0,1,0,1,0,1,0
-                ,1,0,0,1,1,1,0,0,2,1,0,2,1,0,1,0,2,1,1,1,2,2,2,0,1,0,1,0,1,0,1,0,0,1,1,1,0,0,2,1,0,2,1,0,1,0,2,1,1,1,2,2,2,0,1,0,1,0,1,0
-                ,1,0,0,0,0,0,0};
+            string trainlabelsPath = @"Data\Features\train_labels.txt";
+            string testlabelsPath = @"Data\Features\test_labels.txt";
 
-            double[] testlabels =
-                        {
-                1, 0, 0, 1, 1, 1, 0, 0, 2, 1, 0, 2, 1, 0, 1, 0, 2, 1, 1, 1, 2, 2, 2, 0, 1, 0, 1, 0, 1, 0
-                , 1, 0, 0, 1, 1, 1, 0, 0, 2, 1, 0, 1, 0, 1, 0, 1, 2, 1, 0, 2, 2, 1, 0, 1, 0, 2, 1, 1, 1, 2, 2, 2, 0, 1,
-                0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 2, 1, 0, 2, 1, 0, 1, 0, 2, 1, 1, 1, 2, 2, 2, 0, 1, 0, 1, 0, 1, 0
-                , 1, 0, 0, 1, 1, 1, 0, 0, 2, 1, 0, 2, 1, 0, 1, 0, 2, 1, 1, 1, 2, 2, 2, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1,
-                1, 1, 0, 0, 2, 1, 0, 2, 1, 0, 1, 0, 2, 1, 1, 1, 2, 2, 2, 0, 1, 0, 1, 0, 1, 0
-                , 1, 0, 0, 0, 0, 0, 0, 1, 0, 2, 1, 0, 1, 0, 1, 1, 1, 1, 2, 2, 2, 0, 1, 0, 1, 0, 1, 0
+            var trainFeat = Files.ReadFileToListArrayList<double>(trainDataPath).ToList();
+            var testFeat = Files.ReadFileToListArrayList<double>(testDataPath).ToList();
+
+            double[] trainlabels = Files.ReadFileTo1DArray<double>(trainlabelsPath);
+            double[] testlabels = Files.ReadFileTo1DArray<double>(testlabelsPath);
+
+
+            Parameters _params = new Parameters
+            {
+                Gamma = 0.5,
+                Homker = "KCHI2",
+                Kernel = "chi2",
+                Cost = 1,
+                BiasMultiplier = 1,
+                Solver = "liblinear",
+                SolverType = 0,
+                IsManualCv = false
             };
-
-            List<double[]> testFeat = Files.ReadFileToArray(testDataPath).ToList();
-
-
-            //List<double[]> train_feat_arr = { { 1, 2, 3 }, { 2, 3, 4 }, { 3, 2, 1 } };
-            //double[] trainlabels = { 0, 1, 1 };
-
-            //		System.out.println(train_feat_arr.length +" : "+ train_feat_arr[0].length);
-            //		System.out.println(test_feat_arr.length +" : "+ test_feat_arr[0].length);
-
-
-            Parameters _params = new Parameters();
-            _params.Gamma = 0.5;
-            _params.Homker = "KCHI2";
-            _params.Kernel = "chi2";
-            _params.Cost = 1;
-            _params.BiasMultiplier = 1;
-            _params.Solver = "liblinear"; //liblinear
-            _params.SolverType = 0;
-            _params.IsManualCv = false;
-
+            
+            //liblinear
             LibLinearLib classifier = new LibLinearLib(_params);
 
 
@@ -67,6 +56,11 @@ namespace AutomaticImageClassificationTests
 
             classifier.Predict(ref testFeat);
 
+            string predictedLabelsText = @"Data\Results\LibLinearBocPredictedLabels.txt";
+            string predictedprobstext = @"Data\Results\LibLinearBocPredictedProbabilities.txt";
+
+            Files.WriteFile(predictedLabelsText, classifier.GetPredictedCategories().ToList());
+            Files.WriteFile(predictedprobstext, classifier.GetPredictedProbabilities().ToList());
 
         }
 
@@ -75,36 +69,29 @@ namespace AutomaticImageClassificationTests
         public void CanUseLibSvm()
         {
 
-            string trainDataPath = @"Data\train1.txt";
-            string testDataPath = @"Data\test1.txt";
+            string trainDataPath = @"Data\Features\boc_train.txt";
+            string testDataPath = @"Data\Features\boc_test.txt";
 
-            List<double[]> trainFeat = Files.ReadFileToArray(trainDataPath).ToList();
-            double[] trainlabels =
-            {
-                1, 0, 0, 1, 1, 1, 0, 0, 2, 1, 0, 2, 1, 0, 1, 0, 2, 1, 1, 1, 2, 2, 2, 0, 1, 0, 1, 0, 1, 0
-                , 1, 0, 0, 1, 1, 1, 0, 0, 2, 1, 0, 2, 1, 0, 1, 0, 2, 1, 1, 1, 2, 2, 2, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1,
-                1, 1, 0, 0, 2, 1, 0, 2, 1, 0, 1, 0, 2, 1, 1, 1, 2, 2, 2, 0, 1, 0, 1, 0, 1, 0
-                , 1, 0, 0, 1, 1, 1, 0, 0, 2, 1, 0, 2, 1, 0, 1, 0, 2, 1, 1, 1, 2, 2, 2, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1,
-                1, 1, 0, 0, 2, 1, 0, 2, 1, 0, 1, 0, 2, 1, 1, 1, 2, 2, 2, 0, 1, 0, 1, 0, 1, 0
-                , 1, 0, 0, 0, 0, 0, 0
-            };
+            string trainlabelsPath = @"Data\Features\train_labels.txt";
+            string testlabelsPath = @"Data\Features\test_labels.txt";
 
-            double[] testlabels =
-            {
-                1, 0, 0, 1, 1, 1, 0, 0, 2, 1, 0, 2, 1, 0, 1, 0, 2, 1, 1, 1, 2, 2, 2, 0, 1, 0, 1, 0, 1, 0
-                , 1, 0, 0, 1, 1, 1, 0, 0, 2, 1, 0, 1, 0, 1, 0, 1, 2, 1, 0, 2, 2, 1, 0, 1, 0, 2, 1, 1, 1, 2, 2, 2, 0, 1,
-                0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 2, 1, 0, 2, 1, 0, 1, 0, 2, 1, 1, 1, 2, 2, 2, 0, 1, 0, 1, 0, 1, 0
-                , 1, 0, 0, 1, 1, 1, 0, 0, 2, 1, 0, 2, 1, 0, 1, 0, 2, 1, 1, 1, 2, 2, 2, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1,
-                1, 1, 0, 0, 2, 1, 0, 2, 1, 0, 1, 0, 2, 1, 1, 1, 2, 2, 2, 0, 1, 0, 1, 0, 1, 0
-                , 1, 0, 0, 0, 0, 0, 0, 1, 0, 2, 1, 0, 1, 0, 1, 1, 1, 1, 2, 2, 2, 0, 1, 0, 1, 0, 1, 0
-            };
-            List<double[]> testFeat = Files.ReadFileToArray(testDataPath).ToList();
+            var trainFeat = Files.ReadFileToListArrayList<double>(trainDataPath).ToList();
+            var testFeat = Files.ReadFileToListArrayList<double>(testDataPath).ToList();
 
+            double[] trainlabels = Files.ReadFileTo1DArray<double>(trainlabelsPath);
+            double[] testlabels = Files.ReadFileTo1DArray<double>(testlabelsPath);
 
             IClassifier classifier = new LibSvm();
             classifier.GridSearch(ref trainFeat, ref trainlabels);
             classifier.Train(ref trainFeat, ref trainlabels);
             classifier.Predict(ref testFeat);
+
+            var predictedLabelsText = @"Data\Results\LibSVMBocPredictedLabels.txt";
+            var predictedprobstext = @"Data\Results\LibSVMBocPredictedProbabilities.txt";
+
+            Files.WriteFile(predictedLabelsText, classifier.GetPredictedCategories().ToList());
+            Files.WriteFile(predictedprobstext, classifier.GetPredictedProbabilities().ToList());
+
 
 
             // Normalize the datasets if you want: L2 Norm => x / ||x||

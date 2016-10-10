@@ -86,12 +86,11 @@ namespace AutomaticImageClassification.Classifiers
                     // Evaluate the cross validation result
                     double crossValidationAccuracy = trainSet.EvaluateClassificationProblem(crossValidationResults);
 
-                    if (crossValidationAccuracy >= bestcv)
-                    {
-                        bestcv = crossValidationAccuracy;
-                        bestCost = cost;
-                        bestGamma = gamma;
-                    }
+                    if (!(crossValidationAccuracy >= bestcv)) continue;
+
+                    bestcv = crossValidationAccuracy;
+                    bestCost = cost;
+                    bestGamma = gamma;
                 }
             }
             _parameter.C = bestCost;

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Figures>
+    <Figure>
+        <ID>1471-2105-10-49-5</ID>
+        <CLASS>GSCR</CLASS>
+        <TITLE>"GenotypeColour ™ " : colour visualisation of SNPs and CNVs</TITLE>
+        <CAPTION>Screenshot of CN state</CAPTION>
+    </Figure>
+    <Figure>
+        <ID>1471-2105-10-266-6</ID>
+        <CLASS>GSCR</CLASS>
+        <TITLE>Genoviz Software Development Kit: Java tool kit for building genomics visualization applications</TITLE>
+        <CAPTION>TieredNeoMap . The TieredNeoMap is a</CAPTION>
+    </Figure>
+    <Figure>
+        <ID>1471-2105-12-366-1</ID>
+        <CLASS>GSCR</CLASS>
+        <TITLE>MetaboLab - advanced NMR data processing and analysis for metabolomics</TITLE>
+        <CAPTION>1D-NMR spectra</CAPTION>
+    </Figure>
+    <Figure>
+        <ID>1471-2105-9-S6-S6-1</ID>
+        <CLASS>GSCR</CLASS>
+        <TITLE>high-performance bionetwork analysis using</TITLE>
+        <CAPTION>1D-NMR spectra</CAPTION>
+    </Figure>
+    <Figure>
+        <ID>1471-2105-6-21-4</ID>
+        <CLASS>GSCR</CLASS>
+        <TITLE>The Molecular Biology Toolkit (MBT): a modular platform for developing molecular visualization applications</TITLE>
+        <CAPTION>Ligand Explorer</CAPTION>
+    </Figure>
+</Figures>

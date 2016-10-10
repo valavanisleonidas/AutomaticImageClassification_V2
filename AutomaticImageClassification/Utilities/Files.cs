@@ -10,12 +10,13 @@ namespace AutomaticImageClassification.Utilities
 {
     public class Files
     {
+        //default for pictures
         public static string[] GetFilesFrom(string searchFolder, string[] filters = null, bool isRecursive = true)
         {
             if (filters == null)
                 filters = new[] { "jpg", "jpeg", "png", "gif", "tiff", "bmp" };
 
-            List<string> filesFound = new List<string>();
+            var filesFound = new List<string>();
             var searchOption = isRecursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
             foreach (var filter in filters)
             {
@@ -23,16 +24,16 @@ namespace AutomaticImageClassification.Utilities
             }
             return filesFound.ToArray();
         }
-
+        //default for pictures
         public static string[] GetFilesFrom(string searchFolder,int filesFromEachSubFolder, string[] filters = null, bool isRecursive = true)
         {
             if (filters == null)
                 filters = new[] { "jpg", "jpeg", "png", "gif", "tiff", "bmp" };
 
-            string[] filesInDirectory = Directory.GetDirectories(searchFolder);
-            List<string> filesFound = new List<string>();
+            var filesInDirectory = Directory.GetDirectories(searchFolder);
+            var filesFound = new List<string>();
             var searchOption = isRecursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
-            foreach (string subfolder in filesInDirectory)
+            foreach (var subfolder in filesInDirectory)
             {
                 filesFound.AddRange(Directory.GetFiles(subfolder, string.Format("*.{0}", filters), searchOption).Take(filesFromEachSubFolder));
             }
@@ -41,8 +42,8 @@ namespace AutomaticImageClassification.Utilities
 
         public static void WriteFile<T>(string fileToWrite,List<T[]> contentList )
         {
-            string content = "";
-            foreach (T[] feature in contentList)
+            var content = "";
+            foreach (var feature in contentList)
             {
                 content += string.Join(" ", feature);
                 content += "\r\n";
@@ -51,17 +52,42 @@ namespace AutomaticImageClassification.Utilities
             File.WriteAllText(fileToWrite, content,Encoding.UTF8);
         }
 
-        public static List<double[]> ReadFileToList(string path)
+        public static void WriteFile<T>(string fileToWrite, List<T> contentList)
         {
-            return ReadFileToArray(path).ToList();
+            var content = "";
+            foreach (var feature in contentList)
+            {
+                content += string.Join(" ", feature);
+                content += @"\r\n";
+            }
+            // Write the string to a file.
+            File.WriteAllText(fileToWrite, content, Encoding.UTF8);
         }
 
-        public static double[][] ReadFileToArray(string path)
+        public static List<T[]> ReadFileToListArrayList<T>(string path)
+        {
+            return ReadFileTo2DArray<T>(path).ToList();
+        }
+
+        public static List<T> ReadFileToList<T>(string path)
+        {
+            return ReadFileTo1DArray<T>(path).ToList();
+        }
+
+        public static T[][] ReadFileTo2DArray<T>(string path)
         {
             return File.ReadAllLines(path)
-                .Select(l => l.Split(new []{' '},StringSplitOptions.RemoveEmptyEntries).Select(i => double.Parse(i, CultureInfo.InvariantCulture)).ToArray())
+                .Select(l => l.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(i => (T)Convert.ChangeType(i, typeof(T))).ToArray())
                 .ToArray();
-            
         }
+
+        public static T[] ReadFileTo1DArray<T>(string path)
+        {
+
+            return File.ReadAllLines(path).Select(i => (T)Convert.ChangeType(i, typeof(T))).ToArray();
+        }
+
+
+
     }
 }

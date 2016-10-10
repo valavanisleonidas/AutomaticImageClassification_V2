@@ -88,7 +88,7 @@ namespace AutomaticImageClassificationTests
 
             IFeatures colorCorrelo = new ColorCorrelogram();
             double[] featu = colorCorrelo.ExtractHistogram(imagePath);
-            Files.WriteFile(@"C:\Users\l.valavanis\Desktop\colorCorre.txt", new List<double[]> { featu });
+            Files.WriteFile(@"C:\Users\l.valavanis\Desktop\colorCorre.txt", new List<double[]> {featu});
         }
 
         [TestMethod]
@@ -121,7 +121,7 @@ namespace AutomaticImageClassificationTests
             ICluster cluster = new LireKmeans();
 
             bool isDistinctColors = true;
-            int numOfcolors = 50;
+            int numOfcolors = 10;
             int resize = 256;
             int patches = 64;
             int sampleImages = 5;
@@ -147,7 +147,7 @@ namespace AutomaticImageClassificationTests
             {
                 Arrays.GetDistinctColors(ref colors);
             }
-            
+
             List<double[]> centers = cluster.CreateClusters(colors, numOfcolors);
             centers = centers.OrderByDescending(b => b[0]).ToList();
 
@@ -229,10 +229,10 @@ namespace AutomaticImageClassificationTests
 
             #endregion
 
-            
+
             #region cluster lboc and create dictionary
 
-            IFeatures lboc = new Lboc(resize, patches, colorspace,palette,boctree);
+            IFeatures lboc = new Lboc(resize, patches, colorspace, palette, boctree);
 
             List<double[]> lbocColors = new List<double[]>();
             foreach (var img in sampleImgs)
@@ -255,7 +255,7 @@ namespace AutomaticImageClassificationTests
 
             #endregion
 
-            lboc = new Lboc(resize,patches, lbocCenters, colorspace,palette,boctree,lboctree);
+            lboc = new Lboc(resize, patches, lbocCenters, colorspace, palette, boctree, lboctree);
 
             //Feature extraction BOC
             List<double[]> trainFeatures = new List<double[]>();
@@ -338,5 +338,51 @@ namespace AutomaticImageClassificationTests
 
         }
 
+        [TestMethod]
+        public void CanCreateTfidf()
+        {
+            bool removeStopwords = false;
+            bool UseTfidf = true;
+
+            string file = @"Data\testFiguresTest.xml";
+            Figures images = XmlFiguresReader.ReadXml(file);
+
+            #region train set 
+
+            TfidfApproach trainTfidfApproach = new TfidfApproach(removeStopwords, UseTfidf);
+            trainTfidfApproach.ParseData(images.FigureList, true);
+
+            TfIdf tfidf = new TfIdf(trainTfidfApproach);
+            foreach (var image in images.FigureList.Select(a => a.Caption))
+            {
+                double[] vec = tfidf.ExtractHistogram(image);
+            }
+
+            #endregion
+
+            string testfile = @"Data\testFiguresTest.xml";
+            Figures testImages = XmlFiguresReader.ReadXml(testfile);
+
+            #region test set 
+
+            TfidfApproach testTfidfApproach = new TfidfApproach(removeStopwords, UseTfidf);
+            testTfidfApproach.ParseData(testImages.FigureList, false);
+
+            TfIdf testtTfIdf = new TfIdf(testTfidfApproach);
+            foreach (var image in testImages.FigureList.Select(a => a.Caption))
+            {
+                double[] vec = testtTfIdf.ExtractHistogram(image);
+            }
+
+            #endregion
+
+        }
+
+        [TestMethod]
+        public void CanCreateEmbeddings()
+        {
+
+
+        }
     }
 }

@@ -2,21 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AutomaticImageClassification.Utilities;
-using ikvm.extensions;
 
 namespace AutomaticImageClassification.Feature
 {
     public class TfIdf : IFeatures
     {
         private TfidfApproach _tfidf;
+        private  Dictionary<string, double> _wordIdf = new Dictionary<string, double>();
+
+        public TfIdf(TfidfApproach tfidfApproach)
+        {
+            _tfidf = tfidfApproach;
+        }
 
         public double[] ExtractHistogram(string input)
         {
             var tfidfvector = new double[_tfidf.AllTerms.Count];
 
-            var tokenizedSentence = input.replaceAll("[\\W&&[^\\s]]", "").split("\\W+");   //to get individual terms
+            //get terms of sentence
+            var tokenizedSentence = Regex.Split(input.Replace(@"[\W&&[^\s]]", ""), @"\W+"); 
 
             //for each term
             foreach (var term in tokenizedSentence)
@@ -27,32 +34,31 @@ namespace AutomaticImageClassification.Feature
                     continue;
 
                 //if term exists in all terms then continue else discard word
-                var index = _tfidf.AllTerms.IndexOf(term);
+                var index = _tfidf.AllTerms.IndexOf(termLower);
                 if (index == -1)
                 {
                     //System.out.println("Word "+ term +" does not exist in sentence "+ docTermsArray.toString());
                     continue;
                 }
 
-                var tf = Normalization.ComputeTf(tokenizedSentence, term); //term frequency
+                var tf = Normalization.ComputeTf<double>(tokenizedSentence, termLower); //term frequency
                 var finalScore = tf; //term frequency inverse document frequency   
                 if (_tfidf.UseTfidf)
                 {
                     double idf; //inverse document frequency
-                    if (_tfidf.WordIdf.ContainsKey(term))
+                    if (_wordIdf.ContainsKey(termLower))
                     {
-                        _tfidf.WordIdf.TryGetValue(term,out idf);
+                        //get from dictionary
+                        _wordIdf.TryGetValue(termLower, out idf);
                     }
                     else
                     {
-                        //calculate idf
-                        idf = Normalization.ComputeIdf(_tfidf.TermsDocsArray, term);
-                        _tfidf.WordIdf.Add(term, idf);
+                        //calculate idf and add to dictionary
+                        idf = Normalization.ComputeIdf<double>(_tfidf.TermsDocsArray, termLower);
+                        _wordIdf.Add(termLower, idf);
                     }
                     finalScore = tf * idf;
                 }
-
-                //System.out.print*/ln("term " + terms + " was FOUND in document: " + counter + " with TFIDF : " + tfidf + " tf :" + tf + " idf :" + idf);
                 tfidfvector[index] = finalScore;
             }
             return tfidfvector;
@@ -76,7 +82,6 @@ namespace AutomaticImageClassification.Feature
         //stopwords to be removed
         public List<string> Stopwords = new List<string>();
 
-        public Dictionary<string, double> WordIdf = new Dictionary<string, double>();
 
         public bool RemoveStopwords = true;
         public bool UseTfidf = true;
@@ -91,19 +96,18 @@ namespace AutomaticImageClassification.Feature
 
         public void ParseData(List<Figure> images, bool isTrainSet)
         {
-            TermsDocsArray = new List<string[]>();
-            TfidfDocsVector = new List<double[]>();
-            WordIdf = new Dictionary<string, double>();
             
-
             //each row contains one doc (image)    	
             foreach (var figurese in images)
             {
-                string doc = figurese.Title + " " + figurese.Caption;
-                string[] tokenizedTerms = doc.replaceAll("[\\W&&[^\\s]]", "").split("\\W+"); //to get individual terms
+                //var doc = figurese.Title + " " + figurese.Caption;
+                var doc = figurese.Caption;
+                
+                //get terms of sentence
+                var tokenizedTerms = Regex.Split(doc.Replace(@"[\W&&[^\s]]", ""), @"\W+");
 
                 TermsDocsArray.Add(tokenizedTerms);
-                //if test dont add to allterms
+                //if test, dont add terms to allterms array
                 if (!isTrainSet)
                     continue;
 

@@ -44,7 +44,7 @@ namespace AutomaticImageClassificationTests
         public void CanReadFile()
         {
             string path = @"Data\train1.txt";
-            var result = Files.ReadFileToArray(path);
+            var result = Files.ReadFileToListArrayList<double[]>(path);
             string fileToWrite = @"Data\testpalete.txt";
             Files.WriteFile(fileToWrite, result.ToList());
 
@@ -92,7 +92,7 @@ namespace AutomaticImageClassificationTests
         public void CanReadXml()
         {
             string file = @"Data\test_figures.xml";
-            Figures images = XmlReaderClass.ReadXml(file);
+            Figures images = XmlFiguresReader.ReadXml(file);
         }
 
 

@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace AutomaticImageClassification.Utilities
 {
-    public class XmlReaderClass
+    public class XmlFiguresReader
     {
         public static Figures ReadXml(string file)
         {

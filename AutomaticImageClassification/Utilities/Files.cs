@@ -25,7 +25,7 @@ namespace AutomaticImageClassification.Utilities
             return filesFound.ToArray();
         }
         //default for pictures
-        public static string[] GetFilesFrom(string searchFolder,int filesFromEachSubFolder, string[] filters = null, bool isRecursive = true)
+        public static string[] GetFilesFrom(string searchFolder, int filesFromEachSubFolder, string[] filters = null, bool isRecursive = true)
         {
             if (filters == null)
                 filters = new[] { "jpg", "jpeg", "png", "gif", "tiff", "bmp" };
@@ -40,28 +40,37 @@ namespace AutomaticImageClassification.Utilities
             return filesFound.ToArray();
         }
 
-        public static void WriteFile<T>(string fileToWrite,List<T[]> contentList )
+        public static void WriteFile<T>(string fileToWrite, List<T[]> contentList)
         {
+            bool encoderShouldEmitUTF8Identifier = false;
             var content = "";
             foreach (var feature in contentList)
             {
                 content += string.Join(" ", feature);
                 content += "\r\n";
             }
-            // Write the string to a file.
-            File.WriteAllText(fileToWrite, content,Encoding.UTF8);
+
+            using (StreamWriter sw = new StreamWriter(File.Open(fileToWrite, FileMode.Create), new UTF8Encoding(encoderShouldEmitUTF8Identifier)))
+            {
+                sw.WriteLine(content);
+            }
+
         }
 
         public static void WriteFile<T>(string fileToWrite, List<T> contentList)
         {
+            bool encoderShouldEmitUTF8Identifier = false;
             var content = "";
             foreach (var feature in contentList)
             {
                 content += string.Join(" ", feature);
-                content += @"\r\n";
+                content += "\r\n";
             }
-            // Write the string to a file.
-            File.WriteAllText(fileToWrite, content, Encoding.UTF8);
+
+            using (StreamWriter sw = new StreamWriter(File.Open(fileToWrite, FileMode.Create), new UTF8Encoding(encoderShouldEmitUTF8Identifier)))
+            {
+                sw.WriteLine(content);
+            }
         }
 
         public static List<T[]> ReadFileToListArrayList<T>(string path)
@@ -83,7 +92,6 @@ namespace AutomaticImageClassification.Utilities
 
         public static T[] ReadFileTo1DArray<T>(string path)
         {
-
             return File.ReadAllLines(path).Select(i => (T)Convert.ChangeType(i, typeof(T))).ToArray();
         }
 

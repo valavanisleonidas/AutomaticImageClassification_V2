@@ -16,8 +16,9 @@ namespace AutomaticImageClassification.Classifiers
         private SVMModel _model;
         private ClassifierResults _results = new ClassifierResults();
         private string _filePath;
-        private int nFold = 10;
+        private const int _nFold = 10;
         private double _cvAccuracy = 0;
+
         public LibSvm()
         {
             _parameter.Type = SVMType.C_SVC;
@@ -70,7 +71,7 @@ namespace AutomaticImageClassification.Classifiers
             double bestGamma = -1;
 
             double[] costing = { 0.1, 0.25, 0.5, 1, 2, 4, 8, 16, 32 };
-            double[] Gamma = { 0.001, 0.01, 0.1, 0.5, 1, 2, 4, 8, 16, 32 };
+            double[] Gamma   = { 0.1, 0.5, 1, 2, 4, 8, 16, 32 };
 
             foreach (var cost in costing)
             {
@@ -81,7 +82,7 @@ namespace AutomaticImageClassification.Classifiers
 
                     // Do cross validation to check this parameter set for the dataset
                     double[] crossValidationResults; // output labels
-                    trainSet.CrossValidation(_parameter, nFold, out crossValidationResults);
+                    trainSet.CrossValidation(_parameter, _nFold, out crossValidationResults);
 
                     // Evaluate the cross validation result
                     double crossValidationAccuracy = trainSet.EvaluateClassificationProblem(crossValidationResults);

@@ -14,7 +14,7 @@ namespace AutomaticImageClassification.Feature
     public class Boc : IFeatures
     {
         private int[][] _palette;
-        private int _resize, _patches;
+        private int _resize = 256, _patches = 64;
         private ColorConversion.ColorSpace _cs;
         private IKdTree _tree;
 
@@ -25,6 +25,18 @@ namespace AutomaticImageClassification.Feature
             _cs = cs;
             _palette = palette;
             _tree = tree;
+        }
+
+        public Boc(ColorConversion.ColorSpace cs, int[][] palette, IKdTree tree)
+        {
+            _cs = cs;
+            _palette = palette;
+            _tree = tree;
+        }
+
+        public Boc(ColorConversion.ColorSpace cs)
+        {
+            _cs = cs;
         }
 
         public Boc(int resize, int patches, ColorConversion.ColorSpace cs)
@@ -52,7 +64,7 @@ namespace AutomaticImageClassification.Feature
                     var color = new Color(img.getRGB(x, y));
                     int[] cl = ColorConversion.convertFromRGB(_cs, color.getRed(), color.getGreen(), color.getBlue());
 
-                    int indx = _tree?.SearchTree(new double[] { cl[0], cl[1], cl[2] }) 
+                    int indx = _tree?.SearchTree(new double[] { cl[0], cl[1], cl[2] })
                         ?? ImageProcessor.getClosestColorIndx(_palette, cl);
 
                     vector[indx]++;
@@ -72,7 +84,7 @@ namespace AutomaticImageClassification.Feature
             {
                 colors.Add(new double[] { domColor[0], domColor[1], domColor[2] });
             }
-            
+
 
             return colors;
         }

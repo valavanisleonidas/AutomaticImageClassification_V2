@@ -88,7 +88,7 @@ namespace AutomaticImageClassificationTests
 
             IFeatures colorCorrelo = new ColorCorrelogram();
             double[] featu = colorCorrelo.ExtractHistogram(imagePath);
-            Files.WriteFile(@"C:\Users\l.valavanis\Desktop\colorCorre.txt", new List<double[]> {featu});
+            Files.WriteFile(@"C:\Users\l.valavanis\Desktop\colorCorre.txt", new List<double[]> { featu });
         }
 
         [TestMethod]
@@ -111,7 +111,6 @@ namespace AutomaticImageClassificationTests
             Files.WriteFile(@"C:\Users\l.valavanis\Desktop\sift.txt", centroids);
         }
 
-
         //TODO THEMA OTAN GRAFW DECIMAL KAI DIAVAZW ME TELEIES KAI KOMMATA
         //TODO cannot read Dictionary
         //TODO NEED TO CHECK vsexecution problem.exe PROBLEM
@@ -120,25 +119,26 @@ namespace AutomaticImageClassificationTests
         {
             ICluster cluster = new LireKmeans();
 
-            bool isDistinctColors = true;
-            int numOfcolors = 10;
-            int resize = 256;
-            int patches = 64;
-            int sampleImages = 5;
-            ColorConversion.ColorSpace colorspace = ColorConversion.ColorSpace.RGB;
-            string paleteFile = @"Data\Palettes\boc_paleteLire.txt";
-            string trainFile = @"Data\Features\boc_train.txt";
-            string testFile = @"Data\Features\boc_test.txt";
+            const bool isDistinctColors = true;
+            const int numOfcolors = 512;
+            const int sampleImages = 10;
+            var colorspace = ColorConversion.ColorSpace.RGB;
+            const string paleteFile = @"Data\Palettes\boc_paleteLire.txt";
+            const string trainFile = @"Data\Features\boc_train.txt";
+            const string testFile = @"Data\Features\boc_test.txt";
+            const string trainLabelsFile = @"Data\Features\boc_labels_train.txt";
+            const string testLabelsFile = @"Data\Features\boc_labels_test.txt";
 
-            string baseFolder = @"C:\Users\l.valavanis\Desktop\personal\dbs\Clef2013\Compound";
-            string trainPath = Path.Combine(baseFolder, "Train");
-            string testPath = Path.Combine(baseFolder, "Test");
+
+            const string baseFolder = @"C:\Users\l.valavanis\Desktop\personal\dbs\Clef2013\Compound";
+            var trainPath = Path.Combine(baseFolder, "Train");
+            var testPath = Path.Combine(baseFolder, "Test");
 
             //Create Palette
             var sampleImgs = Files.GetFilesFrom(trainPath, sampleImages);
-            IFeatures boc = new Boc(resize, patches, colorspace);
+            IFeatures boc = new Boc(colorspace);
 
-            List<double[]> colors = new List<double[]>();
+            var colors = new List<double[]>();
             foreach (var img in sampleImgs)
             {
                 colors.AddRange(boc.ExtractDescriptors(img));
@@ -158,24 +158,32 @@ namespace AutomaticImageClassificationTests
             tree.CreateTree(centers);
 
             int[][] palette = Arrays.ConvertDoubleListToIntArray(ref centers);
-            boc = new Boc(resize, colorspace, palette, tree);
+            boc = new Boc(colorspace, palette, tree);
 
             //Feature extraction BOC
-            List<double[]> trainFeatures = new List<double[]>();
+            var trainFeatures = new List<double[]>();
+            var trainLabels = new List<double>();
             foreach (var train in Files.GetFilesFrom(trainPath))
             {
                 double[] vec = boc.ExtractHistogram(train);
+
+                trainLabels.Add( Convert.ToDouble(train.Split('\\')[train.Split('\\').Length - 2]) + 1 );
                 trainFeatures.Add(vec);
             }
             Files.WriteFile(trainFile, trainFeatures);
+            Files.WriteFile(trainLabelsFile, trainLabels);
 
-            List<double[]> testFeatures = new List<double[]>();
+            var testFeatures = new List<double[]>();
+            var testLabels = new List<double>();
             foreach (var test in Files.GetFilesFrom(testPath))
             {
                 double[] vec = boc.ExtractHistogram(test);
+
+                testLabels.Add(Convert.ToDouble(test.Split('\\')[test.Split('\\').Length - 2]) + 1 );
                 testFeatures.Add(vec);
             }
             Files.WriteFile(testFile, testFeatures);
+            Files.WriteFile(testLabelsFile, testLabels);
 
 
         }

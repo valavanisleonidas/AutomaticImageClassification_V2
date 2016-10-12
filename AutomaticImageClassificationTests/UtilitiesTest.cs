@@ -14,13 +14,14 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void CanReadAllImagesFromFolder()
         {
-            string searchFolder = @"C:\Users\l.valavanis\Desktop\Leo Files\DBs\clef2016\subfigure\SubfigureClassificationTraining2016_Enriched";
+            var searchFolder = @"C:\Users\l.valavanis\Desktop\personal\dbs\Clef2013\Compound";
 
             string[] files = Files.GetFilesFrom(searchFolder);
 
             Console.WriteLine(files.Length);
             foreach (string file in files)
             {
+                double category = Convert.ToDouble(file.Split('\\')[file.Split('\\').Length - 2]);
                 Console.WriteLine(file);
             }
 
@@ -49,7 +50,6 @@ namespace AutomaticImageClassificationTests
             Files.WriteFile(fileToWrite, result.ToList());
 
         }
-
 
         [TestMethod]
         public void TestNormalization()

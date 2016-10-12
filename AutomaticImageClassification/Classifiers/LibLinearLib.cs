@@ -11,7 +11,7 @@ namespace AutomaticImageClassification.Classifiers
     {
 
         private Model _model = new Model();
-        private ClassifierResults _results = new ClassifierResults();
+        public ClassifierResults _results = new ClassifierResults();
         private Parameters _params = new Parameters();
 
         public LibLinearLib()
@@ -94,7 +94,7 @@ namespace AutomaticImageClassification.Classifiers
                 //only 0 and 2 support automatic cross validation
                 if (!_params.IsManualCv && (_params.SolverType == 0 || _params.SolverType == 2))
                 {
-                    string parameters = "-s " + _params.SolverType + " -B " + _params.BiasMultiplier + " -C 10";
+                    var parameters = "-s " + _params.SolverType + " -B " + _params.BiasMultiplier + " -C 10";
 
                     //automatic cross validation
                     double[] results = CrossValidation(ref features, ref labels, parameters);

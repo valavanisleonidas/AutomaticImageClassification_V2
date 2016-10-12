@@ -169,6 +169,7 @@
     <Compile Include="Cluster\LireKmeans.cs" />
     <Compile Include="Cluster\VlFeatEm.cs" />
     <Compile Include="Cluster\VlFeatKmeans.cs" />
+    <Compile Include="Evaluation\Measures.cs" />
     <Compile Include="Feature\Boc.cs" />
     <Compile Include="Feature\ColorCorrelogram.cs" />
     <Compile Include="Feature\JavaSift.cs" />

@@ -54,8 +54,6 @@ namespace AutomaticImageClassificationTests
 
         }
 
-
-
         [TestMethod]
         public void CanClusterAccordKmeans()
         {

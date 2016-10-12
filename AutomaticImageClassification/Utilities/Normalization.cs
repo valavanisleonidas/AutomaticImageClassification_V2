@@ -20,22 +20,52 @@ namespace AutomaticImageClassification.Utilities
 
             return arr;
         }
+        
+        public static void SqrtList<T>(ref List<T[]> list)
+        {
+            for (var i = 0; i < list.Count; i++)
+            {
+                var feature = list[i];
+                list[i] = SqrtArray(ref feature);
+            }
+        }
 
         public static T[] SqrtArray<T>(ref T[] vector)
         {
             for (var i = 0; i < vector.Length; i++)
             {
                 dynamic feature = vector[i];
-                if (feature != 0)
-                    vector[i] = Math.Sqrt(feature);
+                vector[i] = Math.Sqrt(feature);
             }
             return vector;
+        }
+
+        //computes L1 norm of list
+        public static void ComputeL1Features<T>(ref List<T[]> list)
+        {
+            for (var i = 0; i < list.Count; i++)
+            {
+                var features = list[i];
+                var norm = ComputeL1Norm(ref features);
+                list[i] = NormalizeArray(ref features, ref norm);
+            }
+        }
+
+        //computes L2 norm of list
+        public static void ComputeL2Features<T>(ref List<T[]> list)
+        {
+            for (var i = 0; i < list.Count; i++)
+            {
+                var features = list[i];
+                var norm = ComputeL2Norm(ref features);
+                list[i] = NormalizeArray(ref features, ref norm);
+            }
         }
 
         //computes L1 norm of double array
         public static T ComputeL1Norm<T>(ref T[] imgVocVector)
         {
-            //sum of vector ( sum += imgVocVector[i]; ) 
+            //sum of vector ( sum += list[i]; ) 
             return imgVocVector.Aggregate<T, dynamic>(0, (current, feature) => current + feature);
         }
 
@@ -52,11 +82,11 @@ namespace AutomaticImageClassification.Utilities
         {
             for (var i = 0; i < imgVocVector.Length; i++)
             {
-                dynamic feature = imgVocVector[i];
-                if (feature != 0)
-                {
-                    imgVocVector[i] = feature / norm;
-                }
+                if (Equals(0, norm))
+                    continue;
+
+                imgVocVector[i] = (dynamic)imgVocVector[i] / norm;
+
             }
             return imgVocVector;
         }

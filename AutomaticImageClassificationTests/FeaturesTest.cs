@@ -163,11 +163,16 @@ namespace AutomaticImageClassificationTests
             //Feature extraction BOC
             var trainFeatures = new List<double[]>();
             var trainLabels = new List<double>();
+
+            Dictionary<string, int> mapping = Files.MapCategoriesToNumbers(trainPath);
             foreach (var train in Files.GetFilesFrom(trainPath))
             {
                 double[] vec = boc.ExtractHistogram(train);
+                
+                int cat;
+                mapping.TryGetValue(train.Split('\\')[train.Split('\\').Length - 2], out cat);
 
-                trainLabels.Add( Convert.ToDouble(train.Split('\\')[train.Split('\\').Length - 2]) + 1 );
+                trainLabels.Add(cat);
                 trainFeatures.Add(vec);
             }
             Files.WriteFile(trainFile, trainFeatures);
@@ -179,7 +184,10 @@ namespace AutomaticImageClassificationTests
             {
                 double[] vec = boc.ExtractHistogram(test);
 
-                testLabels.Add(Convert.ToDouble(test.Split('\\')[test.Split('\\').Length - 2]) + 1 );
+                int cat;
+                mapping.TryGetValue(test.Split('\\')[test.Split('\\').Length - 2], out cat);
+
+                testLabels.Add(cat);
                 testFeatures.Add(vec);
             }
             Files.WriteFile(testFile, testFeatures);
@@ -193,28 +201,26 @@ namespace AutomaticImageClassificationTests
         {
             ICluster cluster = new LireKmeans();
 
-            bool isDistinctColors = true;
-            int numOfcolors = 10;
-            int numOfVisualWords = 10;
+            const bool isDistinctColors = true;
+            const int numOfcolors = 50;
+            const int numOfVisualWords = 1024;
 
-            int resize = 50;
-            int patches = 25;
-            int sampleImages = 5;
+            const int sampleImages = 10;
             ColorConversion.ColorSpace colorspace = ColorConversion.ColorSpace.RGB;
-            string paleteFile = @"Data\Palettes\lboc_paleteLire.txt";
-            string dictionaryFile = @"Data\Dictionaries\lboc_dictionaryLire.txt";
+            const string paleteFile = @"Data\Palettes\lboc_paleteLire.txt";
+            const string dictionaryFile = @"Data\Dictionaries\lboc_dictionaryLire.txt";
 
-            string trainFile = @"Data\Features\lboc_train.txt";
-            string testFile = @"Data\Features\lboc_test.txt";
+            string trainFile = @"Data\Features\lboc_"+ numOfcolors + "_"+ numOfVisualWords + "_train.txt";
+            string testFile = @"Data\Features\lboc_" + numOfcolors + "_" + numOfVisualWords + "_test.txt";
 
-            string baseFolder = @"C:\Users\l.valavanis\Desktop\personal\dbs\Clef2013\Compound";
+            const string baseFolder = @"C:\Users\l.valavanis\Desktop\personal\dbs\Clef2013\Compound";
             string trainPath = Path.Combine(baseFolder, "Train");
             string testPath = Path.Combine(baseFolder, "Test");
 
             #region cluster boc
 
             var sampleImgs = Files.GetFilesFrom(trainPath, sampleImages);
-            IFeatures _boc = new Boc(resize, patches, colorspace);
+            IFeatures _boc = new Boc(colorspace);
 
             List<double[]> bocColors = new List<double[]>();
             foreach (var img in sampleImgs)
@@ -240,7 +246,7 @@ namespace AutomaticImageClassificationTests
 
             #region cluster lboc and create dictionary
 
-            IFeatures lboc = new Lboc(resize, patches, colorspace, palette, boctree);
+            IFeatures lboc = new Lboc(colorspace, palette, boctree);
 
             List<double[]> lbocColors = new List<double[]>();
             foreach (var img in sampleImgs)
@@ -263,7 +269,7 @@ namespace AutomaticImageClassificationTests
 
             #endregion
 
-            lboc = new Lboc(resize, patches, lbocCenters, colorspace, palette, boctree, lboctree);
+            lboc = new Lboc(lbocCenters, colorspace, palette, boctree, lboctree);
 
             //Feature extraction BOC
             List<double[]> trainFeatures = new List<double[]>();
@@ -275,6 +281,7 @@ namespace AutomaticImageClassificationTests
             Files.WriteFile(trainFile, trainFeatures);
 
             List<double[]> testFeatures = new List<double[]>();
+            
             foreach (var test in Files.GetFilesFrom(testPath))
             {
                 double[] vec = lboc.ExtractHistogram(test);

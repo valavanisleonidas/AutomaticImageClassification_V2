@@ -40,36 +40,56 @@ namespace AutomaticImageClassification.Utilities
             return filesFound.ToArray();
         }
 
+        public static string[] GetSubFolders(string path)
+        {
+            return Directory.GetDirectories(path).Select(a => a.Remove(0, path.Length).Replace("\\", "")).ToArray();
+        }
+
+        public static Dictionary<string, int> MapCategoriesToNumbers(string path)
+        {
+            return MapCategoriesToNumbers(GetSubFolders(path));
+        }
+
+        public static Dictionary<string, int> MapCategoriesToNumbers(string[] subfolders)
+        {
+            var categoriesNumbers = new Dictionary<string, int>();
+            for (var i = 0; i < subfolders.Length; i++)
+            {
+                categoriesNumbers.Add(subfolders[i], i + 1);
+            }
+            return categoriesNumbers;
+        }
+
         public static void WriteFile<T>(string fileToWrite, List<T[]> contentList)
         {
-            bool encoderShouldEmitUTF8Identifier = false;
+            var encoderShouldEmitUtf8Identifier = false;
             var content = "";
             foreach (var feature in contentList)
             {
                 content += string.Join(" ", feature);
-                content += "\r\n";
+                content += Environment.NewLine;
             }
 
-            using (StreamWriter sw = new StreamWriter(File.Open(fileToWrite, FileMode.Create), new UTF8Encoding(encoderShouldEmitUTF8Identifier)))
+            using (StreamWriter sw = new StreamWriter(File.Open(fileToWrite, FileMode.Create), new UTF8Encoding(encoderShouldEmitUtf8Identifier)))
             {
-                sw.WriteLine(content);
+                sw.Write(content);
             }
 
         }
 
         public static void WriteFile<T>(string fileToWrite, List<T> contentList)
         {
-            bool encoderShouldEmitUTF8Identifier = false;
+            var encoderShouldEmitUtf8Identifier = false;
             var content = "";
             foreach (var feature in contentList)
             {
                 content += string.Join(" ", feature);
-                content += "\r\n";
+                content += Environment.NewLine;
             }
 
-            using (StreamWriter sw = new StreamWriter(File.Open(fileToWrite, FileMode.Create), new UTF8Encoding(encoderShouldEmitUTF8Identifier)))
+            using (StreamWriter sw = new StreamWriter(File.Open(fileToWrite, FileMode.Create), new UTF8Encoding(encoderShouldEmitUtf8Identifier)))
             {
-                sw.WriteLine(content);
+                sw.Write(content);
             }
         }
 
@@ -94,8 +114,6 @@ namespace AutomaticImageClassification.Utilities
         {
             return File.ReadAllLines(path).Select(i => (T)Convert.ChangeType(i, typeof(T))).ToArray();
         }
-
-
-
+        
     }
 }

@@ -14,7 +14,7 @@ namespace AutomaticImageClassification.Feature
     {
 
         private int[][] _palette;
-        private int _resize, _patches;
+        private int _resize = 256, _patches = 64;
         private ColorConversion.ColorSpace _cs;
         private List<double[]> _dictionary;
         private IKdTree _boctree;
@@ -31,12 +31,28 @@ namespace AutomaticImageClassification.Feature
             _lBoctree = lBoctree;
         }
 
+        public Lboc(List<double[]> dictionary, ColorConversion.ColorSpace cs, int[][] palette, IKdTree boctree, IKdTree lBoctree)
+        {
+            _cs = cs;
+            _palette = palette;
+            _dictionary = dictionary;
+            _boctree = boctree;
+            _lBoctree = lBoctree;
+        }
+
         public Lboc(int resize, int patches, ColorConversion.ColorSpace cs, int[][] palette, IKdTree boctree)
         {
             _resize = resize;
             _cs = cs;
             _palette = palette;
             _patches = patches;
+            _boctree = boctree;
+        }
+
+        public Lboc(ColorConversion.ColorSpace cs, int[][] palette, IKdTree boctree)
+        {
+            _cs = cs;
+            _palette = palette;
             _boctree = boctree;
         }
 

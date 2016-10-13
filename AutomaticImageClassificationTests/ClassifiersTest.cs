@@ -14,11 +14,11 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void CanUseLibLinear()
         {
-            var trainDataPath = @"Data\Features\boc_train.txt";
-            var testDataPath = @"Data\Features\boc_test.txt";
+            const string trainDataPath = @"Data\Features\boc_train.txt";
+            const string testDataPath = @"Data\Features\boc_test.txt";
 
-            var trainlabelsPath = @"Data\Features\boc_labels_train.txt";
-            var testlabelsPath = @"Data\Features\boc_labels_test.txt";
+            const string trainlabelsPath = @"Data\Features\boc_labels_train.txt";
+            const string testlabelsPath = @"Data\Features\boc_labels_test.txt";
 
             var trainFeat = Files.ReadFileToListArrayList<double>(trainDataPath).ToList();
             var testFeat = Files.ReadFileToListArrayList<double>(testDataPath).ToList();
@@ -32,7 +32,7 @@ namespace AutomaticImageClassificationTests
                 Gamma = 0.5,
                 Homker = "KCHI2",
                 Kernel = "chi2",
-                Cost = 1,
+                Cost = 2,
                 BiasMultiplier = 1,
                 Solver = "liblinear",
                 SolverType = 0,
@@ -54,10 +54,10 @@ namespace AutomaticImageClassificationTests
 
 
             // APPLY KERNEL MAPPING
-            //classifier.ApplyKernelMapping(ref trainFeat);
-            //classifier.ApplyKernelMapping(ref testFeat);
+            classifier.ApplyKernelMapping(ref trainFeat);
+            classifier.ApplyKernelMapping(ref testFeat);
 
-            //classifier.GridSearch(ref trainFeat, ref trainlabels);
+            classifier.GridSearch(ref trainFeat, ref trainlabels);
             classifier.Train(ref trainFeat, ref trainlabels);
 
             classifier.Predict(ref testFeat);

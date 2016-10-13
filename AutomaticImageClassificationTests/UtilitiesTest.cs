@@ -19,12 +19,27 @@ namespace AutomaticImageClassificationTests
             string[] files = Files.GetFilesFrom(searchFolder);
 
             Console.WriteLine(files.Length);
-            foreach (string file in files)
+            foreach (var file in files)
             {
-                double category = Convert.ToDouble(file.Split('\\')[file.Split('\\').Length - 2]);
-                Console.WriteLine(file);
+                //double category = Convert.ToDouble(file.Split('\\')[file.Split('\\').Length - 2]);
+                string cat = file.Split('\\')[file.Split('\\').Length - 2] + "\\" + file.Split('\\')[file.Split('\\').Length - 1];
+                Console.WriteLine(cat);
             }
 
+        }
+
+        [TestMethod]
+        public void CanGetSubfoldersOfPath()
+        {
+            var searchFolder = @"C:\Users\l.valavanis\Desktop\personal\dbs\Clef2013\Compound\Test";
+            string[] subfolders = Files.GetSubFolders(searchFolder);
+        }
+
+        [TestMethod]
+        public void CanMapCategoriesToNumbers()
+        {
+            var searchFolder = @"C:\Users\l.valavanis\Desktop\personal\dbs\Clef2013\Compound\Test";
+            Dictionary<string, int> mapping = Files.MapCategoriesToNumbers(searchFolder);
         }
 
         [TestMethod]

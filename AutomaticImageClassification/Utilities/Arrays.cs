@@ -51,7 +51,6 @@ namespace AutomaticImageClassification.Utilities
             return list;
         }
 
-
         public static void GetDistinctColors<T>(ref List<T[]> colors)
         {
             if (colors.Count == 0)
@@ -60,8 +59,6 @@ namespace AutomaticImageClassification.Utilities
             }
             colors = colors.Distinct(new ColorsComparator<T>()).ToList();
         }
-
-
 
         public static double[] ConvertJagged2DToDouble1D(ref double[,] array)
         {
@@ -85,10 +82,10 @@ namespace AutomaticImageClassification.Utilities
 
         public static T[][] TransposeMatrix<T>(ref T[][] matrix)
         {
-            int m = matrix.Length;
-            int n = matrix[0].Length;
+            var m = matrix.Length;
+            var n = matrix[0].Length;
 
-            T[][] trasposedMatrix = new T[n][];
+            var trasposedMatrix = new T[n][];
 
             for (var x = 0; x < n; x++)
             {

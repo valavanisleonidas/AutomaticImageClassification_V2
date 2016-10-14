@@ -114,18 +114,20 @@
     <Content Include="Data\database\inner_piecepng.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Features\boc_test.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\Features\boc_train.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\Features\test_labels.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\Features\train_labels.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Data\Features\boc\boc_512_RGB_distinct_test.txt" />
+    <Content Include="Data\Features\boc\boc_512_RGB_distinct_train.txt" />
+    <Content Include="Data\test results\apply kernel mapping -g 0.5 chi2\c# liblinear_ApplyKernelMap.txt" />
+    <Content Include="Data\test results\apply kernel mapping -g 0.5 chi2\matlab liblinear_apply_kernel.txt" />
+    <Content Include="Data\test results\grid search -s 2 -B 1 -C 10\c# grid search.txt" />
+    <Content Include="Data\test results\grid search -s 2 -B 1 -C 10\matlab grid search.txt" />
+    <Content Include="Data\test results\model liblinear default params\c# liblinear_model_bias.txt" />
+    <Content Include="Data\test results\model liblinear default params\c# liblinear_model_weights.txt" />
+    <Content Include="Data\test results\model liblinear default params\matlab liblinear_model_bias.txt" />
+    <Content Include="Data\test results\model liblinear default params\matlab liblinear_model_weights.txt" />
+    <Content Include="Data\test results\results from boc test\liblinear_results_labels.txt" />
+    <Content Include="Data\test results\results from boc test\liblinear_results_probs.txt" />
+    <Content Include="Data\test results\results from boc test\matlab_liblinear_results_labels.txt" />
+    <Content Include="Data\test results\results from boc test\matlab_liblinear_results_probs.txt" />
     <Content Include="Data\textData\testFiguresTest.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

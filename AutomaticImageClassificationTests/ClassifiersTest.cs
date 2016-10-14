@@ -14,8 +14,8 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void CanUseLibLinear()
         {
-            const string trainDataPath = @"Data\Features\boc_train.txt";
-            const string testDataPath = @"Data\Features\boc_test.txt";
+            const string trainDataPath = @"Data\Features\lboc_50_1024_train.txt";
+            const string testDataPath = @"Data\Features\lboc_50_1024_test.txt";
 
             const string trainlabelsPath = @"Data\Features\boc_labels_train.txt";
             const string testlabelsPath = @"Data\Features\boc_labels_test.txt";

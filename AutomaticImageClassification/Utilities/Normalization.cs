@@ -7,6 +7,29 @@ namespace AutomaticImageClassification.Utilities
 {
     public class Normalization
     {
+        public static void array(ref List<double[]> list )
+        {
+            //var sqrtArray = list
+            //                .Select(x => x.Select(y => (dynamic)y * y).ToArray())
+            //                .ToArray();
+
+            //var columnSums = Arrays.TransposeMatrix(ref sqrtArray)
+            //    .ToList()
+            //    .Select(a => a.Sum(b=>(double)b))
+            //    .ToArray();
+            
+            //var _list = list
+            //    .Select(a => a.Select((b, i) => (dynamic)b * 1 / Math.Sqrt(columnSums[i])).ToArray())
+            //    .AsEnumerable()
+            //    .ToList();
+
+            var sqrtArray = list.Select(x => x.Select(y => y * y).ToArray()).ToArray();
+            double[] columnSums = Arrays.TransposeMatrix(ref sqrtArray).ToList().Select(a => a.Sum()).ToArray();
+
+            var final = list.Select(a => a.Select((b, i) => b * 1 / Math.Sqrt(columnSums[i])).ToArray()).ToArray();
+
+
+        }
 
         //multiply array with given weight
         public static T[] WeightArray<T>(T[] array, T weight)

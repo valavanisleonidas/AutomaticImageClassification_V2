@@ -12,6 +12,23 @@ namespace AutomaticImageClassificationTests
     public class UtilitiesTest
     {
         [TestMethod]
+        public void CanDivideWithSqrtSumPower()
+        {
+            var list = new List<double[]>();
+            list.Add(new double[] { 1, 1, 1 });
+            list.Add(new double[] { 2, 2, 2 });
+            list.Add(new double[] { 4,4,5 });
+
+            Normalization.array(ref list);
+
+            //var sqrtArray = list.Select(x => x.Select(y => y * y).ToArray()).ToArray();
+            //double[] columnSums = Arrays.TransposeMatrix(ref sqrtArray).ToList().Select(a => a.Sum()).ToArray();
+
+            //var final = list.Select(a => a.Select((b, i) => b * 1 / Math.Sqrt(columnSums[i])).ToArray()).ToArray();
+
+        }
+
+        [TestMethod]
         public void CanReadAllImagesFromFolder()
         {
             var searchFolder = @"C:\Users\l.valavanis\Desktop\personal\dbs\Clef2013\Compound";

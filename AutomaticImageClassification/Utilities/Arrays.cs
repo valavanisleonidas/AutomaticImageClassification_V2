@@ -21,12 +21,7 @@ namespace AutomaticImageClassification.Utilities
 
         public static List<T[]> ConvertArrayToList<T>(ref T[,] array)
         {
-            List<T[]> list = new List<T[]>();
-            foreach (T[] floatset in Arrays.ToJaggedArray(ref array).ToList())
-            {
-                list.Add(floatset.ToList().Select(i => i).ToArray());
-            }
-            return list;
+            return Arrays.ToJaggedArray(ref array).ToList().Select(floatset => floatset.ToList().Select(i => i).ToArray()).ToList();
         }
 
         public static List ConvertGenericListToArrayList<T>(ref List<T[]> list)
@@ -78,8 +73,7 @@ namespace AutomaticImageClassification.Utilities
 
             return null;
         }
-
-
+        
         public static T[][] TransposeMatrix<T>(ref T[][] matrix)
         {
             var m = matrix.Length;

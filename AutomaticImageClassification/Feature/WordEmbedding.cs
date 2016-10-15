@@ -69,7 +69,7 @@ namespace AutomaticImageClassification.Feature
                     //get embedding
                     _wordEmbeddings.TryGetValue(termLower, out termEmbedding);
 
-                    var tf = Normalization.ComputeTf<double>(docTerms, termLower);
+                    var tf = Normalization.ComputeTf(docTerms, termLower);
                     var finalScore = tf;
 
                     if (_useTfidf)
@@ -82,7 +82,7 @@ namespace AutomaticImageClassification.Feature
                         else
                         {
                             //calculate idf
-                            idf = Normalization.ComputeIdf<double>(_alltermDocsArray, termLower);
+                            idf = Normalization.ComputeIdf(_alltermDocsArray, termLower);
                             _wordIdf.Add(termLower, idf);
                         }
                         finalScore *= idf;

@@ -41,7 +41,7 @@ namespace AutomaticImageClassification.Feature
                     continue;
                 }
 
-                var tf = Normalization.ComputeTf<double>(tokenizedSentence, termLower); //term frequency
+                var tf = Normalization.ComputeTf(tokenizedSentence, termLower); //term frequency
                 var finalScore = tf; //term frequency inverse document frequency   
                 if (_tfidf.UseTfidf)
                 {
@@ -54,7 +54,7 @@ namespace AutomaticImageClassification.Feature
                     else
                     {
                         //calculate idf and add to dictionary
-                        idf = Normalization.ComputeIdf<double>(_tfidf.TermsDocsArray, termLower);
+                        idf = Normalization.ComputeIdf(_tfidf.TermsDocsArray, termLower);
                         _wordIdf.Add(termLower, idf);
                     }
                     finalScore = tf * idf;

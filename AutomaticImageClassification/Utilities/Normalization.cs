@@ -7,7 +7,7 @@ namespace AutomaticImageClassification.Utilities
 {
     public class Normalization
     {
-        public static void array(ref List<double[]> list )
+        public static void array(ref List<double[]> list)
         {
             //var sqrtArray = list
             //                .Select(x => x.Select(y => (dynamic)y * y).ToArray())
@@ -17,7 +17,7 @@ namespace AutomaticImageClassification.Utilities
             //    .ToList()
             //    .Select(a => a.Sum(b=>(double)b))
             //    .ToArray();
-            
+
             //var _list = list
             //    .Select(a => a.Select((b, i) => (dynamic)b * 1 / Math.Sqrt(columnSums[i])).ToArray())
             //    .AsEnumerable()
@@ -26,9 +26,52 @@ namespace AutomaticImageClassification.Utilities
             var sqrtArray = list.Select(x => x.Select(y => y * y).ToArray()).ToArray();
             double[] columnSums = Arrays.TransposeMatrix(ref sqrtArray).ToList().Select(a => a.Sum()).ToArray();
 
-            var final = list.Select(a => a.Select((b, i) => b * 1 / Math.Sqrt(columnSums[i])).ToArray()).ToArray();
+            list = list.Select(a => a.Select((b, i) => b * 1 / Math.Sqrt(columnSums[i])).ToArray()).ToList();
+        }
+        
+        public static void HellKernelMapping(ref List<double[]> list)
+        {
+            for (var i = 0; i < list.Count; i++)
+            {
+                //var sign = Sign(list[i]);
+                //var sqrtAbs = list[i].Select(a => Math.Sqrt(Math.Abs(a))).ToArray();
+                //for (var j = 0; j < sign.Length; j++)
+                //{
+                //    list[i][j] = sign[j] * sqrtAbs[j];
+                //}
+                list[i] = list[i].Select((a, index) => Sign(a) * Math.Sqrt(Math.Abs(a))).ToArray();
+            }
+        }
 
+        public static void Sign(ref List<double[]> list)
+        {
+            for (var i = 0; i < list.Count; i++)
+            {
+                list[i] = Sign(list[i]);
+            }
+        }
 
+        private static double[] Sign(double[] array)
+        {
+            for (var i = 0; i < array.Length; i++)
+            {
+                array[i] = Sign(array[i]);
+            }
+            return array;
+        }
+
+        private static double Sign(double feature)
+        {
+            if (feature > 0)
+            {
+                return 1;
+            }
+            if (feature < 0)
+            {
+                return -1;
+            }
+            //return 0
+            return feature;
         }
 
         //multiply array with given weight
@@ -43,7 +86,7 @@ namespace AutomaticImageClassification.Utilities
 
             return arr;
         }
-        
+
         public static void SqrtList<T>(ref List<T[]> list)
         {
             for (var i = 0; i < list.Count; i++)
@@ -165,9 +208,10 @@ namespace AutomaticImageClassification.Utilities
         public static T ComputeTf<T>(ref T[] array)
         {
             dynamic tf = 0;
-            foreach (dynamic feature in array)
+            foreach (var feature in array)
             {
-                if (feature != 0)
+                dynamic feat = feature;
+                if (feat != 0)
                 {
                     tf++;
                 }
@@ -181,16 +225,9 @@ namespace AutomaticImageClassification.Utilities
          * @param termToCheck : term of which tf is to be calculated.
          * @return tf(term frequency) of term termToCheck
          */
-        public static T ComputeTf<T>(string[] totalterms, string termToCheck)
+        public static double ComputeTf(string[] totalterms, string termToCheck)
         {
-            dynamic count = 0;  //to count the overall occurrence of the term termToCheck
-            foreach (var s in totalterms)
-            {
-                if (s.equalsIgnoreCase(termToCheck))
-                {
-                    count++;
-                }
-            }
+            var count = totalterms.Count(s => s.equalsIgnoreCase(termToCheck));  //to count the overall occurrence of the term termToCheck
             return Math.Sqrt(count);
             //return Math.sqrt (count / totalterms.Length );
         }
@@ -201,16 +238,9 @@ namespace AutomaticImageClassification.Utilities
          * @param termToCheck
          * @return idf(inverse document frequency) score
          */
-        public static T ComputeIdf<T>(List<string[]> allTerms, string termToCheck)
+        public static double ComputeIdf(List<string[]> allTerms, string termToCheck)
         {
-            dynamic count = 0;
-            foreach (var ss in allTerms)
-            {
-                if (ss.Any(s => s.equalsIgnoreCase(termToCheck)))
-                {
-                    count++;
-                }
-            }
+            var count = allTerms.Count(ss => ss.Any(s => s.equalsIgnoreCase(termToCheck)));
             return 1 + Math.Log(allTerms.Count / (1 + count));
         }
 

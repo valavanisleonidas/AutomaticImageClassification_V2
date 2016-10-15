@@ -17,7 +17,7 @@ namespace AutomaticImageClassificationTests
             var list = new List<double[]>();
             list.Add(new double[] { 1, 1, 1 });
             list.Add(new double[] { 2, 2, 2 });
-            list.Add(new double[] { 4,4,5 });
+            list.Add(new double[] { 4, 4, 5 });
 
             Normalization.array(ref list);
 
@@ -28,6 +28,18 @@ namespace AutomaticImageClassificationTests
 
         }
 
+        [TestMethod]
+        public void CanUseHellKernel()
+        {
+            var list = new List<double[]>();
+            list.Add(new double[] { 1, 2, 3 });
+            list.Add(new double[] { 0, 1, 2 });
+            list.Add(new double[] { 1, 2, -2 });
+
+            Normalization.HellKernelMapping(ref list);
+
+        }
+        
         [TestMethod]
         public void CanReadAllImagesFromFolder()
         {
@@ -124,7 +136,7 @@ namespace AutomaticImageClassificationTests
         public void CanReadXml()
         {
             string file = @"Data\test_figures.xml";
-            Figures images = XmlFiguresReader.ReadXml(file);
+            Figures images = XmlFiguresReader.ReadXml<Figures>(file);
         }
 
 

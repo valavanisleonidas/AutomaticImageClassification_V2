@@ -6,9 +6,9 @@ namespace AutomaticImageClassification.Utilities
 {
     public class XmlFiguresReader
     {
-        public static Figures ReadXml(string file)
+        public static T ReadXml<T>(string file)
         {
-            return XmlSerializationExtensions.FromXmlFile<Figures>(file);
+            return XmlSerializationExtensions.FromXmlFile<T>(file);
         }
     }
 

@@ -360,7 +360,7 @@ namespace AutomaticImageClassificationTests
             bool UseTfidf = true;
 
             string file = @"Data\testFiguresTest.xml";
-            Figures images = XmlFiguresReader.ReadXml(file);
+            Figures images = XmlFiguresReader.ReadXml<Figures>(file);
 
             #region train set 
 
@@ -376,7 +376,7 @@ namespace AutomaticImageClassificationTests
             #endregion
 
             string testfile = @"Data\testFiguresTest.xml";
-            Figures testImages = XmlFiguresReader.ReadXml(testfile);
+            Figures testImages = XmlFiguresReader.ReadXml<Figures>(testfile);
 
             #region test set 
 

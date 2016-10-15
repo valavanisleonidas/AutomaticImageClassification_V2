@@ -9,55 +9,27 @@ namespace AutomaticImageClassification.Utilities
     {
         public static void array(ref List<double[]> list)
         {
-            //var sqrtArray = list
-            //                .Select(x => x.Select(y => (dynamic)y * y).ToArray())
-            //                .ToArray();
-
-            //var columnSums = Arrays.TransposeMatrix(ref sqrtArray)
-            //    .ToList()
-            //    .Select(a => a.Sum(b=>(double)b))
-            //    .ToArray();
-
-            //var _list = list
-            //    .Select(a => a.Select((b, i) => (dynamic)b * 1 / Math.Sqrt(columnSums[i])).ToArray())
-            //    .AsEnumerable()
-            //    .ToList();
-
             var sqrtArray = list.Select(x => x.Select(y => y * y).ToArray()).ToArray();
             double[] columnSums = Arrays.TransposeMatrix(ref sqrtArray).ToList().Select(a => a.Sum()).ToArray();
 
-            list = list.Select(a => a.Select((b, i) => b * 1 / Math.Sqrt(columnSums[i])).ToArray()).ToList();
+            list = list
+                .Select(a => a.Select((b, i) => b != 0 ? b * 1 / Math.Sqrt(columnSums[i]) : b).ToArray())
+                .ToList();
         }
-        
+
         public static void HellKernelMapping(ref List<double[]> list)
         {
-            for (var i = 0; i < list.Count; i++)
-            {
-                //var sign = Sign(list[i]);
-                //var sqrtAbs = list[i].Select(a => Math.Sqrt(Math.Abs(a))).ToArray();
-                //for (var j = 0; j < sign.Length; j++)
-                //{
-                //    list[i][j] = sign[j] * sqrtAbs[j];
-                //}
-                list[i] = list[i].Select((a, index) => Sign(a) * Math.Sqrt(Math.Abs(a))).ToArray();
-            }
+            list = list.Select(w => w.Select((a, index) => Sign(a) * Math.Sqrt(Math.Abs(a))).ToArray()).ToList();
         }
 
         public static void Sign(ref List<double[]> list)
         {
-            for (var i = 0; i < list.Count; i++)
-            {
-                list[i] = Sign(list[i]);
-            }
+            list = list.Select(a => Sign(a)).ToList();
         }
 
         private static double[] Sign(double[] array)
         {
-            for (var i = 0; i < array.Length; i++)
-            {
-                array[i] = Sign(array[i]);
-            }
-            return array;
+            return array.Select(a => Sign(a)).ToArray();
         }
 
         private static double Sign(double feature)
@@ -244,7 +216,6 @@ namespace AutomaticImageClassification.Utilities
             return 1 + Math.Log(allTerms.Count / (1 + count));
         }
 
-        //wrapper for tfidf for list<double[]>
         public static List<T[]> Tfidf<T>(List<T[]> features)
         {
             var featuresArr = features.ToArray();

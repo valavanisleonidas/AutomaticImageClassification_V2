@@ -15,17 +15,12 @@ namespace AutomaticImageClassificationTests
         public void CanDivideWithSqrtSumPower()
         {
             var list = new List<double[]>();
-            list.Add(new double[] { 1, 1, 1 });
-            list.Add(new double[] { 2, 2, 2 });
-            list.Add(new double[] { 4, 4, 5 });
+            list.Add(new double[] { 0, 1, 1 });
+            list.Add(new double[] { 0, 2, 2 });
+            list.Add(new double[] { 0, 4, 5 });
 
             Normalization.array(ref list);
-
-            //var sqrtArray = list.Select(x => x.Select(y => y * y).ToArray()).ToArray();
-            //double[] columnSums = Arrays.TransposeMatrix(ref sqrtArray).ToList().Select(a => a.Sum()).ToArray();
-
-            //var final = list.Select(a => a.Select((b, i) => b * 1 / Math.Sqrt(columnSums[i])).ToArray()).ToArray();
-
+            
         }
 
         [TestMethod]
@@ -39,7 +34,7 @@ namespace AutomaticImageClassificationTests
             Normalization.HellKernelMapping(ref list);
 
         }
-        
+
         [TestMethod]
         public void CanReadAllImagesFromFolder()
         {
@@ -118,14 +113,10 @@ namespace AutomaticImageClassificationTests
             List<double[]> list = new List<double[]>();
             list.Add(new double[] { 5, 2, 3 });
             list.Add(new double[] { 5, 2, 3 });
-
             list.Add(new double[] { 5, 1, 3 });
-
             list.Add(new double[] { 5, 4, 3 });
             list.Add(new double[] { 5, 4, 3 });
-
             list.Add(new double[] { 2, 4, 1 });
-
             list.Add(new double[] { 3, 2, 3 });
 
             Arrays.GetDistinctColors(ref list);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using AutomaticImageClassification.Cluster;
@@ -117,6 +118,8 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void CanCreateboc()
         {
+            Stopwatch stopwatch = Stopwatch.StartNew(); //creates and start the instance of Stopwatch
+
             ICluster cluster = new LireKmeans();
 
             const bool isDistinctColors = true;
@@ -124,15 +127,19 @@ namespace AutomaticImageClassificationTests
             const int sampleImages = 10;
             var colorspace = ColorConversion.ColorSpace.RGB;
             const string paleteFile = @"Data\Palettes\boc_paleteLire.txt";
-            const string trainFile = @"Data\Features\boc_train.txt";
-            const string testFile = @"Data\Features\boc_test.txt";
+            const string trainFile = @"Data\Features\boc_Lire_Accord_train.txt";
+            const string testFile = @"Data\Features\boc_Lire_Accord_test.txt";
             const string trainLabelsFile = @"Data\Features\boc_labels_train.txt";
             const string testLabelsFile = @"Data\Features\boc_labels_test.txt";
 
 
-            const string baseFolder = @"C:\Users\l.valavanis\Desktop\personal\dbs\Clef2013\Compound";
-            var trainPath = Path.Combine(baseFolder, "Train");
-            var testPath = Path.Combine(baseFolder, "Test");
+            //const string baseFolder = @"C:\Users\l.valavanis\Desktop\personal\dbs\Clef2013\Compound";
+            //var trainPath = Path.Combine(baseFolder, "Train");
+            //var testPath = Path.Combine(baseFolder, "Test");
+
+            const string baseFolder = @"C:\Users\leonidas\Desktop\libsvm\databases\Clef2013\Compound";
+            var trainPath = Path.Combine(baseFolder, "TrainSet");
+            var testPath = Path.Combine(baseFolder, "TestSet");
 
             //Create Palette
             var sampleImgs = Files.GetFilesFrom(trainPath, sampleImages);
@@ -153,8 +160,8 @@ namespace AutomaticImageClassificationTests
 
             Files.WriteFile(paleteFile, centers);
 
-            //Create Dictionary
-            IKdTree tree = new JavaMlKdTree();
+            //Create Kd-Tree
+            IKdTree tree = new AccordKdTree(centers);
             tree.CreateTree(centers);
 
             int[][] palette = Arrays.ConvertDoubleListToIntArray(ref centers);
@@ -168,7 +175,7 @@ namespace AutomaticImageClassificationTests
             foreach (var train in Files.GetFilesFrom(trainPath))
             {
                 double[] vec = boc.ExtractHistogram(train);
-                
+
                 int cat;
                 mapping.TryGetValue(train.Split('\\')[train.Split('\\').Length - 2], out cat);
 
@@ -193,12 +200,17 @@ namespace AutomaticImageClassificationTests
             Files.WriteFile(testFile, testFeatures);
             Files.WriteFile(testLabelsFile, testLabels);
 
+            stopwatch.Stop();
+            Console.WriteLine("program run for : " + stopwatch.Elapsed.Minutes + " minutes and " + stopwatch.Elapsed.Seconds + " seconds ");
+
 
         }
 
         [TestMethod]
         public void CanCreateLboc()
         {
+            Stopwatch stopwatch = Stopwatch.StartNew(); //creates and start the instance of Stopwatch
+
             ICluster cluster = new LireKmeans();
 
             const bool isDistinctColors = true;
@@ -210,12 +222,16 @@ namespace AutomaticImageClassificationTests
             const string paleteFile = @"Data\Palettes\lboc_paleteLire.txt";
             const string dictionaryFile = @"Data\Dictionaries\lboc_dictionaryLire.txt";
 
-            string trainFile = @"Data\Features\lboc_"+ numOfcolors + "_"+ numOfVisualWords + "_train.txt";
-            string testFile = @"Data\Features\lboc_" + numOfcolors + "_" + numOfVisualWords + "_test.txt";
+            string trainFile = @"Data\Features\lboc_" + numOfcolors + "_" + numOfVisualWords + "_Lire_AccordKDTree_train.txt";
+            string testFile = @"Data\Features\lboc_" + numOfcolors + "_" + numOfVisualWords + "_Lire_AccordKDTree_test.txt";
 
-            const string baseFolder = @"C:\Users\l.valavanis\Desktop\personal\dbs\Clef2013\Compound";
-            string trainPath = Path.Combine(baseFolder, "Train");
-            string testPath = Path.Combine(baseFolder, "Test");
+            //const string baseFolder = @"C:\Users\l.valavanis\Desktop\personal\dbs\Clef2013\Compound";
+            //string trainPath = Path.Combine(baseFolder, "Train");
+            //string testPath = Path.Combine(baseFolder, "Test");
+
+            const string baseFolder = @"C:\Users\leonidas\Desktop\libsvm\databases\Clef2013\Compound";
+            var trainPath = Path.Combine(baseFolder, "TrainSet");
+            var testPath = Path.Combine(baseFolder, "TestSet");
 
             #region cluster boc
 
@@ -237,7 +253,7 @@ namespace AutomaticImageClassificationTests
 
             Files.WriteFile(paleteFile, bocCenters);
 
-            IKdTree boctree = new JavaMlKdTree();
+            IKdTree boctree = new AccordKdTree(bocCenters);
             boctree.CreateTree(bocCenters);
             int[][] palette = Arrays.ConvertDoubleListToIntArray(ref bocCenters);
 
@@ -263,7 +279,7 @@ namespace AutomaticImageClassificationTests
 
             Files.WriteFile(dictionaryFile, lbocCenters);
 
-            IKdTree lboctree = new JavaMlKdTree();
+            IKdTree lboctree = new AccordKdTree(lbocCenters);
             lboctree.CreateTree(lbocCenters);
 
 
@@ -281,7 +297,7 @@ namespace AutomaticImageClassificationTests
             Files.WriteFile(trainFile, trainFeatures);
 
             List<double[]> testFeatures = new List<double[]>();
-            
+
             foreach (var test in Files.GetFilesFrom(testPath))
             {
                 double[] vec = lboc.ExtractHistogram(test);
@@ -289,7 +305,8 @@ namespace AutomaticImageClassificationTests
             }
             Files.WriteFile(testFile, testFeatures);
 
-
+            stopwatch.Stop();
+            Console.WriteLine("program run for : " + stopwatch.Elapsed.Minutes + " minutes and " + stopwatch.Elapsed.Seconds + " seconds ");
         }
 
         [TestMethod]

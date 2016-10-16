@@ -99,6 +99,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Data\Comparison\boc\boc experiment1.txt" />
     <Content Include="Data\database\03432.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -114,8 +115,24 @@
     <Content Include="Data\database\inner_piecepng.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Features\boc\boc_512_RGB_distinct_test.txt" />
-    <Content Include="Data\Features\boc\boc_512_RGB_distinct_train.txt" />
+    <Content Include="Data\Features\boc\boc_512_RGB_distinct_Lire_AccordKDTree_test.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Features\boc\boc_512_RGB_distinct_Lire_AccordKDTree_train.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Features\boc\boc_512_RGB_distinct_Lire_JavaML_test.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Features\boc\boc_512_RGB_distinct_Lire_JavaML_train.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Features\lboc_50_1024_test.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Features\lboc_50_1024_train.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Data\test results\apply kernel mapping -g 0.5 chi2\c# liblinear_ApplyKernelMap.txt" />
     <Content Include="Data\test results\apply kernel mapping -g 0.5 chi2\matlab liblinear_apply_kernel.txt" />
     <Content Include="Data\test results\grid search -s 2 -B 1 -C 10\c# grid search.txt" />

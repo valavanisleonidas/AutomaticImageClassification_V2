@@ -32,13 +32,13 @@ namespace AutomaticImageClassificationTests
                 Gamma = 0.5,
                 Homker = "KCHI2",
                 Kernel = "chi2",
-                Cost = 2,
+                Cost = 8,
                 BiasMultiplier = 1,
                 Solver = "liblinear",
                 SolverType = 0,
                 IsManualCv = false
             };
-            
+
             //liblinear
             var classifier = new LibLinearLib(_params);
 
@@ -69,12 +69,12 @@ namespace AutomaticImageClassificationTests
             Files.WriteFile(predictedprobstext, classifier.GetPredictedProbabilities().ToList());
 
             //compute accuracy
-            int[] predictedLabels = Array.ConvertAll(classifier.GetPredictedCategories(), x => (int) x);
+            int[] predictedLabels = Array.ConvertAll(classifier.GetPredictedCategories(), x => (int)x);
             int[] labels = Array.ConvertAll(testlabels, x => (int)x);
-            
+
 
             var accuracy = AutomaticImageClassification.Evaluation.Measures.Accuracy(labels, predictedLabels);
-            Console.WriteLine(@"Accuracy is : "+accuracy);
+            Console.WriteLine(@"Accuracy is : " + accuracy);
 
         }
 
@@ -83,8 +83,8 @@ namespace AutomaticImageClassificationTests
         public void CanUseLibSvm()
         {
 
-            var trainDataPath = @"Data\Features\boc_train.txt";
-            var testDataPath = @"Data\Features\boc_test.txt";
+            var trainDataPath = @"Data\Features\lboc_50_1024_train.txt";
+            var testDataPath = @"Data\Features\lboc_50_1024_test.txt";
 
             var trainlabelsPath = @"Data\Features\boc_labels_train.txt";
             var testlabelsPath = @"Data\Features\boc_labels_test.txt";

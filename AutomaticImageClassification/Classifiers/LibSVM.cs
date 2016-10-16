@@ -71,7 +71,10 @@ namespace AutomaticImageClassification.Classifiers
             double bestGamma = -1;
 
             double[] costing = { 0.1, 0.25, 0.5, 1, 2, 4, 8, 16, 32 };
-            double[] Gamma   = { 0.1, 0.5, 1, 2, 4, 8, 16, 32 };
+            double[] Gamma = { 0.1, 0.5, 1, 2, 4, 8, 16, 32 };
+
+            //double[] costing = { 16, 32 };
+            //double[] Gamma = { 2, 4, 8, 16 };
 
             foreach (var cost in costing)
             {

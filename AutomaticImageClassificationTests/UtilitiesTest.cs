@@ -20,7 +20,7 @@ namespace AutomaticImageClassificationTests
             list.Add(new double[] { 0, 4, 5 });
 
             Normalization.array(ref list);
-            
+
         }
 
         [TestMethod]
@@ -33,6 +33,16 @@ namespace AutomaticImageClassificationTests
 
             Normalization.HellKernelMapping(ref list);
 
+            var results = new List<double[]>();
+            results.Add(new[] { 1, 1.4142135623730951, 1.7320508075688772 });
+            results.Add(new[] { 0, 1, 1.4142135623730951 });
+            results.Add(new[] { 1, 1.4142135623730951, -1.4142135623730951 });
+
+
+            for (var i = 0; i < list.Count; i++)
+            {
+                CollectionAssert.AreEqual(list[i].ToArray(), results[i].ToArray());
+            }
         }
 
         [TestMethod]
@@ -113,14 +123,19 @@ namespace AutomaticImageClassificationTests
             List<double[]> list = new List<double[]>();
             list.Add(new double[] { 5, 2, 3 });
             list.Add(new double[] { 5, 2, 3 });
+
             list.Add(new double[] { 5, 1, 3 });
+
             list.Add(new double[] { 5, 4, 3 });
             list.Add(new double[] { 5, 4, 3 });
+
             list.Add(new double[] { 2, 4, 1 });
+
             list.Add(new double[] { 3, 2, 3 });
 
             Arrays.GetDistinctColors(ref list);
 
+            Assert.AreEqual(list.Count, 5);
         }
 
         [TestMethod]

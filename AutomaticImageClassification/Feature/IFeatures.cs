@@ -10,5 +10,6 @@ namespace AutomaticImageClassification.Feature
     {
         double[] ExtractHistogram(string input);
         List<double[]> ExtractDescriptors(string input);
+        
     }
 }

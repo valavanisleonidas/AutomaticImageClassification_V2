@@ -14,8 +14,8 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void CanUseLibLinear()
         {
-            const string trainDataPath = @"Data\Features\lboc_50_1024_train.txt";
-            const string testDataPath = @"Data\Features\lboc_50_1024_test.txt";
+            const string trainDataPath = @"Data\Features\boc_VLFeatEM_Accord_train.txt";
+            const string testDataPath = @"Data\Features\boc_VLFeatEM_Accord_test.txt";
 
             const string trainlabelsPath = @"Data\Features\boc_labels_train.txt";
             const string testlabelsPath = @"Data\Features\boc_labels_test.txt";
@@ -25,7 +25,7 @@ namespace AutomaticImageClassificationTests
 
             double[] trainlabels = Files.ReadFileTo1DArray<double>(trainlabelsPath);
             double[] testlabels = Files.ReadFileTo1DArray<double>(testlabelsPath);
-
+            const bool doCrossVal = false;
 
             var _params = new Parameters
             {
@@ -43,11 +43,11 @@ namespace AutomaticImageClassificationTests
             var classifier = new LibLinearLib(_params);
 
             //normalize 
-            Normalization.SqrtList(ref trainFeat);
-            Normalization.SqrtList(ref testFeat);
+            //Normalization.SqrtList(ref trainFeat);
+            //Normalization.SqrtList(ref testFeat);
 
-            trainFeat = Normalization.Tfidf(trainFeat);
-            testFeat = Normalization.Tfidf(testFeat);
+            //trainFeat = Normalization.Tfidf(trainFeat);
+            //testFeat = Normalization.Tfidf(testFeat);
 
             Normalization.ComputeL1Features(ref trainFeat);
             Normalization.ComputeL1Features(ref testFeat);
@@ -57,7 +57,11 @@ namespace AutomaticImageClassificationTests
             classifier.ApplyKernelMapping(ref trainFeat);
             classifier.ApplyKernelMapping(ref testFeat);
 
-            classifier.GridSearch(ref trainFeat, ref trainlabels);
+            if (doCrossVal)
+            {
+                classifier.GridSearch(ref trainFeat, ref trainlabels);
+            }
+
             classifier.Train(ref trainFeat, ref trainlabels);
 
             classifier.Predict(ref testFeat);

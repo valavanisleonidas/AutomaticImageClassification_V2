@@ -10,6 +10,6 @@ namespace AutomaticImageClassification.Cluster.KDTree
     {
         void CreateTree(List<double[]> centers);
         int SearchTree(double[] centroid);
-
+        
     }
 }

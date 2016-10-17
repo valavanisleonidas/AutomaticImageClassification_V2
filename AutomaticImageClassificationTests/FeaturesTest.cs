@@ -116,19 +116,20 @@ namespace AutomaticImageClassificationTests
         //TODO cannot read Dictionary
         //TODO NEED TO CHECK vsexecution problem.exe PROBLEM
         [TestMethod]
+
         public void CanCreateboc()
         {
             Stopwatch stopwatch = Stopwatch.StartNew(); //creates and start the instance of Stopwatch
 
-            ICluster cluster = new LireKmeans();
+            ICluster cluster = new VlFeatEm();
 
             const bool isDistinctColors = true;
             const int numOfcolors = 512;
             const int sampleImages = 10;
             var colorspace = ColorConversion.ColorSpace.RGB;
-            const string paleteFile = @"Data\Palettes\boc_paleteLire.txt";
-            const string trainFile = @"Data\Features\boc_Lire_Accord_train.txt";
-            const string testFile = @"Data\Features\boc_Lire_Accord_test.txt";
+            const string paleteFile = @"Data\Palettes\boc_paleteVLFeatEM.txt";
+            string trainFile = @"Data\Features\boc_VLFeatEM_javaML_train.txt";
+            const string testFile = @"Data\Features\boc_VLFeatEM_javaML_test.txt";
             const string trainLabelsFile = @"Data\Features\boc_labels_train.txt";
             const string testLabelsFile = @"Data\Features\boc_labels_test.txt";
 
@@ -161,7 +162,8 @@ namespace AutomaticImageClassificationTests
             Files.WriteFile(paleteFile, centers);
 
             //Create Kd-Tree
-            IKdTree tree = new AccordKdTree(centers);
+            IKdTree tree = new JavaMlKdTree();
+
             tree.CreateTree(centers);
 
             int[][] palette = Arrays.ConvertDoubleListToIntArray(ref centers);
@@ -312,61 +314,68 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void CanCreateBovw()
         {
+            Stopwatch stopwatch = Stopwatch.StartNew(); //creates and start the instance of Stopwatch
+
+            const int clusterNum = 512;
+            const int sampleImages = 10;
+            ICluster cluster = new LireKmeans();
+            IFeatures feature = new AccordSurf();
+
+            const string baseFolder = @"C:\Users\leonidas\Desktop\libsvm\databases\Clef2013\Compound";
+            var trainPath = Path.Combine(baseFolder, "TrainSet");
+            var testPath = Path.Combine(baseFolder, "TestSet");
 
 
+            var trainFile = @"Data\Features\bovw_" + feature + "_Lire_JavaML_" + clusterNum + "_train.txt";
+            var testFile = @"Data\Features\bovw_" + feature + "_Lire_JavaML_" + clusterNum + "_test.txt";
 
-            //string baseFolder = @"C:\Users\l.valavanis\Desktop\Leo Files\DBs\Clef2013\Compound";
-            //string trainPath = Path.Combine(baseFolder, "Train");
-            //string testPath = Path.Combine(baseFolder, "Test");
+            var clustersFile = @"Data\Palettes\" + feature + "_" + clusterNum + "_clusters.txt";
 
-            //string trainFile = @"C:\Users\l.valavanis\Desktop\train.txt";
-            //string testFile = @"C:\Users\l.valavanis\Desktop\test.txt";
-            //int clusterNum = 10;
-            //string filename = @"C:\Users\l.valavanis\Desktop\clusters.txt";
+            #region Clustering
 
+            var sampleImgs = Files.GetFilesFrom(trainPath, sampleImages);
 
-            //ICluster cluster = new Lire_Kmeans(100000);
+            var clusters = new List<double[]>();
+            foreach (var image in sampleImgs)
+            {
+                clusters.AddRange(feature.ExtractDescriptors(image));
+            }
 
-            ////IFeatures feature = new Sift();
-            //IFeatures feature = new Phow();
-            ////Clusteriiiiiiiiiiing
+            var finalClusters = cluster.CreateClusters(clusters, clusterNum);
 
-            //var sampleImgs = Files.GetFilesFrom(trainPath, 2);
+            IKdTree tree = new JavaMlKdTree();
+            tree.CreateTree(finalClusters);
 
-            //var clusters = new java.util.ArrayList();
+            Files.WriteFile(clustersFile, finalClusters);
 
+            #endregion
 
-            //for (int i = 0; i < sampleImgs.Length; i++)
-            //{
-            //    clusters.addAll(feature.extractDescriptors(sampleImgs[i]));
-            //}
+            feature = new AccordSurf(tree, clusterNum);
 
-            //ICluster kmeans = new Lire_Kmeans(1000);
-            //var finalClusters = kmeans.CreateClusters(clusters, clusterNum);
-            //KDTree tree = Utilities.KDTreeImplementation.createTree(finalClusters);
+            #region features extraction
 
-            ////feature = new Sift(tree, clusterNum);
-            //feature = new Phow(finalClusters);
+            //Feature extraction bovw
+            List<double[]> trainFeatures = new List<double[]>();
+            foreach (var train in Files.GetFilesFrom(trainPath))
+            {
+                double[] vec = feature.ExtractHistogram(train);
+                trainFeatures.Add(vec);
+            }
+            Files.WriteFile(trainFile, trainFeatures);
 
+            //Feature extraction bovw
+            List<double[]> testFeatures = new List<double[]>();
+            foreach (var test in Files.GetFilesFrom(testPath))
+            {
+                double[] vec = feature.ExtractHistogram(test);
+                testFeatures.Add(vec);
+            }
+            Files.WriteFile(testFile, testFeatures);
+            
+            #endregion
 
-            ////Feature extraction bovw
-            //List<double[]> trainFeatures = new List<double[]>();
-            //foreach (string train in Files.GetFilesFrom(trainPath))
-            //{
-            //    double[] vec = feature.extractHistogram(train);
-            //    trainFeatures.Add(vec);
-            //}
-            //Files.WriteFile(trainFile, trainFeatures);
-
-            ////Feature extraction bovw
-            //List<double[]> testFeatures = new List<double[]>();
-            //foreach (string test in Files.GetFilesFrom(testPath))
-            //{
-            //    double[] vec = feature.extractHistogram(test);
-            //    testFeatures.Add(vec);
-            //}
-            //Files.WriteFile(testFile, testFeatures);
-
+            stopwatch.Stop();
+            Console.WriteLine("program run for : " + stopwatch.Elapsed.Minutes + " minutes and " + stopwatch.Elapsed.Seconds + " seconds ");
 
         }
 

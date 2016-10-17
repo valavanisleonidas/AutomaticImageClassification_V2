@@ -54,6 +54,8 @@ namespace AutomaticImageClassification.Feature
                 // Describe the interest points
                 SurfDescriptor.DecribeInterestPoints(ipts, false, false, iimg);
 
+               // List<double[]> aaa = ipts.Select(a => a.descriptor.Select( b => Convert.ToDouble(b) ).ToArray() ).ToList();
+
                 return ipts.ConvertAll(
                             new Converter<IPoint, double[]>(
                                 des => Array.ConvertAll(des.descriptor, x => (double)x)));

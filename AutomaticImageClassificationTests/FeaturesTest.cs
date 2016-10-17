@@ -95,7 +95,7 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void CanUseJavaSift()
         {
-            IFeatures javasift = new JavaSift();
+            IFeatures javasift = new MkLabSift();
 
             string imagePath = @"Data\einstein.jpg";
             int clusterNum = 10;
@@ -105,7 +105,7 @@ namespace AutomaticImageClassificationTests
 
             //Arrays.GetSubsetOfFeatures(ref centroids,10);
             //kdtree.CreateTree(centroids);
-            //javasift = new JavaSift(kdtree, clusterNum);
+            //javasift = new MkLabSift(kdtree, clusterNum);
 
             //double[] featu = javasift.ExtractHistogram(imagePath);
             //Files.WriteFile(@"C:\Users\l.valavanis\Desktop\sift.txt", new List<double[]> { featu });
@@ -203,9 +203,7 @@ namespace AutomaticImageClassificationTests
             Files.WriteFile(testLabelsFile, testLabels);
 
             stopwatch.Stop();
-            Console.WriteLine("program run for : " + stopwatch.Elapsed.Minutes + " minutes and " + stopwatch.Elapsed.Seconds + " seconds ");
-
-
+            Console.WriteLine("program run for : " + stopwatch.Elapsed);
         }
 
         [TestMethod]
@@ -308,7 +306,7 @@ namespace AutomaticImageClassificationTests
             Files.WriteFile(testFile, testFeatures);
 
             stopwatch.Stop();
-            Console.WriteLine("program run for : " + stopwatch.Elapsed.Minutes + " minutes and " + stopwatch.Elapsed.Seconds + " seconds ");
+            Console.WriteLine("program run for : " + stopwatch.Elapsed);
         }
 
         [TestMethod]
@@ -319,16 +317,14 @@ namespace AutomaticImageClassificationTests
             const int clusterNum = 512;
             const int sampleImages = 10;
             ICluster cluster = new LireKmeans();
-            IFeatures feature = new AccordSurf();
+            IFeatures feature = new MkLabSift();
 
             const string baseFolder = @"C:\Users\leonidas\Desktop\libsvm\databases\Clef2013\Compound";
             var trainPath = Path.Combine(baseFolder, "TrainSet");
             var testPath = Path.Combine(baseFolder, "TestSet");
 
-
-            var trainFile = @"Data\Features\bovw_" + feature + "_Lire_JavaML_" + clusterNum + "_train.txt";
-            var testFile = @"Data\Features\bovw_" + feature + "_Lire_JavaML_" + clusterNum + "_test.txt";
-
+            var trainFile = @"Data\Features\" + feature + "_Lire_JavaML_" + clusterNum + "_train.txt";
+            var testFile = @"Data\Features\" + feature + "_Lire_JavaML_" + clusterNum + "_test.txt";
             var clustersFile = @"Data\Palettes\" + feature + "_" + clusterNum + "_clusters.txt";
 
             #region Clustering
@@ -350,7 +346,7 @@ namespace AutomaticImageClassificationTests
 
             #endregion
 
-            feature = new AccordSurf(tree, clusterNum);
+            feature = new MkLabSift(tree, clusterNum);
 
             #region features extraction
 
@@ -371,11 +367,11 @@ namespace AutomaticImageClassificationTests
                 testFeatures.Add(vec);
             }
             Files.WriteFile(testFile, testFeatures);
-            
+
             #endregion
 
             stopwatch.Stop();
-            Console.WriteLine("program run for : " + stopwatch.Elapsed.Minutes + " minutes and " + stopwatch.Elapsed.Seconds + " seconds ");
+            Console.WriteLine("program run for : " + stopwatch.Elapsed);
 
         }
 

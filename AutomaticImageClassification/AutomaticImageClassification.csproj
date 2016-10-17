@@ -171,8 +171,9 @@
     <Compile Include="Evaluation\Measures.cs" />
     <Compile Include="Feature\Boc.cs" />
     <Compile Include="Feature\ColorCorrelogram.cs" />
-    <Compile Include="Feature\JavaSift.cs" />
+    <Compile Include="Feature\MkLabSift.cs" />
     <Compile Include="Feature\Lboc.cs" />
+    <Compile Include="Feature\MKLabSurf.cs" />
     <Compile Include="Feature\OpenCvSift.cs" />
     <Compile Include="Feature\IFeatures.cs" />
     <Compile Include="Feature\JOpenSurf.cs" />

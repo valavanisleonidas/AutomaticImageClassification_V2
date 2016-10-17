@@ -14,8 +14,8 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void CanUseLibLinear()
         {
-            const string trainDataPath = @"Data\Features\boc_VLFeatEM_Accord_train.txt";
-            const string testDataPath = @"Data\Features\boc_VLFeatEM_Accord_test.txt";
+            const string trainDataPath = @"Data\Features\AutomaticImageClassification.Feature.OpenCvSift_Lire_JavaML_512_train.txt";
+            const string testDataPath = @"Data\Features\AutomaticImageClassification.Feature.OpenCvSift_Lire_JavaML_512_test.txt";
 
             const string trainlabelsPath = @"Data\Features\boc_labels_train.txt";
             const string testlabelsPath = @"Data\Features\boc_labels_test.txt";
@@ -26,6 +26,11 @@ namespace AutomaticImageClassificationTests
             double[] trainlabels = Files.ReadFileTo1DArray<double>(trainlabelsPath);
             double[] testlabels = Files.ReadFileTo1DArray<double>(testlabelsPath);
             const bool doCrossVal = false;
+            
+            //normalize
+            const bool sqrt = false;
+            const bool tfidf = false;
+            const bool l1 = true;
 
             var _params = new Parameters
             {
@@ -43,15 +48,21 @@ namespace AutomaticImageClassificationTests
             var classifier = new LibLinearLib(_params);
 
             //normalize 
-            //Normalization.SqrtList(ref trainFeat);
-            //Normalization.SqrtList(ref testFeat);
-
-            //trainFeat = Normalization.Tfidf(trainFeat);
-            //testFeat = Normalization.Tfidf(testFeat);
-
-            Normalization.ComputeL1Features(ref trainFeat);
-            Normalization.ComputeL1Features(ref testFeat);
-
+            if (sqrt)
+            {
+                Normalization.SqrtList(ref trainFeat);
+                Normalization.SqrtList(ref testFeat);
+            }
+            if (tfidf)
+            {
+                trainFeat = Normalization.Tfidf(trainFeat);
+                testFeat = Normalization.Tfidf(testFeat);
+            }
+            if (l1)
+            {
+                Normalization.ComputeL1Features(ref trainFeat);
+                Normalization.ComputeL1Features(ref testFeat);
+            }
 
             // APPLY KERNEL MAPPING
             classifier.ApplyKernelMapping(ref trainFeat);

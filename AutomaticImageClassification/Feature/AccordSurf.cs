@@ -43,18 +43,12 @@ namespace AutomaticImageClassification.Feature
         {
             try
             {
-                var map = new Bitmap(input);
-
-                return _surf
-                        .ProcessImage(map)
-                        .ConvertAll(
-                                new Converter<SpeededUpRobustFeaturePoint, double[]>(descriptor => descriptor.Descriptor));
+                return _surf.ProcessImage(new Bitmap(input)).ConvertAll( descriptor => descriptor.Descriptor);
             }
             catch (Exception e)
             {
                 throw e;
             }
-
         }
     }
 }

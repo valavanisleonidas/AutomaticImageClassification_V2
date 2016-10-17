@@ -10,18 +10,18 @@ using System.Threading.Tasks;
 
 namespace AutomaticImageClassification.Feature
 {
-    public class JavaSift : IFeatures
+    public class MkLabSift : IFeatures
     {
-        private AbstractFeatureExtractor _sift = new SIFTExtractor();
+        private AbstractFeatureExtractor _sift = new RootSIFTExtractor();
         private IKdTree _tree;
         private int _clusterNum;
 
-        public JavaSift(IKdTree tree, int clusterNum)
+        public MkLabSift(IKdTree tree, int clusterNum)
         {
             _tree = tree;
             _clusterNum = clusterNum;
         }
-        public JavaSift() { }
+        public MkLabSift() { }
 
         public List<double[]> ExtractDescriptors(string input)
         {

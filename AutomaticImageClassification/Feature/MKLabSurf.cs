@@ -12,7 +12,7 @@ namespace AutomaticImageClassification.Feature
 {
     public class MkLabSurf : IFeatures
     {
-        private AbstractFeatureExtractor _surf = new SURFExtractor();
+        private AbstractFeatureExtractor _surf = new ColorSURFExtractor();
         private IKdTree _tree;
         private int _clusterNum;
 
@@ -43,6 +43,11 @@ namespace AutomaticImageClassification.Feature
             }
 
             return imgVocVector;
+        }
+
+        public override string ToString()
+        {
+            return "MkLabColorSurf";
         }
     }
 }

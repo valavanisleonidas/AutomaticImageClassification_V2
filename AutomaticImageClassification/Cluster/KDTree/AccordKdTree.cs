@@ -26,6 +26,10 @@ namespace AutomaticImageClassification.Cluster.KDTree
             return _centers.FindIndex(da => da[0] == a.Nearest.Position[0] && da[1] == a.Nearest.Position[1] && da[2] == a.Nearest.Position[2]);
         }
 
+        public override string ToString()
+        {
+            return "AccordKdTree";
+        }
 
     }
 }

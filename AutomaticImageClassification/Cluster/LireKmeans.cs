@@ -20,7 +20,6 @@ namespace AutomaticImageClassification.Cluster
             _numberOfFeatures = numberOfFeatures;
         }
 
-
         public List<double[]> CreateClusters(List<double[]> descriptorFeatures, int clustersNum)
         {
             if (descriptorFeatures.Count > _numberOfFeatures)
@@ -39,5 +38,11 @@ namespace AutomaticImageClassification.Cluster
             //convert to generics list
             return Arrays.ConvertArrayListToGenericList<double>(ref javaCenters);      
         }
+
+        public override string ToString()
+        {
+            return "LireKmeans";
+        }
+
     }
 }

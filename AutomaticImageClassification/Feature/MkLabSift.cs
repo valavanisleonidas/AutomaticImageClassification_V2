@@ -44,5 +44,11 @@ namespace AutomaticImageClassification.Feature
             
             return imgVocVector;
         }
+
+        public override string ToString()
+        {
+            return "MkLabRootSift";
+        }
+
     }
 }

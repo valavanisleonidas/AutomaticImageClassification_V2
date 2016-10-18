@@ -24,5 +24,11 @@ namespace AutomaticImageClassification.Cluster.KDTree
             var nearestObject = _tree.nearest(centroid);
             return Integer.parseInt(nearestObject.toString());
         }
+
+        public override string ToString()
+        {
+            return "JavaMlKdTree";
+        }
+
     }
 }

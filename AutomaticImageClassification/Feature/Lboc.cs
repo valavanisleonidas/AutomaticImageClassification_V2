@@ -100,23 +100,23 @@ namespace AutomaticImageClassification.Feature
         public static int ClusterIndexOf(List<double[]> clusters, double[] p)
         {
             int ret = 0;
-            if (clusters.Count > 0)
+            if (clusters.Count <= 0) return ret;
+            double distance = DistanceFunctions.getL2Distance(clusters[0], p);
+            double tmp;
+            for (int i = 1; i < clusters.Count; i++)
             {
-                double distance = DistanceFunctions.getL2Distance(clusters[0], p);
-                double tmp;
-                for (int i = 1; i < clusters.Count; i++)
-                {
-                    tmp = DistanceFunctions.getL2Distance(clusters[i], p);
-                    if (tmp < distance)
-                    {
-                        distance = tmp;
-                        ret = i;
-                    }
-                }
+                tmp = DistanceFunctions.getL2Distance(clusters[i], p);
+                if (!(tmp < distance)) continue;
+                distance = tmp;
+                ret = i;
             }
             return ret;
         }
 
+        public override string ToString()
+        {
+            return "LBoc";
+        }
 
     }
 }

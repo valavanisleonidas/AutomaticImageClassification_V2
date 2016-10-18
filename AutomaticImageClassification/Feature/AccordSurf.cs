@@ -50,5 +50,11 @@ namespace AutomaticImageClassification.Feature
                 throw e;
             }
         }
+
+        public override string ToString()
+        {
+            return "AccordSurf";
+        }
+
     }
 }

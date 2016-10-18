@@ -133,6 +133,10 @@ namespace AutomaticImageClassification.Feature
             return array;
         }
 
+        public override string ToString()
+        {
+            return "Embeddings";
+        }
 
     }
 

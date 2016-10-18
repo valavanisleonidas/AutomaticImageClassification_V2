@@ -47,5 +47,11 @@ namespace AutomaticImageClassification.Cluster
             }
 
         }
+
+        public override string ToString()
+        {
+            return "VlFeatKmeans";
+        }
+
     }
 }

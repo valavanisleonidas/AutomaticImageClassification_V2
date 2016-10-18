@@ -22,6 +22,7 @@ namespace AutomaticImageClassification.Cluster
         {
             _isRandomInit = isRandomInit;
         }
+
         public VlFeatEm(int numberOfFeatures)
         {
             _numberOfFeatures = numberOfFeatures;
@@ -32,7 +33,6 @@ namespace AutomaticImageClassification.Cluster
             _isRandomInit = isRandomInit;
             _numberOfFeatures = numberOfFeatures;
         }
-
 
         public List<double[]> CreateClusters(List<double[]> descriptorFeatures, int clustersNum)
         {
@@ -60,5 +60,11 @@ namespace AutomaticImageClassification.Cluster
                 throw e;
             }
         }
+
+        public override string ToString()
+        {
+            return "VlFeatEm";
+        }
+
     }
 }

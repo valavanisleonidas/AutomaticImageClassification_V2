@@ -125,9 +125,12 @@ namespace AutomaticImageClassification.Feature
                     AllTerms.Add(termLower);
                 }
             }
-
         }
 
+        public override string ToString()
+        {
+            return "TfIdf";
+        }
 
     }
 

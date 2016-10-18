@@ -53,7 +53,10 @@ namespace AutomaticImageClassification.Feature
                         des => Array.ConvertAll(des, x => (double)x));
         }
 
-
+        public override string ToString()
+        {
+            return "OpenCvSift";
+        }
 
     }
 }

@@ -148,7 +148,10 @@ namespace AutomaticImageClassification.Feature
             hsv[2] = max;
         }
 
-
+        public override string ToString()
+        {
+            return "ColorCorrelogram";
+        }
 
 
     }

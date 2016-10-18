@@ -188,6 +188,12 @@ namespace AutomaticImageClassification.Classifiers
         {
             return _results.PredictedLabels;
         }
+
+        public override string ToString()
+        {
+            return "LibLinear";
+        }
+
     }
 
     public class Model

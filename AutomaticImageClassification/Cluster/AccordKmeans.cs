@@ -63,6 +63,11 @@ namespace AutomaticImageClassification.Cluster
             //// Retrieve the resulting image in a picture box
             //Bitmap result; arrayToImage.Convert(pixels, out result);
         }
-        
+
+        public override string ToString()
+        {
+            return "AccordKmeans";
+        }
+
     }
 }

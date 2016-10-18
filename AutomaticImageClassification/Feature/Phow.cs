@@ -16,7 +16,7 @@ namespace AutomaticImageClassification.Feature
         private int[,] _numSpatialX = { { 1, 2, 4 } }, _numSpatialY = { { 1, 2, 4 } };
 
         public Phow() { }
-        
+
         public Phow(List<double[]> vocab)
         {
             _vocab = vocab;
@@ -37,7 +37,7 @@ namespace AutomaticImageClassification.Feature
             try
             {
                 var phow = new MatlabAPI.Phow();
-                
+
                 MWArray[] result = phow.extractFeatures(1,
                      new MWCharArray(input),
                      new MWNumericArray(_vocab.ToArray()),
@@ -53,7 +53,7 @@ namespace AutomaticImageClassification.Feature
             catch (Exception e)
             {
                 throw e;
-            }          
+            }
         }
 
         public List<double[]> ExtractDescriptors(string input)
@@ -68,14 +68,18 @@ namespace AutomaticImageClassification.Feature
 
                 result = null;
                 phow.Dispose();
-                
+
                 return Arrays.ToJaggedArray(ref features).ToList();
             }
             catch (Exception e)
             {
                 throw e;
             }
-            
+        }
+
+        public override string ToString()
+        {
+            return "Phow";
         }
     }
 }

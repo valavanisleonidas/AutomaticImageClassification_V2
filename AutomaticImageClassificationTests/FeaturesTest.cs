@@ -317,7 +317,7 @@ namespace AutomaticImageClassificationTests
             const int clusterNum = 512;
             const int sampleImages = 10;
             ICluster cluster = new LireKmeans();
-            IFeatures feature = new MkLabSift();
+            IFeatures feature = new MkLabSurf();
 
             const string baseFolder = @"C:\Users\leonidas\Desktop\libsvm\databases\Clef2013\Compound";
             var trainPath = Path.Combine(baseFolder, "TrainSet");
@@ -336,17 +336,18 @@ namespace AutomaticImageClassificationTests
             {
                 clusters.AddRange(feature.ExtractDescriptors(image));
             }
-
+            sampleImgs = null;
             var finalClusters = cluster.CreateClusters(clusters, clusterNum);
+            clusters.Clear();
 
             IKdTree tree = new JavaMlKdTree();
             tree.CreateTree(finalClusters);
 
             Files.WriteFile(clustersFile, finalClusters);
-
+            finalClusters.Clear();
             #endregion
 
-            feature = new MkLabSift(tree, clusterNum);
+            feature = new MkLabSurf(tree,clusterNum);
 
             #region features extraction
 
@@ -358,7 +359,7 @@ namespace AutomaticImageClassificationTests
                 trainFeatures.Add(vec);
             }
             Files.WriteFile(trainFile, trainFeatures);
-
+            trainFeatures.Clear();
             //Feature extraction bovw
             List<double[]> testFeatures = new List<double[]>();
             foreach (var test in Files.GetFilesFrom(testPath))
@@ -367,7 +368,49 @@ namespace AutomaticImageClassificationTests
                 testFeatures.Add(vec);
             }
             Files.WriteFile(testFile, testFeatures);
+            testFeatures.Clear();
+            #endregion
 
+            stopwatch.Stop();
+            Console.WriteLine("program run for : " + stopwatch.Elapsed);
+
+        }
+
+        [TestMethod]
+        public void CanCreateAutoColorCorrelogram()
+        {
+            Stopwatch stopwatch = Stopwatch.StartNew(); //creates and start the instance of Stopwatch
+
+            IFeatures feature = new ColorCorrelogram();
+
+            const string baseFolder = @"C:\Users\leonidas\Desktop\libsvm\databases\Clef2013\Compound";
+            var trainPath = Path.Combine(baseFolder, "TrainSet");
+            var testPath = Path.Combine(baseFolder, "TestSet");
+
+            var trainFile = @"Data\Features\" + feature + "_train.txt";
+            var testFile = @"Data\Features\" + feature + "_test.txt";
+            
+
+            #region features extraction
+
+            //Feature extraction bovw
+            List<double[]> trainFeatures = new List<double[]>();
+            foreach (var train in Files.GetFilesFrom(trainPath))
+            {
+                double[] vec = feature.ExtractHistogram(train);
+                trainFeatures.Add(vec);
+            }
+            Files.WriteFile(trainFile, trainFeatures);
+            trainFeatures.Clear();
+            //Feature extraction bovw
+            List<double[]> testFeatures = new List<double[]>();
+            foreach (var test in Files.GetFilesFrom(testPath))
+            {
+                double[] vec = feature.ExtractHistogram(test);
+                testFeatures.Add(vec);
+            }
+            Files.WriteFile(testFile, testFeatures);
+            testFeatures.Clear();
             #endregion
 
             stopwatch.Stop();

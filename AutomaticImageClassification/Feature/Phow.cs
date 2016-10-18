@@ -32,7 +32,6 @@ namespace AutomaticImageClassification.Feature
             _vocab = vocab;
         }
 
-
         public double[] ExtractHistogram(string input)
         {
             try

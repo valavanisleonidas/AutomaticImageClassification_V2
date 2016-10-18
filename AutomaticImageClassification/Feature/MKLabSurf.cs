@@ -12,7 +12,7 @@ namespace AutomaticImageClassification.Feature
 {
     public class MkLabSurf : IFeatures
     {
-        private AbstractFeatureExtractor _surf = new ColorSURFExtractor();
+        private AbstractFeatureExtractor _surf = new SURFExtractor();
         private IKdTree _tree;
         private int _clusterNum;
 

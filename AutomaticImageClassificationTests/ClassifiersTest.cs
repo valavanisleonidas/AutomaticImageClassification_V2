@@ -14,8 +14,8 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void CanUseLibLinear()
         {
-            const string trainDataPath = @"Data\Features\AutomaticImageClassification.Feature.OpenCvSift_Lire_JavaML_512_train.txt";
-            const string testDataPath = @"Data\Features\AutomaticImageClassification.Feature.OpenCvSift_Lire_JavaML_512_test.txt";
+            const string trainDataPath = @"Data\Features\AutomaticImageClassification.Feature.ColorCorrelogram_train.txt";
+            const string testDataPath = @"Data\Features\AutomaticImageClassification.Feature.ColorCorrelogram_test.txt";
 
             const string trainlabelsPath = @"Data\Features\boc_labels_train.txt";
             const string testlabelsPath = @"Data\Features\boc_labels_test.txt";

@@ -115,11 +115,9 @@ namespace AutomaticImageClassification.Classifiers
                         double[] results = CrossValidation(ref features, ref labels, parameters);
                         double currentCv = results[1];
 
-                        if (bestCv < currentCv)
-                        {
-                            bestCost = cost;
-                            bestCv = currentCv;
-                        }
+                        if (!(bestCv < currentCv)) continue;
+                        bestCost = cost;
+                        bestCv = currentCv;
                     }
 
                 }

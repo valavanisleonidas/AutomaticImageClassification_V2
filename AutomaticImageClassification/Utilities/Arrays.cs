@@ -52,7 +52,7 @@ namespace AutomaticImageClassification.Utilities
             {
                 throw new ArgumentException("List is empty");
             }
-            colors = colors.Distinct(new ColorsComparator<T>()).ToList();
+            colors = colors.Distinct(new CustomGenericArrayEqualityComparator<T>()).ToList();
         }
 
         public static double[] ConvertJagged2DToDouble1D(ref double[,] array)

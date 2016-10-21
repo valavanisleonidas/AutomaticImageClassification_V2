@@ -14,23 +14,22 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void CanUseLibLinear()
         {
-            const string trainDataPath = @"Data\Features\AutomaticImageClassification.Feature.MkLabSurf_Lire_JavaML_512_train.txt";
-            const string testDataPath = @"Data\Features\AutomaticImageClassification.Feature.MkLabSurf_Lire_JavaML_512_test.txt";
+            const string trainDataPath = @"Data\Features\Vlad_OpenCvSift_Lire_JavaML_512_train.txt";
+            const string testDataPath = @"Data\Features\Vlad_OpenCvSift_Lire_JavaML_512_test.txt";
 
             const string trainlabelsPath = @"Data\Features\boc_labels_train.txt";
             const string testlabelsPath = @"Data\Features\boc_labels_test.txt";
 
             var trainFeat = Files.ReadFileToListArrayList<double>(trainDataPath).ToList();
-            var testFeat = Files.ReadFileToListArrayList<double>(testDataPath).ToList();
+            var trainlabels = Files.ReadFileTo1DArray<double>(trainlabelsPath);
 
-            double[] trainlabels = Files.ReadFileTo1DArray<double>(trainlabelsPath);
-            double[] testlabels = Files.ReadFileTo1DArray<double>(testlabelsPath);
             const bool doCrossVal = false;
             
             //normalize
             const bool sqrt = false;
             const bool tfidf = false;
             const bool l1 = true;
+            const bool l2 = false;
 
             var _params = new Parameters
             {
@@ -51,31 +50,57 @@ namespace AutomaticImageClassificationTests
             if (sqrt)
             {
                 Normalization.SqrtList(ref trainFeat);
-                Normalization.SqrtList(ref testFeat);
             }
             if (tfidf)
             {
                 trainFeat = Normalization.Tfidf(trainFeat);
-                testFeat = Normalization.Tfidf(testFeat);
             }
             if (l1)
             {
                 Normalization.ComputeL1Features(ref trainFeat);
-                Normalization.ComputeL1Features(ref testFeat);
+            }
+            if (l2)
+            {
+                Normalization.ComputeL2Features(ref trainFeat);
             }
 
             // APPLY KERNEL MAPPING
             classifier.ApplyKernelMapping(ref trainFeat);
-            classifier.ApplyKernelMapping(ref testFeat);
-
+            
             if (doCrossVal)
             {
                 classifier.GridSearch(ref trainFeat, ref trainlabels);
             }
 
             classifier.Train(ref trainFeat, ref trainlabels);
+            trainFeat.Clear();
+            
+
+            var testFeat = Files.ReadFileToListArrayList<double>(testDataPath).ToList();
+            var testlabels = Files.ReadFileTo1DArray<double>(testlabelsPath);
+
+
+            //normalize 
+            if (sqrt)
+            {
+                Normalization.SqrtList(ref testFeat);
+            }
+            if (tfidf)
+            {
+                testFeat = Normalization.Tfidf(testFeat);
+            }
+            if (l1)
+            {
+                Normalization.ComputeL1Features(ref testFeat);
+            }
+            if (l2)
+            {
+                Normalization.ComputeL2Features(ref testFeat);
+            }
+            classifier.ApplyKernelMapping(ref testFeat);
 
             classifier.Predict(ref testFeat);
+            
 
             var predictedLabelsText = @"Data\Results\LibLinearBocPredictedLabels.txt";
             var predictedprobstext = @"Data\Results\LibLinearBocPredictedProbabilities.txt";

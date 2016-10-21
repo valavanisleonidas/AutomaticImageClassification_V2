@@ -105,5 +105,6 @@ namespace AutomaticImageClassification.Evaluation
                     F1(labels, predictions, category2)
                    ) / 2;
         }
+
     }
 }

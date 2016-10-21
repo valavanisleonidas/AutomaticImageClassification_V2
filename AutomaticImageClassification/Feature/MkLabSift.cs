@@ -12,8 +12,9 @@ namespace AutomaticImageClassification.Feature
 {
     public class MkLabSift : IFeatures
     {
-        private AbstractFeatureExtractor _sift = new RootSIFTExtractor();
+        private AbstractFeatureExtractor _sift;
         private IKdTree _tree;
+        private ExtractionMethod _extractionMethod;
         private int _clusterNum;
 
         public MkLabSift(IKdTree tree, int clusterNum)
@@ -21,7 +22,29 @@ namespace AutomaticImageClassification.Feature
             _tree = tree;
             _clusterNum = clusterNum;
         }
-        public MkLabSift() { }
+
+        public MkLabSift()
+        {
+            _extractionMethod = ExtractionMethod.RootSift;
+            _sift = new RootSIFTExtractor();
+        }
+
+        public MkLabSift(ExtractionMethod extractionMethod)
+        {
+            _extractionMethod = extractionMethod;
+            switch (_extractionMethod)
+            {
+                case ExtractionMethod.Sift:
+                    _sift = new SIFTExtractor();
+                    break;
+                case ExtractionMethod.RootSift:
+                    _sift = new RootSIFTExtractor();
+                    break;
+                default:
+                    _sift = new RootSIFTExtractor();
+                    break;
+            }
+        }
 
         public List<double[]> ExtractDescriptors(string input)
         {
@@ -41,13 +64,19 @@ namespace AutomaticImageClassification.Feature
                 int positionofMin = _tree.SearchTree(feature);
                 imgVocVector[positionofMin]++;
             }
-            
+
             return imgVocVector;
+        }
+
+        public enum ExtractionMethod
+        {
+            Sift,
+            RootSift
         }
 
         public override string ToString()
         {
-            return "MkLabRootSift";
+            return _extractionMethod.ToString();
         }
 
     }

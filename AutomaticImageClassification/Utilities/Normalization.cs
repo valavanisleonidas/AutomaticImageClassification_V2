@@ -47,19 +47,40 @@ namespace AutomaticImageClassification.Utilities
         }
 
         //multiply array with given weight
-        public static T[] WeightArray<T>(T[] array, T weight)
+        public static double[] WeightArray(double[] array, double weight)
         {
             var arraySize = array.Length;
-            var arr = new T[arraySize];
+            var arr = new double[arraySize];
             for (var i = 0; i < arraySize; i++)
             {
-                arr[i] = (dynamic)array[i] * weight;
+                arr[i] = array[i] * weight;
             }
-
             return arr;
         }
 
-        public static void SqrtList<T>(ref List<T[]> list)
+        public static float[] WeightArray(float[] array, double weight)
+        {
+            var arraySize = array.Length;
+            var arr = new float[arraySize];
+            for (var i = 0; i < arraySize; i++)
+            {
+                arr[i] = array[i] * (float)weight;
+            }
+            return arr;
+        }
+
+        public static int[] WeightArray(int[] array, double weight)
+        {
+            var arraySize = array.Length;
+            var arr = new int[arraySize];
+            for (var i = 0; i < arraySize; i++)
+            {
+                arr[i] = array[i] * (int)weight;
+            }
+            return arr;
+        }
+
+        public static void SqrtList(ref List<double[]> list)
         {
             for (var i = 0; i < list.Count; i++)
             {
@@ -68,18 +89,13 @@ namespace AutomaticImageClassification.Utilities
             }
         }
 
-        public static T[] SqrtArray<T>(ref T[] vector)
+        public static double[] SqrtArray(ref double[] vector)
         {
-            for (var i = 0; i < vector.Length; i++)
-            {
-                dynamic feature = vector[i];
-                vector[i] = Math.Sqrt(feature);
-            }
-            return vector;
+            return vector.Select(a => Math.Sqrt(a)).ToArray();
         }
 
         //computes L1 norm of list
-        public static void ComputeL1Features<T>(ref List<T[]> list)
+        public static void ComputeL1Features(ref List<double[]> list)
         {
             for (var i = 0; i < list.Count; i++)
             {
@@ -90,7 +106,7 @@ namespace AutomaticImageClassification.Utilities
         }
 
         //computes L2 norm of list
-        public static void ComputeL2Features<T>(ref List<T[]> list)
+        public static void ComputeL2Features(ref List<double[]> list)
         {
             for (var i = 0; i < list.Count; i++)
             {
@@ -101,93 +117,75 @@ namespace AutomaticImageClassification.Utilities
         }
 
         //computes L1 norm of double array
-        public static T ComputeL1Norm<T>(ref T[] imgVocVector)
+        public static double ComputeL1Norm(ref double[] imgVocVector)
         {
             //sum of vector ( sum += list[i]; ) 
-            return imgVocVector.Aggregate<T, dynamic>(0, (current, feature) => current + feature);
+            return imgVocVector.Sum();
         }
 
         //computes L2 norm of double array
-        public static T ComputeL2Norm<T>(ref T[] imgVocVector)
+        public static double ComputeL2Norm(ref double[] imgVocVector)
         {
             //sum += feature * feature; 
-            dynamic sum = imgVocVector.Cast<dynamic>().Aggregate<dynamic, dynamic>(0, (current, feature) => current + feature * feature);
+            var sum = imgVocVector.Sum(d => d * d);
             return Math.Sqrt(sum);
         }
 
         //normalize double array
-        public static T[] NormalizeArray<T>(ref T[] imgVocVector, ref T norm)
+        public static double[] NormalizeArray(ref double[] imgVocVector, ref double norm)
         {
+            if (norm == 0)
+                return imgVocVector;
+
             for (var i = 0; i < imgVocVector.Length; i++)
             {
-                if (Equals(0, norm))
-                    continue;
 
-                imgVocVector[i] = (dynamic)imgVocVector[i] / norm;
+                imgVocVector[i] = imgVocVector[i] / norm;
 
             }
             return imgVocVector;
         }
 
-        public static T[] ComputeDf<T>(ref T[][] array)
+        public static double[] ComputeDf(ref double[][] array)
         {
             var columns = array[0].Length;
-            var df = new T[columns];
+            var df = new double[columns];
             array = Arrays.TransposeMatrix(ref array);
 
             for (var i = 0; i < array.Length; i++)
             {
-                var feature = array[i];
-                df[i] = ComputeDf(ref feature);
+                df[i] = ComputeDf(ref array[i]);
             }
             array = Arrays.TransposeMatrix(ref array);
 
             return df;
         }
 
-        public static T ComputeDf<T>(ref T[] array)
+        public static int ComputeDf(ref double[] array)
         {
-            dynamic df = 0;
-            foreach (dynamic feature in array)
-            {
-                if (feature != 0)
-                {
-                    df++;
-                }
-            }
-            return df;
+            return array.Count(feature => feature != 0);
         }
 
-        public static T[] ComputeIdf<T>(ref T[] df, ref int numOfDocs)
+        public static double[] ComputeIdf(ref double[] df, ref int numOfDocs)
         {
-            var idf = new T[df.Length];
+            var idf = new double[df.Length];
 
             //1+log(rows./(DF+1));
             for (var i = 0; i < df.Length; i++)
             {
-                var feature = df[i];
-                idf[i] = ComputeIdf(ref feature, ref numOfDocs);
+                idf[i] = ComputeIdf(ref df[i], ref numOfDocs);
             }
             return idf;
         }
 
-        public static T ComputeIdf<T>(ref T df, ref int numOfDocs)
+        public static double ComputeIdf(ref double df, ref int numOfDocs)
         {
-            dynamic typing = df;
-            return 1 + Math.Log(numOfDocs / (typing + 1));
+            return 1 + Math.Log(numOfDocs / (df + 1));
         }
 
-        public static T ComputeTf<T>(ref T[] array)
+        public static double ComputeTf(ref double[] array)
         {
-            dynamic tf = 0;
-            foreach (var feature in array)
-            {
-                dynamic feat = feature;
-                if (feat != 0)
-                {
-                    tf++;
-                }
-            }
+            int tf = array.Count(feat => feat != 0);
             return Math.Sqrt(tf);
         }
 
@@ -216,13 +214,13 @@ namespace AutomaticImageClassification.Utilities
             return 1 + Math.Log(allTerms.Count / (1 + count));
         }
 
-        public static List<T[]> Tfidf<T>(List<T[]> features)
+        public static List<double[]> Tfidf(List<double[]> features)
         {
             var featuresArr = features.ToArray();
             return Tfidf(ref featuresArr).ToList();
         }
 
-        public static T[][] Tfidf<T>(ref T[][] features)
+        public static double[][] Tfidf(ref double[][] features)
         {
             var numOfDocs = features.Length;
             // compute document frequency for features
@@ -234,19 +232,18 @@ namespace AutomaticImageClassification.Utilities
             return features;
         }
 
-        public static T[][] ComputeTfidf<T>(ref T[][] array, ref T[] idf)
+        public static double[][] ComputeTfidf(ref double[][] array, ref double[] idf)
         {
             for (var i = 0; i < array.Length; i++)
             {
                 var tf = ComputeTf(ref array[i]);
                 for (var j = 0; j < array[i].Length; j++)
                 {
-                    array[i][j] = (dynamic)array[i][j] * tf * idf[j];
+                    array[i][j] = array[i][j] * tf * idf[j];
                 }
             }
             return array;
         }
-
 
     }
 }

@@ -12,8 +12,9 @@ namespace AutomaticImageClassification.Feature
 {
     public class MkLabSurf : IFeatures
     {
-        private AbstractFeatureExtractor _surf = new ColorSURFExtractor();
+        private AbstractFeatureExtractor _surf;
         private IKdTree _tree;
+        private ExtractionMethod _extractionMethod;
         private int _clusterNum;
 
         public MkLabSurf(IKdTree tree, int clusterNum)
@@ -21,7 +22,29 @@ namespace AutomaticImageClassification.Feature
             _tree = tree;
             _clusterNum = clusterNum;
         }
-        public MkLabSurf() { }
+
+        public MkLabSurf()
+        {
+            _extractionMethod = ExtractionMethod.ColorSurf;
+            _surf = new ColorSURFExtractor();
+        }
+
+        public MkLabSurf(ExtractionMethod extractionMethod)
+        {
+            _extractionMethod = extractionMethod;
+            switch (_extractionMethod)
+            {
+                case ExtractionMethod.Surf:
+                    _surf = new SURFExtractor();
+                    break;
+                case ExtractionMethod.ColorSurf:
+                    _surf = new ColorSURFExtractor();
+                    break;
+                default:
+                    _surf = new ColorSURFExtractor();
+                    break;
+            }
+        }
 
         public List<double[]> ExtractDescriptors(string input)
         {
@@ -45,9 +68,15 @@ namespace AutomaticImageClassification.Feature
             return imgVocVector;
         }
 
+        public enum ExtractionMethod
+        {
+            Surf,
+            ColorSurf
+        }
+
         public override string ToString()
         {
-            return "MkLabColorSurf";
+            return _extractionMethod.ToString();
         }
     }
 }

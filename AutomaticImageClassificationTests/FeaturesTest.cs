@@ -116,7 +116,6 @@ namespace AutomaticImageClassificationTests
         //TODO cannot read Dictionary
         //TODO NEED TO CHECK vsexecution problem.exe PROBLEM
         [TestMethod]
-
         public void CanCreateboc()
         {
             Stopwatch stopwatch = Stopwatch.StartNew(); //creates and start the instance of Stopwatch
@@ -317,7 +316,7 @@ namespace AutomaticImageClassificationTests
             const int clusterNum = 512;
             const int sampleImages = 10;
             ICluster cluster = new LireKmeans();
-            IFeatures feature = new MkLabSurf();
+            IFeatures feature = new MkLabVlad();
 
             const string baseFolder = @"C:\Users\leonidas\Desktop\libsvm\databases\Clef2013\Compound";
             var trainPath = Path.Combine(baseFolder, "TrainSet");
@@ -338,37 +337,35 @@ namespace AutomaticImageClassificationTests
             }
             sampleImgs = null;
             var finalClusters = cluster.CreateClusters(clusters, clusterNum);
-            clusters.Clear();
+            //clusters.Clear();
 
             IKdTree tree = new JavaMlKdTree();
             tree.CreateTree(finalClusters);
 
             Files.WriteFile(clustersFile, finalClusters);
-            finalClusters.Clear();
+            
             #endregion
 
-            feature = new MkLabSurf(tree,clusterNum);
+            feature = new MkLabVlad(finalClusters);
+            finalClusters.Clear();
 
             #region features extraction
 
             //Feature extraction bovw
-            List<double[]> trainFeatures = new List<double[]>();
             foreach (var train in Files.GetFilesFrom(trainPath))
             {
-                double[] vec = feature.ExtractHistogram(train);
-                trainFeatures.Add(vec);
+                var vec = feature.ExtractHistogram(train);
+                Files.WriteAppendFile(trainFile, vec);
             }
-            Files.WriteFile(trainFile, trainFeatures);
-            trainFeatures.Clear();
+
             //Feature extraction bovw
-            List<double[]> testFeatures = new List<double[]>();
+
             foreach (var test in Files.GetFilesFrom(testPath))
             {
-                double[] vec = feature.ExtractHistogram(test);
-                testFeatures.Add(vec);
+                var vec = feature.ExtractHistogram(test);
+                Files.WriteAppendFile(testFile, vec);
             }
-            Files.WriteFile(testFile, testFeatures);
-            testFeatures.Clear();
+
             #endregion
 
             stopwatch.Stop();
@@ -381,7 +378,7 @@ namespace AutomaticImageClassificationTests
         {
             Stopwatch stopwatch = Stopwatch.StartNew(); //creates and start the instance of Stopwatch
 
-            IFeatures feature = new ColorCorrelogram();
+            IFeatures feature = new ColorCorrelogram(ColorCorrelogram.ExtractionMethod.DynamicProgrammingHuangAlgorithm);
 
             const string baseFolder = @"C:\Users\leonidas\Desktop\libsvm\databases\Clef2013\Compound";
             var trainPath = Path.Combine(baseFolder, "TrainSet");
@@ -389,7 +386,7 @@ namespace AutomaticImageClassificationTests
 
             var trainFile = @"Data\Features\" + feature + "_train.txt";
             var testFile = @"Data\Features\" + feature + "_test.txt";
-            
+
 
             #region features extraction
 

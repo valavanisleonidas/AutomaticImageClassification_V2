@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -87,6 +88,25 @@ namespace AutomaticImageClassificationTests
 
             string fileToWrite = @"Data\test.txt";
             Files.WriteFile(fileToWrite, features);
+
+            string fileToWrite_2 = @"Data\test2.txt";
+            string fileToWrite_2Binary = @"Data\test2binary.txt";
+
+            Files.WriteFile(fileToWrite, features);
+
+            foreach (var doublese in features)
+            {
+                Files.WriteAppendFile(fileToWrite_2,doublese);
+                //Files.WriteAppendBinaryFile(fileToWrite_2Binary, doublese);   
+            }
+
+            List<double> categories = new List<double>();
+            categories.Add(1);
+            categories.Add(3);
+            string fileToWrite2 = @"Data\categories.txt";
+            Files.WriteFile(fileToWrite2, categories);
+
+
 
         }
 

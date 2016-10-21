@@ -15,26 +15,12 @@ namespace AutomaticImageClassification.Feature
 
         public ColorCorrelogram()
         {
-            _extractionMethod = ExtractionMethod.NaiveHuangAlgorithm;
+            _extractionMethod = ExtractionMethod.LireAlgorithm;
         }
 
         public ColorCorrelogram(ExtractionMethod extractionMethod)
         {
-            _extractionMethod = extractionMethod;
-        }
-
-        public double[] ExtractHistogram(string input)
-        {
-            var bimage = new BufferedImage(new Bitmap(input));
-
-            BufferedImage newImage = new BufferedImage(bimage.getWidth(), bimage.getHeight(), 5);
-
-            Graphics2D g = newImage.createGraphics();
-            g.drawImage(bimage, 0, 0, null);
-            g.dispose();
-
-
-            switch (_extractionMethod)
+            switch (extractionMethod)
             {
                 case ExtractionMethod.LireAlgorithm:
                     _extractionAlgorithm = new MLuxAutoCorrelogramExtraction();
@@ -42,16 +28,32 @@ namespace AutomaticImageClassification.Feature
                 case ExtractionMethod.NaiveHuangAlgorithm:
                     _extractionAlgorithm = new NaiveAutoCorrelogramExtraction();
                     break;
-                case ExtractionMethod.DynamicProgrammingHuangAlgorithm:
-                    _extractionAlgorithm = DynamicProgrammingAutoCorrelogramExtraction.getInstance();
+                // this implementation consumes all the memory and is really slow
+                //case ExtractionMethod.DynamicProgrammingHuangAlgorithm:
+                //    _extractionAlgorithm = DynamicProgrammingAutoCorrelogramExtraction.getInstance();
+                //    break;
+                default:
+                    _extractionMethod = ExtractionMethod.NaiveHuangAlgorithm;
                     break;
             }
 
+        }
+
+        public double[] ExtractHistogram(string input)
+        {
+            var bimage = new BufferedImage(new Bitmap(input));
+
+            //BufferedImage newImage = new BufferedImage(bimage.getWidth(), bimage.getHeight(), 5);
+
+            //Graphics2D g = newImage.createGraphics();
+            //g.drawImage(bimage, 0, 0, null);
+            //g.dispose();
+            
             AutoColorCorrelogram color = new AutoColorCorrelogram(_extractionAlgorithm);
             Raster r = bimage.getRaster();
             int[][][] hsvImage = ColorCorrelogram.HsvImage(r);
             color.extract(hsvImage);
-
+         
             return color.getDoubleHistogram();
         }
 
@@ -88,15 +90,16 @@ namespace AutomaticImageClassification.Feature
                 }
             }
             return pixels;
-
         }
 
         /**
      * @param rgb RGB Values
      * @param hsv HSV values to set.
      */
+
         private static void ConvertRgbToHsv(int[] rgb, int[] hsv)
-        {     //TODO: Conversion
+        {
+            //TODO: Conversion
             if (hsv.Length < 3)
             {
                 throw new IndexOutOfRangeException("HSV array too small, a minimum of three elements is required.");
@@ -107,10 +110,10 @@ namespace AutomaticImageClassification.Feature
             int max, min;
             float hue = 0f;
 
-            max = Math.Max(R, G);     //calculation of max(R,G,B)
+            max = Math.Max(R, G); //calculation of max(R,G,B)
             max = Math.Max(max, B);
 
-            min = Math.Min(R, G);     //calculation of min(R,G,B)
+            min = Math.Min(R, G); //calculation of min(R,G,B)
             min = Math.Min(min, B);
 
             if (max == 0)
@@ -118,24 +121,24 @@ namespace AutomaticImageClassification.Feature
             else
             {
                 // Saturation in [0,255]
-                hsv[1] = (int)(((max - min) / (float)max) * 255f);
+                hsv[1] = (int) (((max - min)/(float) max)*255f);
             }
 
             if (max == min)
             {
-                hue = 0;     // (max - min) = 0
+                hue = 0; // (max - min) = 0
             }
             else
             {
                 float maxMinusMin = (max - min);
                 if (R == max)
-                    hue = ((G - B) / maxMinusMin);
+                    hue = ((G - B)/maxMinusMin);
 
                 else if (G == max)
-                    hue = (2 + (B - R) / maxMinusMin);
+                    hue = (2 + (B - R)/maxMinusMin);
 
                 else if (B == max)
-                    hue = (4 + (R - G) / maxMinusMin);
+                    hue = (4 + (R - G)/maxMinusMin);
 
                 hue *= 60f;
 
@@ -143,16 +146,14 @@ namespace AutomaticImageClassification.Feature
                     hue += 360f;
             }
             // hue in [0,359]
-            hsv[0] = (int)hue;
+            hsv[0] = (int) hue;
             // value in [0,255]
             hsv[2] = max;
         }
 
         public override string ToString()
         {
-            return "ColorCorrelogram";
+            return "ColorCorrelogram" + _extractionMethod;
         }
-
-
     }
 }

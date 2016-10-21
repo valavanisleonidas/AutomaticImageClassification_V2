@@ -60,38 +60,52 @@ namespace AutomaticImageClassification.Utilities
             return categoriesNumbers;
         }
 
+        //write each line of List into a new line in file
         public static void WriteFile<T>(string fileToWrite, List<T[]> contentList)
         {
             var encoderShouldEmitUtf8Identifier = false;
-            var content = "";
-            foreach (var feature in contentList)
-            {
-                content += string.Join(" ", feature);
-                content += Environment.NewLine;
-            }
-
             using (StreamWriter sw = new StreamWriter(File.Open(fileToWrite, FileMode.Create), new UTF8Encoding(encoderShouldEmitUtf8Identifier)))
             {
-                sw.Write(content);
+                foreach (var features in contentList)
+                {
+                    sw.WriteLine(string.Join(" ", features.Select(p => p.ToString()).ToArray()));
+                }
             }
-
         }
 
+        //write each line of List into a new line in file
         public static void WriteFile<T>(string fileToWrite, List<T> contentList)
         {
             var encoderShouldEmitUtf8Identifier = false;
-            var content = "";
-            foreach (var feature in contentList)
-            {
-                content += string.Join(" ", feature);
-                content += Environment.NewLine;
-            }
-
             using (StreamWriter sw = new StreamWriter(File.Open(fileToWrite, FileMode.Create), new UTF8Encoding(encoderShouldEmitUtf8Identifier)))
             {
-                sw.Write(content);
+                foreach (var feature in contentList)
+                {
+                    sw.WriteLine(feature);
+                }
             }
         }
+
+        //appends array to end of line in file or if file does not exists it creates a new file
+        public static void WriteAppendFile<T>(string fileToWrite, T[] contentArray)
+        {
+            var encoderShouldEmitUtf8Identifier = false;
+            using (StreamWriter sw = new StreamWriter(File.Open(fileToWrite, FileMode.Append), new UTF8Encoding(encoderShouldEmitUtf8Identifier)))
+            {
+                sw.WriteLine(string.Join(" ", contentArray.Select(p => p.ToString()).ToArray()));
+            }
+        }
+
+        //appends array to end of line in file or if file does not exists it creates a new file
+        //public static void WriteAppendBinaryFile<T>(string fileToWrite, T[] contentArray)
+        //{
+        //    var encoderShouldEmitUtf8Identifier = false;
+        //    using (BinaryWriter sw = new BinaryWriter(File.Open(fileToWrite, FileMode.Append), new UTF8Encoding(encoderShouldEmitUtf8Identifier)))
+        //    {
+        //        sw.Write(string.Join(" ", contentArray.Select(p => p.ToString()).ToArray()) + "\r\n");
+        //    }
+        //}
+
 
         public static List<T[]> ReadFileToListArrayList<T>(string path)
         {
@@ -114,6 +128,6 @@ namespace AutomaticImageClassification.Utilities
         {
             return File.ReadAllLines(path).Select(i => (T)Convert.ChangeType(i, typeof(T))).ToArray();
         }
-        
+
     }
 }

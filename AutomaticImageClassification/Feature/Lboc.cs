@@ -74,7 +74,7 @@ namespace AutomaticImageClassification.Feature
                 double[] _boc = boc.ExtractHistogram(b);
 
                 int indx = _lBoctree?.SearchTree(_boc) 
-                    ?? ClusterIndexOf(_dictionary, _boc);
+                    ?? DistanceMetrics.ComputeNearestCentroidL2(_dictionary, _boc);
 
                 vector[indx]++;
             }
@@ -96,23 +96,7 @@ namespace AutomaticImageClassification.Feature
             }
            return colors;
         }
-
-        public static int ClusterIndexOf(List<double[]> clusters, double[] p)
-        {
-            int ret = 0;
-            if (clusters.Count <= 0) return ret;
-            double distance = DistanceFunctions.getL2Distance(clusters[0], p);
-            double tmp;
-            for (int i = 1; i < clusters.Count; i++)
-            {
-                tmp = DistanceFunctions.getL2Distance(clusters[i], p);
-                if (!(tmp < distance)) continue;
-                distance = tmp;
-                ret = i;
-            }
-            return ret;
-        }
-
+        
         public override string ToString()
         {
             return "LBoc";

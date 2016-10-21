@@ -316,7 +316,7 @@ namespace AutomaticImageClassificationTests
             const int clusterNum = 512;
             const int sampleImages = 10;
             ICluster cluster = new LireKmeans();
-            IFeatures feature = new MkLabVlad();
+            IFeatures feature = new Phow();
 
             const string baseFolder = @"C:\Users\leonidas\Desktop\libsvm\databases\Clef2013\Compound";
             var trainPath = Path.Combine(baseFolder, "TrainSet");
@@ -346,7 +346,7 @@ namespace AutomaticImageClassificationTests
             
             #endregion
 
-            feature = new MkLabVlad(finalClusters);
+            feature = new Phow(finalClusters);
             finalClusters.Clear();
 
             #region features extraction

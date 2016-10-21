@@ -64,7 +64,7 @@ namespace AutomaticImageClassification.Feature
                     int[] cl = ColorConversion.convertFromRGB(_cs, color.getRed(), color.getGreen(), color.getBlue());
 
                     int indx = _tree?.SearchTree(new double[] { cl[0], cl[1], cl[2] })
-                        ?? ImageProcessor.getClosestColorIndx(_palette, cl);
+                        ?? DistanceMetrics.ComputeNearestCentroidL2(_palette, cl);
 
                     vector[indx]++;
                 }

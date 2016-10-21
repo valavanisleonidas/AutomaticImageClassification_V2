@@ -188,6 +188,7 @@
     <Compile Include="FusionTypes\LateFusion.cs" />
     <Compile Include="Utilities\Arrays.cs" />
     <Compile Include="Utilities\CustomGenericArrayEqualityComparator.cs" />
+    <Compile Include="Utilities\DistanceMetrics.cs" />
     <Compile Include="Utilities\Normalization.cs" />
     <Compile Include="Utilities\Files.cs" />
     <Compile Include="Cluster\KDTree\JavaMlKdTree.cs" />

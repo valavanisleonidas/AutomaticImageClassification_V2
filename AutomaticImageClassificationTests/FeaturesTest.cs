@@ -315,8 +315,9 @@ namespace AutomaticImageClassificationTests
 
             const int clusterNum = 512;
             const int sampleImages = 10;
+
             ICluster cluster = new LireKmeans();
-            IFeatures feature = new Phow();
+            IFeatures feature = new MkLabSurf();
 
             const string baseFolder = @"C:\Users\leonidas\Desktop\libsvm\databases\Clef2013\Compound";
             var trainPath = Path.Combine(baseFolder, "TrainSet");
@@ -337,7 +338,7 @@ namespace AutomaticImageClassificationTests
             }
             sampleImgs = null;
             var finalClusters = cluster.CreateClusters(clusters, clusterNum);
-            //clusters.Clear();
+            clusters.Clear();
 
             IKdTree tree = new JavaMlKdTree();
             tree.CreateTree(finalClusters);
@@ -346,7 +347,7 @@ namespace AutomaticImageClassificationTests
             
             #endregion
 
-            feature = new Phow(finalClusters);
+            feature = new MkLabSurf(tree,clusterNum);
             finalClusters.Clear();
 
             #region features extraction
@@ -372,6 +373,76 @@ namespace AutomaticImageClassificationTests
             Console.WriteLine("program run for : " + stopwatch.Elapsed);
 
         }
+
+        [TestMethod]
+        public void CanCreatePhow()
+        {
+            Stopwatch stopwatch = Stopwatch.StartNew(); //creates and start the instance of Stopwatch
+
+            const int clusterNum = 1536;
+            const int sampleImages = 10;
+            const int maxNumberClusterFeatures = 100000;
+
+            ICluster cluster = new VlFeatKmeans(maxNumberClusterFeatures);
+            IFeatures feature = new Phow();
+
+            const string baseFolder = @"C:\Users\leonidas\Desktop\libsvm\databases\Clef2013\Compound";
+            var trainPath = Path.Combine(baseFolder, "TrainSet");
+            var testPath = Path.Combine(baseFolder, "TestSet");
+
+            var trainFile = @"Data\Features\" + feature + "_Lire_JavaML_" + clusterNum + "_train.txt";
+            var testFile = @"Data\Features\" + feature + "_Lire_JavaML_" + clusterNum + "_test.txt";
+            var clustersFile = @"Data\Palettes\" + feature + "_" + clusterNum + "_clusters.txt";
+
+            #region Clustering
+
+            var sampleImgs = Files.GetFilesFrom(trainPath, sampleImages);
+            var clusterFeaturesPerImage = maxNumberClusterFeatures/sampleImgs.Length;
+
+            var clusters = new List<double[]>();
+            foreach (var image in sampleImgs)
+            {
+                clusters.AddRange(feature.ExtractDescriptors(image).OrderBy(x => Guid.NewGuid()).Take(clusterFeaturesPerImage));
+            }
+            sampleImgs = null;
+            var finalClusters = cluster.CreateClusters(clusters, clusterNum);
+            clusters.Clear();
+
+            //IKdTree tree = new JavaMlKdTree();
+            //tree.CreateTree(finalClusters);
+
+            Files.WriteFile(clustersFile, finalClusters);
+
+            #endregion
+
+            feature = new Phow(finalClusters);
+            //finalClusters.Clear();
+
+            #region features extraction
+
+            //Feature extraction bovw
+            foreach (var train in Files.GetFilesFrom(trainPath))
+            {
+                var vec = feature.ExtractHistogram(train);
+                Files.WriteAppendFile(trainFile, vec);
+            }
+
+            //Feature extraction bovw
+
+            foreach (var test in Files.GetFilesFrom(testPath))
+            {
+                var vec = feature.ExtractHistogram(test);
+                Files.WriteAppendFile(testFile, vec);
+            }
+
+            #endregion
+
+            stopwatch.Stop();
+            Console.WriteLine("program run for : " + stopwatch.Elapsed);
+
+        }
+
+
 
         [TestMethod]
         public void CanCreateAutoColorCorrelogram()

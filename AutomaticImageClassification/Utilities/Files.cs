@@ -35,7 +35,7 @@ namespace AutomaticImageClassification.Utilities
             var searchOption = isRecursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
             foreach (var subfolder in filesInDirectory)
             {
-                filesFound.AddRange(Directory.GetFiles(subfolder, string.Format("*.{0}", filters), searchOption).Take(filesFromEachSubFolder));
+                filesFound.AddRange(Directory.GetFiles(subfolder, string.Format("*.{0}", filters), searchOption).OrderBy(x => Guid.NewGuid()).Take(filesFromEachSubFolder));
             }
             return filesFound.ToArray();
         }

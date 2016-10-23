@@ -32,7 +32,7 @@ namespace AutomaticImageClassification.Cluster
                     Arrays.GetSubsetOfFeatures(ref descriptorFeatures, _numberOfFeatures);
                 }
 
-                MWArray result = cluster.kmeans(new MWNumericArray(descriptorFeatures.ToArray()),
+                MWArray result = cluster.Kmeans(new MWNumericArray(descriptorFeatures.ToArray()),
                         new MWNumericArray(clustersNum));
 
                 var features = (double[,])result.ToArray();

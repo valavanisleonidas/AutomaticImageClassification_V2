@@ -38,7 +38,7 @@ namespace AutomaticImageClassification.Feature
             {
                 var phow = new MatlabAPI.Phow();
 
-                MWArray[] result = phow.extractFeatures(1,
+                MWArray[] result = phow.ExtractFeatures(1,
                      new MWCharArray(input),
                      new MWNumericArray(_vocab.ToArray()),
                      _quantizer,
@@ -63,10 +63,9 @@ namespace AutomaticImageClassification.Feature
                 var phow = new MatlabAPI.Phow();
 
                 //return frames descriptors( features )
-                MWArray[] result = phow.getPHOW(2, new MWCharArray(input));
+                MWArray[] result = phow.GetPhow(2, new MWCharArray(input));
                 var features = (double[,])result[1].ToArray();
 
-                result = null;
                 phow.Dispose();
 
                 return Arrays.ToJaggedArray(ref features).ToList();
@@ -79,7 +78,7 @@ namespace AutomaticImageClassification.Feature
 
         public override string ToString()
         {
-            return "Phow";
+            return "Phow_" + _extractionColor + "_" + string.Join("_", Arrays.ToJaggedArray(ref _numSpatialX)[0]);
         }
     }
 }

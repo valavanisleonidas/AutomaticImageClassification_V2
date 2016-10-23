@@ -52,7 +52,7 @@ namespace AutomaticImageClassification.Feature
                 //int indx = _lBoctree?.SearchTree(_boc)
                 //    ?? ClusterIndexOf(_dictionary, _boc);
 
-                int index = Utilities.DistanceMetrics.ComputeNearestCentroid2(_codebook,descriptor);
+                int index = Utilities.DistanceMetrics.ComputeNearestCentroidL2(_codebook,descriptor);
                 for (int i = 0; i < descriptorLength; i++)
                 {
                     vlad[index * descriptorLength + i] += descriptor[i] - _codebook[index][i];

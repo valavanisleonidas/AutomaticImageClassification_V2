@@ -33,6 +33,8 @@ namespace AutomaticImageClassification.Cluster
                 Arrays.ConvertGenericListToArrayList(ref descriptorFeatures), 
                 clustersNum);
 
+            descriptorFeatures.Clear();
+
             //get centers 
             List javaCenters = mean.getMeans();
             //convert to generics list

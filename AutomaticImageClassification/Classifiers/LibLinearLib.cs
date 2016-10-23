@@ -37,7 +37,7 @@ namespace AutomaticImageClassification.Classifiers
             {
                 var classifier = new LibLinear();
 
-                MWArray[] result = classifier.applyKernelMapping(1,
+                MWArray[] result = classifier.ApplyKernelMapping(1,
                     new MWNumericArray(features.ToArray()),
                     _params.Kernel,
                     _params.Homker,
@@ -61,7 +61,7 @@ namespace AutomaticImageClassification.Classifiers
             {
                 var classifier = new LibLinear();
 
-                MWArray[] result = classifier.train_liblinear(2,
+                MWArray[] result = classifier.TrainLiblinear(2,
                         new MWNumericArray(features.ToArray()),
                         new MWNumericArray(labels),
                         _params.Cost,
@@ -159,7 +159,7 @@ namespace AutomaticImageClassification.Classifiers
             {
                 var classifier = new LibLinear();
 
-                MWArray[] result = classifier.predict_liblinear(3,
+                MWArray[] result = classifier.PredictLiblinear(3,
                         new MWNumericArray(features.ToArray()),
                         new MWNumericArray(_model.Weights),
                         new MWNumericArray(_model.Bias));

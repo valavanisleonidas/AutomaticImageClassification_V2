@@ -45,7 +45,7 @@ namespace AutomaticImageClassification.Cluster
                     Arrays.GetSubsetOfFeatures(ref descriptorFeatures, _numberOfFeatures);
                 }
 
-                MWArray[] result = cluster.EM(3,
+                MWArray[] result = cluster.Em(3,
                     new MWNumericArray(descriptorFeatures.ToArray()),
                     new MWNumericArray(clustersNum),
                     new MWLogicalArray(_isRandomInit));

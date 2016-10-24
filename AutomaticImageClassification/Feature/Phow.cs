@@ -11,7 +11,7 @@ namespace AutomaticImageClassification.Feature
 {
     public class Phow : IFeatures
     {
-        private string _extractionColor = "gray", _quantizer = "kdtree";
+        private string _extractionColor = "rgb", _quantizer = "kdtree";
         private List<double[]> _vocab;
         private int[,] _numSpatialX = { { 1, 2, 4 } }, _numSpatialY = { { 1, 2, 4 } };
 
@@ -63,7 +63,7 @@ namespace AutomaticImageClassification.Feature
                 var phow = new MatlabAPI.Phow();
 
                 //return frames descriptors( features )
-                MWArray[] result = phow.GetPhow(2, new MWCharArray(input));
+                MWArray[] result = phow.GetPhow(2, new MWCharArray(input), _extractionColor);
                 var features = (double[,])result[1].ToArray();
 
                 phow.Dispose();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutomaticImageClassification.Utilities;
 
 namespace AutomaticImageClassification.Evaluation
 {
@@ -104,6 +105,38 @@ namespace AutomaticImageClassification.Evaluation
                     +
                     F1(labels, predictions, category2)
                    ) / 2;
+        }
+        
+        public static double[][] ConfusionMatrix(int[] labels, int[] predictions, int[] categories)
+        {
+            double[][] confusionMatrix = new double[categories.Length][];
+
+            foreach (var category in categories)
+            {
+                //get indexes of items belong to category
+                var indices = labels.Select((cat, index) => new { cat, index })
+                    .Where(x => x.cat == category)
+                    .Select(x => x.index).ToList();
+
+                confusionMatrix[category - 1] = new double[categories.Length];
+                foreach (var index in indices)
+                {
+                    confusionMatrix[category - 1][predictions[index] - 1 ] += 1;
+                }
+            }
+            confusionMatrix = Arrays.TransposeMatrix(ref confusionMatrix);
+            for (int i = 0; i < confusionMatrix.Length; i++)
+            {
+                double sum = confusionMatrix[i].Sum();
+                if (sum == 0)
+                {
+                    continue;
+                }
+                sum = (1/sum ) * 100;
+                confusionMatrix[i] = Normalization.WeightArray(confusionMatrix[i], sum);
+            }
+
+            return confusionMatrix;
         }
 
     }

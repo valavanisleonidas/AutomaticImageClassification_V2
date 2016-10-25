@@ -152,7 +152,7 @@ namespace AutomaticImageClassificationTests
             }
             if (isDistinctColors)
             {
-                Arrays.GetDistinctColors(ref colors);
+                Arrays.GetDistinctObjects(ref colors);
             }
 
             List<double[]> centers = cluster.CreateClusters(colors, numOfcolors);
@@ -244,7 +244,7 @@ namespace AutomaticImageClassificationTests
             }
             if (isDistinctColors)
             {
-                Arrays.GetDistinctColors(ref bocColors);
+                Arrays.GetDistinctObjects(ref bocColors);
             }
 
             List<double[]> bocCenters = cluster.CreateClusters(bocColors, numOfcolors);
@@ -270,7 +270,7 @@ namespace AutomaticImageClassificationTests
             }
             if (isDistinctColors)
             {
-                Arrays.GetDistinctColors(ref lbocColors);
+                Arrays.GetDistinctObjects(ref lbocColors);
             }
 
             List<double[]> lbocCenters = cluster.CreateClusters(lbocColors, numOfVisualWords);

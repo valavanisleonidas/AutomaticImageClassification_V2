@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutomaticImageClassification.FusionTypes;
 using AutomaticImageClassification.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -96,7 +97,7 @@ namespace AutomaticImageClassificationTests
 
             foreach (var doublese in features)
             {
-                Files.WriteAppendFile(fileToWrite_2,doublese);
+                Files.WriteAppendFile(fileToWrite_2, doublese);
                 //Files.WriteAppendBinaryFile(fileToWrite_2Binary, doublese);   
             }
 
@@ -153,7 +154,7 @@ namespace AutomaticImageClassificationTests
 
             list.Add(new double[] { 3, 2, 3 });
 
-            Arrays.GetDistinctColors(ref list);
+            Arrays.GetDistinctObjects(ref list);
 
             Assert.AreEqual(list.Count, 5);
         }
@@ -163,6 +164,15 @@ namespace AutomaticImageClassificationTests
         {
             string file = @"Data\test_figures.xml";
             Figures images = XmlFiguresReader.ReadXml<Figures>(file);
+        }
+
+        [TestMethod]
+        public void CanConcatArrays()
+        {
+            double[] array1 = { 1, 2, 3 };
+            double[] array2 = { 0, 1, 2, 3 };
+            var concat = EarlyFusion.ConcatArrays(ref array1, ref array2);
+            CollectionAssert.AreEqual(concat, new double[] { 1, 2, 3, 0, 1, 2, 3 });
         }
 
 

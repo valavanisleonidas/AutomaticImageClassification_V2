@@ -381,9 +381,9 @@ namespace AutomaticImageClassificationTests
 
             const int clusterNum = 1536;
             const int sampleImages = 10;
-            const int maxNumberClusterFeatures = 100000;
+            const int maxNumberClusterFeatures = 500000;
 
-            ICluster cluster = new VlFeatKmeans(maxNumberClusterFeatures);
+            ICluster cluster = new VlFeatKmeans();
             IFeatures feature = new Phow();
 
             const string baseFolder = @"C:\Users\leonidas\Desktop\libsvm\databases\Clef2013\Compound";

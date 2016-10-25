@@ -14,8 +14,10 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void CanUseLibLinear()
         {
-            const string trainDataPath = @"Data\Features\Vlad_OpenCvSift_Lire_JavaML_512_train.txt";
-            const string testDataPath = @"Data\Features\Vlad_OpenCvSift_Lire_JavaML_512_test.txt";
+            
+
+            const string trainDataPath = @"Data\Features\Phow_rgb_1_2_4_Lire_JavaML_1536_train.txt";
+            const string testDataPath = @"Data\Features\Phow_rgb_1_2_4_Lire_JavaML_1536_test.txt";
 
             const string trainlabelsPath = @"Data\Features\boc_labels_train.txt";
             const string testlabelsPath = @"Data\Features\boc_labels_test.txt";
@@ -39,7 +41,7 @@ namespace AutomaticImageClassificationTests
                 Cost = 8,
                 BiasMultiplier = 1,
                 Solver = "liblinear",
-                SolverType = 0,
+                SolverType = 2,
                 IsManualCv = false
             };
 

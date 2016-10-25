@@ -106,8 +106,8 @@ namespace AutomaticImageClassification.Evaluation
                     F1(labels, predictions, category2)
                    ) / 2;
         }
-        
-        public static double[][] ConfusionMatrix(int[] labels, int[] predictions, int[] categories)
+
+        public static double[][] ConfusionMatrix(int[] labels, int[] predictions, int[] categories, bool normalize = true)
         {
             double[][] confusionMatrix = new double[categories.Length][];
 
@@ -121,10 +121,13 @@ namespace AutomaticImageClassification.Evaluation
                 confusionMatrix[category - 1] = new double[categories.Length];
                 foreach (var index in indices)
                 {
-                    confusionMatrix[category - 1][predictions[index] - 1 ] += 1;
+                    confusionMatrix[category - 1][predictions[index] - 1] += 1;
                 }
             }
             confusionMatrix = Arrays.TransposeMatrix(ref confusionMatrix);
+
+            if (!normalize) return confusionMatrix;
+
             for (int i = 0; i < confusionMatrix.Length; i++)
             {
                 double sum = confusionMatrix[i].Sum();
@@ -132,10 +135,9 @@ namespace AutomaticImageClassification.Evaluation
                 {
                     continue;
                 }
-                sum = (1/sum ) * 100;
+                sum = (1 / sum) * 100;
                 confusionMatrix[i] = Normalization.WeightArray(confusionMatrix[i], sum);
             }
-
             return confusionMatrix;
         }
 

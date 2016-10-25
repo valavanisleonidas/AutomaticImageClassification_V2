@@ -130,6 +130,24 @@ namespace AutomaticImageClassification.Utilities
             return jaggedArray;
         }
 
+        public static T[][] ToJaggedArray<T>(T[,] multiArray)
+        {
+            int firstElement = multiArray.GetLength(0);
+            int secondElement = multiArray.GetLength(1);
+
+            T[][] jaggedArray = new T[firstElement][];
+
+            for (var c = 0; c < firstElement; c++)
+            {
+                jaggedArray[c] = new T[secondElement];
+                for (var r = 0; r < secondElement; r++)
+                {
+                    jaggedArray[c][r] = multiArray[c, r];
+                }
+            }
+            return jaggedArray;
+        }
+
         //public static void GetSubsetOfFeatures(ref List<double[]> descriptorFeatures, int numberOfFeatures)
         //{
         //    try

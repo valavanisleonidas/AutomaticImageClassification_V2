@@ -69,8 +69,7 @@ namespace AutomaticImageClassification.Classifiers
                         _params.Solver,
                         _params.SolverType);
 
-                var weights = (double[,])((MWNumericArray)result[0]).ToArray(MWArrayComponent.Real);
-                _model.Weights = Arrays.ToJaggedArray(ref weights);
+                _model.Weights = Arrays.ToJaggedArray((double[,])((MWNumericArray)result[0]).ToArray(MWArrayComponent.Real));
                 _model.Bias = (double[])((MWNumericArray)result[1]).ToVector(MWArrayComponent.Real);
 
                 result = null;

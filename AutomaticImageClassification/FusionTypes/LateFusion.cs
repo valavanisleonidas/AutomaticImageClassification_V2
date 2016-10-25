@@ -13,6 +13,14 @@ namespace AutomaticImageClassification.FusionTypes
     {
         public static Dictionary<double,int> PerformLateFusion(List<double[]> resultsModel1, List<double[]> resultsModel2,double weight)
         {
+
+            //if we want to add the sigmoid..
+            //a = sigmoid;
+            //b = sigmoid;
+            //model1 = 1./ (1 + exp(-a * result_model1));
+            //model2 = 1./ (1 + exp(-b * result_model2));
+
+
             Dictionary<double, int> categoriesProbs = new Dictionary<double, int>();
 
             //initialize weights for models

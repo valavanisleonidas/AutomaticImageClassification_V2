@@ -169,10 +169,26 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void CanPerformEarlyFusion()
         {
-            double[] array1 = { 1, 2, 3 };
-            double[] array2 = { 0, 1, 2, 3 };
-            var concat = EarlyFusion.ConcatArrays(ref array1, ref array2);
-            CollectionAssert.AreEqual(concat, new double[] { 1, 2, 3, 0, 1, 2, 3 });
+            List<double[]> resultsModel1 = new List<double[]>();
+            List<double[]> resultsModel2 = new List<double[]>();
+
+            resultsModel1.Add(new double[] { 1, 2, 3 });
+            resultsModel1.Add(new double[] { 1, 2, 3 });
+
+            resultsModel2.Add(new double[] { 0, 1, 1 });
+            resultsModel2.Add(new double[] { 1, 200, 1 });
+            var concat = EarlyFusion.ConcatArrays(ref resultsModel1, ref resultsModel2);
+
+            List<double[]> concatResultList = new List<double[]>();
+
+            concatResultList.Add(new double[] { 1, 2, 3, 0, 1, 1 });
+            concatResultList.Add(new double[] { 1, 2, 3, 1, 200, 1 });
+
+            for (int i = 0; i < concatResultList.Count; i++)
+            {
+                CollectionAssert.AreEqual(concat[i], concatResultList[i]);
+            }
+            
         }
 
         [TestMethod]
@@ -192,7 +208,7 @@ namespace AutomaticImageClassificationTests
             var lateFusion = LateFusion.PerformLateFusion(resultsModel1, resultsModel2, weight);
 
             Dictionary<double, int> results = new Dictionary<double, int>();
-            results.Add(2,3);
+            results.Add(2, 3);
             results.Add(101, 2);
 
             CollectionAssert.AreEqual(lateFusion, results);

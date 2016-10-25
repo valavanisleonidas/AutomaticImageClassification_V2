@@ -167,12 +167,35 @@ namespace AutomaticImageClassificationTests
         }
 
         [TestMethod]
-        public void CanConcatArrays()
+        public void CanPerformEarlyFusion()
         {
             double[] array1 = { 1, 2, 3 };
             double[] array2 = { 0, 1, 2, 3 };
             var concat = EarlyFusion.ConcatArrays(ref array1, ref array2);
             CollectionAssert.AreEqual(concat, new double[] { 1, 2, 3, 0, 1, 2, 3 });
+        }
+
+        [TestMethod]
+        public void CanPerformLateFusion()
+        {
+            List<double[]> resultsModel1 = new List<double[]>();
+            List<double[]> resultsModel2 = new List<double[]>();
+
+            resultsModel1.Add(new double[] { 1, 2, 3 });
+            resultsModel1.Add(new double[] { 1, 2, 3 });
+
+            resultsModel2.Add(new double[] { 0, 1, 1 });
+            resultsModel2.Add(new double[] { 1, 200, 1 });
+
+            double weight = 0.5;
+
+            var lateFusion = LateFusion.PerformLateFusion(resultsModel1, resultsModel2, weight);
+
+            Dictionary<double, int> results = new Dictionary<double, int>();
+            results.Add(2,3);
+            results.Add(101, 2);
+
+            CollectionAssert.AreEqual(lateFusion, results);
         }
 
 

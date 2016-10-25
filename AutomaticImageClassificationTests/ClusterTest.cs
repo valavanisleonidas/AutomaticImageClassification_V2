@@ -5,8 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutomaticImageClassification.Cluster;
+using AutomaticImageClassification.Cluster.EM;
 using AutomaticImageClassification.Cluster.KDTree;
+using AutomaticImageClassification.Cluster.Kmeans;
 using AutomaticImageClassification.Feature;
+using AutomaticImageClassification.Feature.Bovw;
+using AutomaticImageClassification.KDTree;
 using AutomaticImageClassification.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

@@ -10,9 +10,9 @@ namespace AutomaticImageClassification.Classifiers
     public class LibLinearLib : IClassifier
     {
 
-        private Model _model = new Model();
-        public ClassifierResults _results = new ClassifierResults();
-        private Parameters _params = new Parameters();
+        private LibLinearModel _libLinearModel = new LibLinearModel();
+        private LibLinearResults _results = new LibLinearResults();
+        private LibLinearParameters _params = new LibLinearParameters();
 
         public LibLinearLib()
         {
@@ -26,7 +26,7 @@ namespace AutomaticImageClassification.Classifiers
             _params.SolverType = 2;
         }
 
-        public LibLinearLib(Parameters _params)
+        public LibLinearLib(LibLinearParameters _params)
         {
             this._params = _params;
         }
@@ -69,8 +69,8 @@ namespace AutomaticImageClassification.Classifiers
                         _params.Solver,
                         _params.SolverType);
 
-                _model.Weights = Arrays.ToJaggedArray((double[,])((MWNumericArray)result[0]).ToArray(MWArrayComponent.Real));
-                _model.Bias = (double[])((MWNumericArray)result[1]).ToVector(MWArrayComponent.Real);
+                _libLinearModel.Weights = Arrays.ToJaggedArray((double[,])((MWNumericArray)result[0]).ToArray(MWArrayComponent.Real));
+                _libLinearModel.Bias = (double[])((MWNumericArray)result[1]).ToVector(MWArrayComponent.Real);
 
                 result = null;
                 classifier.Dispose();
@@ -160,12 +160,13 @@ namespace AutomaticImageClassification.Classifiers
 
                 MWArray[] result = classifier.PredictLiblinear(3,
                         new MWNumericArray(features.ToArray()),
-                        new MWNumericArray(_model.Weights),
-                        new MWNumericArray(_model.Bias));
+                        new MWNumericArray(_libLinearModel.Weights),
+                        new MWNumericArray(_libLinearModel.Bias));
 
                 _results.Probabilities = (double[])((MWNumericArray)result[0]).ToVector(MWArrayComponent.Real);
                 _results.PredictedLabels = (double[])((MWNumericArray)result[1]).ToVector(MWArrayComponent.Real);
-
+                _results.Scores = Arrays.ToJaggedArray((double[,])((MWNumericArray)result[2]).ToArray(MWArrayComponent.Real)).ToList();
+                
                 result = null;
                 classifier.Dispose();
 
@@ -186,6 +187,11 @@ namespace AutomaticImageClassification.Classifiers
             return _results.PredictedLabels;
         }
 
+        public List<double[]> GetPredictedScores()
+        {
+            return _results.Scores;
+        }
+
         public override string ToString()
         {
             return "LibLinear";
@@ -193,19 +199,24 @@ namespace AutomaticImageClassification.Classifiers
 
     }
 
-    public class Model
+    public class LibLinearModel
     {
         public double[][] Weights;
         public double[] Bias;
     }
     
-    public class Parameters
+    public class LibLinearParameters
     {
         public string Kernel, Homker, Solver;
         public bool IsManualCv;
         public double BiasMultiplier, Gamma, Cost, CvAccuracy = 0;
         public int SolverType;
-
+}
+    public class LibLinearResults
+    {
+        public double[] Probabilities;
+        public double[] PredictedLabels;
+        public List<double[]> Scores;
     }
 
 }

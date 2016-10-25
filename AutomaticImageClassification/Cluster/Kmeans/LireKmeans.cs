@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using java.util;
 using net.semanticmetadata.lire.utils.cv;
 using Arrays = AutomaticImageClassification.Utilities.Arrays;
 
-namespace AutomaticImageClassification.Cluster
+namespace AutomaticImageClassification.Cluster.Kmeans
 {
     public class LireKmeans : ICluster
     {

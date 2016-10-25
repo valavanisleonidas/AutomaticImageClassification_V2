@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using java.awt;
 
-namespace AutomaticImageClassification.Feature
+namespace AutomaticImageClassification.Feature.Bovw
 {
     public class ColorCorrelogram : IFeatures
     {

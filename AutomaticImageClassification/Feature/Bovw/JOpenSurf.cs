@@ -8,7 +8,7 @@ using Accord.Math;
 using OpenSURFcs;
 using AutomaticImageClassification.Cluster.KDTree;
 
-namespace AutomaticImageClassification.Feature
+namespace AutomaticImageClassification.Feature.Bovw
 {
     public class JOpenSurf : IFeatures
     {

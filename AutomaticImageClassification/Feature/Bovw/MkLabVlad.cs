@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using gr.iti.mklab.visual.aggregation;
 
-namespace AutomaticImageClassification.Feature
+namespace AutomaticImageClassification.Feature.Bovw
 {
     public class MkLabVlad : IFeatures
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using AutomaticImageClassification.Utilities;
 
-namespace AutomaticImageClassification.Feature
+namespace AutomaticImageClassification.Feature.Textual
 {
     public class WordEmbedding : IFeatures
     {

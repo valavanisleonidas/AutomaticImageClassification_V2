@@ -14,7 +14,7 @@ namespace AutomaticImageClassification.Classifiers
 
         private SVMParameter _parameter = new SVMParameter();
         private SVMModel _model;
-        private ClassifierResults _results = new ClassifierResults();
+        private LibSvmResults _results = new LibSvmResults();
         private string _filePath;
         private const int _nFold = 10;
         private double _cvAccuracy = 0;
@@ -110,12 +110,10 @@ namespace AutomaticImageClassification.Classifiers
 
             if (_parameter.Probability)
             {
-                //list of probabilities for each category
-                List<double[]> probabilities;
-                //predict probabilities
-                _results.PredictedLabels = testSet.PredictProbability(_model, out probabilities);
+                //predict probabilities and add list of estimates for each category in _results.Scores
+                _results.PredictedLabels = testSet.PredictProbability(_model, out _results.Scores);
                 //get max probability for each image
-                _results.Probabilities = probabilities.Select(l => l.Max()).ToArray();
+                _results.Probabilities = _results.Scores.Select(l => l.Max()).ToArray();
             }
             else
             {
@@ -135,10 +133,23 @@ namespace AutomaticImageClassification.Classifiers
             return _results.PredictedLabels;
         }
 
+        public List<double[]> GetPredictedScores()
+        {
+            return _results.Scores;
+        }
+
         public override string ToString()
         {
             return "LibSvm";
         }
 
     }
+
+    public class LibSvmResults
+    {
+        public double[] Probabilities;
+        public double[] PredictedLabels;
+        public List<double[]> Scores;
+    }
+
 }

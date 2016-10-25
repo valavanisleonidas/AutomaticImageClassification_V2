@@ -33,7 +33,7 @@ namespace AutomaticImageClassificationTests
             const bool l1 = true;
             const bool l2 = false;
 
-            var _params = new Parameters
+            var _params = new LibLinearParameters
             {
                 Gamma = 0.5,
                 Homker = "KCHI2",

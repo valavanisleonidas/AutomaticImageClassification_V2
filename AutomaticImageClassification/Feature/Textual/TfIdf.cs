@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AutomaticImageClassification.Utilities;
 
-namespace AutomaticImageClassification.Feature
+namespace AutomaticImageClassification.Feature.Textual
 {
     public class TfIdf : IFeatures
     {

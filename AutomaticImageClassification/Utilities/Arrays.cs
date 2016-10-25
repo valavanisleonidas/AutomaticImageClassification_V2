@@ -46,13 +46,13 @@ namespace AutomaticImageClassification.Utilities
             return list;
         }
 
-        public static void GetDistinctColors<T>(ref List<T[]> colors)
+        public static void GetDistinctObjects<T>(ref List<T[]> objects)
         {
-            if (colors.Count == 0)
+            if (objects.Count == 0)
             {
                 throw new ArgumentException("List is empty");
             }
-            colors = colors.Distinct(new CustomGenericArrayEqualityComparator<T>()).ToList();
+            objects = objects.Distinct(new CustomGenericArrayEqualityComparator<T>()).ToList();
         }
 
         public static double[] ConvertJagged2DToDouble1D(ref double[,] array)

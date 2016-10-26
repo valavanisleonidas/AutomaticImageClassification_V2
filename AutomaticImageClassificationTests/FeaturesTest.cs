@@ -13,6 +13,7 @@ using AutomaticImageClassification.Cluster.Kmeans;
 using AutomaticImageClassification.Feature.Boc;
 using AutomaticImageClassification.Feature.Bovw;
 using AutomaticImageClassification.Feature.Textual;
+using AutomaticImageClassification.KDTree;
 
 namespace AutomaticImageClassificationTests
 {

@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AutomaticImageClassification.Cluster.KDTree;
 using AutomaticImageClassification.Utilities;
 using java.awt.image;
 
-namespace AutomaticImageClassification.Feature
+namespace AutomaticImageClassification.Feature.Boc
 {
     public class Lboc : IFeatures
     {
@@ -68,7 +64,7 @@ namespace AutomaticImageClassification.Feature
             var vector = new double[_dictionary.Count];
             BufferedImage[] blocks = ImageProcessor.splitImage(input, _patches, _patches);
 
-            var boc = new Boc(_resize, _cs, _palette, _boctree );
+            var boc = new Feature.Boc.Boc(_resize, _cs, _palette, _boctree );
             foreach (var b in blocks)
             {
                 double[] _boc = boc.ExtractHistogram(b);
@@ -89,7 +85,7 @@ namespace AutomaticImageClassification.Feature
             img = ImageProcessor.resizeImage(img, _resize, _resize, false);
             BufferedImage[] blocks = ImageProcessor.splitImage(img, _patches, _patches);
 
-            var boc = new Boc(_resize,_cs,_palette,_boctree);
+            var boc = new Feature.Boc.Boc(_resize,_cs,_palette,_boctree);
             foreach (var b in blocks)
             {
                 colors.Add(boc.ExtractHistogram(b));

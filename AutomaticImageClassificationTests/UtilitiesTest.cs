@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutomaticImageClassification.FusionTypes;
 using AutomaticImageClassification.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -96,7 +97,7 @@ namespace AutomaticImageClassificationTests
 
             foreach (var doublese in features)
             {
-                Files.WriteAppendFile(fileToWrite_2,doublese);
+                Files.WriteAppendFile(fileToWrite_2, doublese);
                 //Files.WriteAppendBinaryFile(fileToWrite_2Binary, doublese);   
             }
 
@@ -153,7 +154,7 @@ namespace AutomaticImageClassificationTests
 
             list.Add(new double[] { 3, 2, 3 });
 
-            Arrays.GetDistinctColors(ref list);
+            Arrays.GetDistinctObjects(ref list);
 
             Assert.AreEqual(list.Count, 5);
         }
@@ -163,6 +164,54 @@ namespace AutomaticImageClassificationTests
         {
             string file = @"Data\test_figures.xml";
             Figures images = XmlFiguresReader.ReadXml<Figures>(file);
+        }
+
+        [TestMethod]
+        public void CanPerformEarlyFusion()
+        {
+            List<double[]> resultsModel1 = new List<double[]>();
+            List<double[]> resultsModel2 = new List<double[]>();
+
+            resultsModel1.Add(new double[] { 1, 2, 3 });
+            resultsModel1.Add(new double[] { 1, 2, 3 });
+
+            resultsModel2.Add(new double[] { 0, 1, 1 });
+            resultsModel2.Add(new double[] { 1, 200, 1 });
+            var concat = EarlyFusion.ConcatArrays(ref resultsModel1, ref resultsModel2);
+
+            List<double[]> concatResultList = new List<double[]>();
+
+            concatResultList.Add(new double[] { 1, 2, 3, 0, 1, 1 });
+            concatResultList.Add(new double[] { 1, 2, 3, 1, 200, 1 });
+
+            for (int i = 0; i < concatResultList.Count; i++)
+            {
+                CollectionAssert.AreEqual(concat[i], concatResultList[i]);
+            }
+            
+        }
+
+        [TestMethod]
+        public void CanPerformLateFusion()
+        {
+            List<double[]> resultsModel1 = new List<double[]>();
+            List<double[]> resultsModel2 = new List<double[]>();
+
+            resultsModel1.Add(new double[] { 1, 2, 3 });
+            resultsModel1.Add(new double[] { 1, 2, 3 });
+
+            resultsModel2.Add(new double[] { 0, 1, 1 });
+            resultsModel2.Add(new double[] { 1, 200, 1 });
+
+            double weight = 0.5;
+
+            var lateFusion = LateFusion.PerformLateFusion(resultsModel1, resultsModel2, weight);
+
+            Dictionary<double, int> results = new Dictionary<double, int>();
+            results.Add(2, 3);
+            results.Add(101, 2);
+
+            CollectionAssert.AreEqual(lateFusion, results);
         }
 
 

@@ -3,21 +3,33 @@ using System.Collections.Generic;
 using System.Linq;
 using AutomaticImageClassification.Utilities;
 using MathWorks.MATLAB.NET.Arrays;
-using MatlabAPI;
 
-namespace AutomaticImageClassification.Cluster
+namespace AutomaticImageClassification.Cluster.EM
 {
-    public class VlFeatKmeans : ICluster
+    public class VlFeatEm : ICluster
     {
+        private bool _isRandomInit;
         private int _numberOfFeatures;
 
-        public VlFeatKmeans()
+        public VlFeatEm()
         {
+            _isRandomInit = false;
             _numberOfFeatures = int.MaxValue;
         }
 
-        public VlFeatKmeans(int numberOfFeatures)
+        public VlFeatEm(bool isRandomInit)
         {
+            _isRandomInit = isRandomInit;
+        }
+
+        public VlFeatEm(int numberOfFeatures)
+        {
+            _numberOfFeatures = numberOfFeatures;
+        }
+
+        public VlFeatEm(bool isRandomInit, int numberOfFeatures)
+        {
+            _isRandomInit = isRandomInit;
             _numberOfFeatures = numberOfFeatures;
         }
 
@@ -32,25 +44,25 @@ namespace AutomaticImageClassification.Cluster
                     Arrays.GetSubsetOfFeatures(ref descriptorFeatures, _numberOfFeatures);
                 }
 
-                MWArray result = cluster.Kmeans(new MWNumericArray(descriptorFeatures.ToArray()),
-                        new MWNumericArray(clustersNum));
+                MWArray[] result = cluster.Em(3,
+                    new MWNumericArray(descriptorFeatures.ToArray()),
+                    new MWNumericArray(clustersNum),
+                    new MWLogicalArray(_isRandomInit));
 
-                var features = (double[,])result.ToArray();
-                result.Dispose();
+                var features = (double[,])result[0].ToArray();
+                result = null;
                 cluster.Dispose();
-
                 return Arrays.ToJaggedArray(ref features).ToList();
             }
             catch (Exception e)
             {
                 throw e;
             }
-
         }
 
         public override string ToString()
         {
-            return "VlFeatKmeans";
+            return "VlFeatEm";
         }
 
     }

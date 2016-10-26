@@ -32,7 +32,7 @@ namespace AutomaticImageClassificationTests
             //features.Add(new double[] { 100, 200, 300 });
             //features.Add(new double[] { 0.4, 0.6, 0.8 });
 
-            var _params = new Parameters
+            var _params = new LibLinearParameters
             {
                 Gamma = 0.5,
                 Homker = "KCHI2",
@@ -58,7 +58,7 @@ namespace AutomaticImageClassificationTests
             var trainFeat = Files.ReadFileToListArrayList<double>(trainDataPath).ToList();
             double[] trainlabels = Files.ReadFileTo1DArray<double>(trainlabelsPath);
 
-            var _params = new Parameters
+            var _params = new LibLinearParameters
             {
                 Gamma = 0.5,
                 Homker = "KCHI2",
@@ -94,7 +94,7 @@ namespace AutomaticImageClassificationTests
 
             double[] trainlabels = Files.ReadFileTo1DArray<double>(trainlabelsPath);
 
-            var _params = new Parameters
+            var _params = new LibLinearParameters
             {
                 Gamma = 0.5,
                 Homker = "KCHI2",
@@ -133,7 +133,7 @@ namespace AutomaticImageClassificationTests
             double[] testlabels = Files.ReadFileTo1DArray<double>(testlabelsPath);
 
 
-            var _params = new Parameters
+            var _params = new LibLinearParameters
             {
                 Gamma = 0.5,
                 Homker = "KCHI2",

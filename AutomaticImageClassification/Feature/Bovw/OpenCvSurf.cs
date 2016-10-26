@@ -8,20 +8,20 @@ using AutomaticImageClassification.Utilities;
 using OpenCvSharp.CPlusPlus;
 using AutomaticImageClassification.Cluster.KDTree;
 
-namespace AutomaticImageClassification.Feature
+namespace AutomaticImageClassification.Feature.Bovw
 {
-    public class OpenCvSift : IFeatures
+    public class OpenCvSurf : IFeatures
     {
-        private SIFT _sift = new SIFT();
+        private SURF _surf = new SURF();
         private IKdTree _tree;
         private int _clusterNum;
 
-        public OpenCvSift(IKdTree tree, int clusterNum)
+        public OpenCvSurf(IKdTree tree, int clusterNum)
         {
             _tree = tree;
             _clusterNum = clusterNum;
         }
-        public OpenCvSift() { }
+        public OpenCvSurf() { }
 
         public double[] ExtractHistogram(string input)
         {
@@ -38,24 +38,27 @@ namespace AutomaticImageClassification.Feature
             return imgVocVector;
         }
 
+
         public List<double[]> ExtractDescriptors(string input)
         {
-            Mat src = new Mat(input);
-            KeyPoint[] keuPoints;
-            MatOfFloat descriptors = new MatOfFloat();
 
-            _sift.Run(src, null, out keuPoints, descriptors);
-            float[,] arr = descriptors.ToRectangularArray();
+            Mat src1 = new Mat(input);
+            KeyPoint[] keypoints1;
+            MatOfFloat descriptors1 = new MatOfFloat();
+
+            _surf.Run(src1, null, out keypoints1, descriptors1);
+
+            float[,] arr = descriptors1.ToRectangularArray();
             //convert to list<double[]>
             return Arrays.ToJaggedArray(ref arr)
-                .ToList()
-                .ConvertAll(
-                        des => Array.ConvertAll(des, x => (double)x));
+                    .ToList()
+                    .ConvertAll(
+                            des => Array.ConvertAll(des, x => (double)x));
         }
 
         public override string ToString()
         {
-            return "OpenCvSift";
+            return "OpenCvSurf";
         }
 
     }

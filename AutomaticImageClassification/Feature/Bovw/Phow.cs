@@ -5,9 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using AutomaticImageClassification.Utilities;
 using MathWorks.MATLAB.NET.Arrays;
-using MatlabAPI;
 
-namespace AutomaticImageClassification.Feature
+namespace AutomaticImageClassification.Feature.Bovw
 {
     public class Phow : IFeatures
     {

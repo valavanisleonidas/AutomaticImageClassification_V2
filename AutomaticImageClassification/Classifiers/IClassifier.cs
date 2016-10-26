@@ -11,6 +11,7 @@ namespace AutomaticImageClassification.Classifiers
 
         double[] GetPredictedProbabilities();
         double[] GetPredictedCategories();
+        List<double[]> GetPredictedScores();
 
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using AutomaticImageClassification.Cluster.KDTree;
 
-namespace AutomaticImageClassification.Cluster.KDTree
+namespace AutomaticImageClassification.KDTree
 {
     public class AccordKdTree : IKdTree
     {

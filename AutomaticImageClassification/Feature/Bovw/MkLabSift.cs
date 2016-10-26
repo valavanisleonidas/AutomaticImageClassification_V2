@@ -8,40 +8,40 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AutomaticImageClassification.Feature
+namespace AutomaticImageClassification.Feature.Bovw
 {
-    public class MkLabSurf : IFeatures
+    public class MkLabSift : IFeatures
     {
-        private AbstractFeatureExtractor _surf;
+        private AbstractFeatureExtractor _sift;
         private IKdTree _tree;
         private ExtractionMethod _extractionMethod;
         private int _clusterNum;
 
-        public MkLabSurf(IKdTree tree, int clusterNum)
+        public MkLabSift(IKdTree tree, int clusterNum)
         {
             _tree = tree;
             _clusterNum = clusterNum;
         }
 
-        public MkLabSurf()
+        public MkLabSift()
         {
-            _extractionMethod = ExtractionMethod.ColorSurf;
-            _surf = new ColorSURFExtractor();
+            _extractionMethod = ExtractionMethod.RootSift;
+            _sift = new RootSIFTExtractor();
         }
 
-        public MkLabSurf(ExtractionMethod extractionMethod)
+        public MkLabSift(ExtractionMethod extractionMethod)
         {
             _extractionMethod = extractionMethod;
             switch (_extractionMethod)
             {
-                case ExtractionMethod.Surf:
-                    _surf = new SURFExtractor();
+                case ExtractionMethod.Sift:
+                    _sift = new SIFTExtractor();
                     break;
-                case ExtractionMethod.ColorSurf:
-                    _surf = new ColorSURFExtractor();
+                case ExtractionMethod.RootSift:
+                    _sift = new RootSIFTExtractor();
                     break;
                 default:
-                    _surf = new ColorSURFExtractor();
+                    _sift = new RootSIFTExtractor();
                     break;
             }
         }
@@ -49,8 +49,8 @@ namespace AutomaticImageClassification.Feature
         public List<double[]> ExtractDescriptors(string input)
         {
             var bimage = new BufferedImage(new Bitmap(input));
-            double[][] surfFeatures = _surf.extractFeatures(bimage);
-            return surfFeatures.ToList();
+            double[][] siftFeatures = _sift.extractFeatures(bimage);
+            return siftFeatures.ToList();
         }
 
         public double[] ExtractHistogram(string input)
@@ -70,13 +70,14 @@ namespace AutomaticImageClassification.Feature
 
         public enum ExtractionMethod
         {
-            Surf,
-            ColorSurf
+            Sift,
+            RootSift
         }
 
         public override string ToString()
         {
             return _extractionMethod.ToString();
         }
+
     }
 }

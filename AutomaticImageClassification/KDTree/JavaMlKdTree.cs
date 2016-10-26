@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using AutomaticImageClassification.Cluster.KDTree;
 using ikvm.extensions;
 using java.lang;
 
-namespace AutomaticImageClassification.Cluster.KDTree
+namespace AutomaticImageClassification.KDTree
 {
     
     public class JavaMlKdTree : IKdTree

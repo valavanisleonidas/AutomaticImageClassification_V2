@@ -4,7 +4,7 @@ using System.Linq;
 using AutomaticImageClassification.Utilities;
 using Accord.MachineLearning;
 
-namespace AutomaticImageClassification.Cluster
+namespace AutomaticImageClassification.Cluster.Kmeans
 {
     public class AccordKmeans : ICluster
     {

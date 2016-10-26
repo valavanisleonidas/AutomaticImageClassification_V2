@@ -1,15 +1,11 @@
-﻿using java.awt.image;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AutomaticImageClassification.Cluster.KDTree;
 using AutomaticImageClassification.Utilities;
+using java.awt.image;
 using Color = java.awt.Color;
 
-namespace AutomaticImageClassification.Feature
+namespace AutomaticImageClassification.Feature.Boc
 {
     public class Boc : IFeatures
     {

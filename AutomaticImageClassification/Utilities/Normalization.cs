@@ -7,7 +7,8 @@ namespace AutomaticImageClassification.Utilities
 {
     public class Normalization
     {
-        public static void array(ref List<double[]> list)
+        
+        public static void Normalize(ref List<double[]> list)
         {
             var sqrtArray = list.Select(x => x.Select(y => y * y).ToArray()).ToArray();
             double[] columnSums = Arrays.TransposeMatrix(ref sqrtArray).ToList().Select(a => a.Sum()).ToArray();
@@ -45,6 +46,7 @@ namespace AutomaticImageClassification.Utilities
             //return 0
             return feature;
         }
+
 
         //multiply array with given weight
         public static double[] WeightArray(double[] array, double weight)
@@ -259,6 +261,5 @@ namespace AutomaticImageClassification.Utilities
             }
             return array;
         }
-
     }
 }

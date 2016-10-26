@@ -191,7 +191,7 @@
     <Compile Include="Utilities\Normalization.cs" />
     <Compile Include="Utilities\Files.cs" />
     <Compile Include="KDTree\JavaMlKdTree.cs" />
-    <Compile Include="Utilities\TermSelection.cs" />
+    <Compile Include="Utilities\FeatureSelection.cs" />
     <Compile Include="Utilities\XmlFiguresReader.cs" />
     <Compile Include="Utilities\XmlSerializationExtensions.cs" />
     <Page Include="MainWindow.xaml">

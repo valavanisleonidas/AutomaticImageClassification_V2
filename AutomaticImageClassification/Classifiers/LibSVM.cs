@@ -16,7 +16,7 @@ namespace AutomaticImageClassification.Classifiers
         private SVMModel _model;
         private LibSvmResults _results = new LibSvmResults();
         private string _filePath;
-        private const int _nFold = 10;
+        private const int NFold = 10;
         private double _cvAccuracy = 0;
 
         public LibSvm()
@@ -85,7 +85,7 @@ namespace AutomaticImageClassification.Classifiers
 
                     // Do cross validation to check this parameter set for the dataset
                     double[] crossValidationResults; // output labels
-                    trainSet.CrossValidation(_parameter, _nFold, out crossValidationResults);
+                    trainSet.CrossValidation(_parameter, NFold, out crossValidationResults);
 
                     // Evaluate the cross validation result
                     double crossValidationAccuracy = trainSet.EvaluateClassificationProblem(crossValidationResults);

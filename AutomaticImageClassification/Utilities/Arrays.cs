@@ -92,6 +92,24 @@ namespace AutomaticImageClassification.Utilities
             return trasposedMatrix;
         }
 
+        public static T[][] TransposeMatrix<T>(T[][] matrix)
+        {
+            var m = matrix.Length;
+            var n = matrix[0].Length;
+
+            var trasposedMatrix = new T[n][];
+
+            for (var x = 0; x < n; x++)
+            {
+                trasposedMatrix[x] = new T[m];
+                for (var y = 0; y < m; y++)
+                {
+                    trasposedMatrix[x][y] = matrix[y][x];
+                }
+            }
+            return trasposedMatrix;
+        }
+
         public static T[,] To2D<T>(ref T[][] source)
         {
             try
@@ -173,6 +191,7 @@ namespace AutomaticImageClassification.Utilities
         {
             descriptorFeatures = descriptorFeatures.OrderBy(x => Guid.NewGuid()).Take(numberOfFeatures).ToList();
         }
+
     }
 
 

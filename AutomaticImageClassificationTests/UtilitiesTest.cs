@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -21,7 +22,7 @@ namespace AutomaticImageClassificationTests
             list.Add(new double[] { 0, 2, 2 });
             list.Add(new double[] { 0, 4, 5 });
 
-            Normalization.array(ref list);
+            Normalization.Normalize(ref list);
 
         }
 
@@ -188,7 +189,7 @@ namespace AutomaticImageClassificationTests
             {
                 CollectionAssert.AreEqual(concat[i], concatResultList[i]);
             }
-            
+
         }
 
         [TestMethod]
@@ -207,11 +208,120 @@ namespace AutomaticImageClassificationTests
 
             var lateFusion = LateFusion.PerformLateFusion(resultsModel1, resultsModel2, weight);
 
-            Dictionary<double, int> results = new Dictionary<double, int>();
-            results.Add(2, 3);
-            results.Add(101, 2);
+            Dictionary<double, int> results = new Dictionary<double, int> { { 2, 3 }, { 101, 2 } };
 
             CollectionAssert.AreEqual(lateFusion, results);
+        }
+
+        [TestMethod]
+        public void CanPerformFeatureSelectionUsingMostFrequent()
+        {
+            var train = new List<double[]>
+            {
+                new double[] {0, 9, 1},
+                new double[] {0, 0, 0},
+                new double[] {0, 0, 1},
+                new double[] {0, 4, 1}
+            };
+
+            var test = new List<double[]>
+            {
+                new double[] {0, 1, 1},
+                new double[] {9, 1, 0},
+                new double[] {7, 0, 1}
+            };
+
+            var kMostFrequent = 1;
+            FeatureSelection.RemoveMostFrequentFeatures(ref train, ref test, kMostFrequent);
+
+            var correctResultTrain = new List<double[]>
+            {
+                new double[] {0, 9},
+                new double[] {0, 0},
+                new double[] {0, 0},
+                new double[] {0, 4}
+            };
+
+            var correctResultTest = new List<double[]>
+            {
+                new double[] {0, 1},
+                new double[] {9, 1},
+                new double[] {7, 0}
+            };
+            for (int i = 0; i < correctResultTrain.Count; i++)
+            {
+                CollectionAssert.AreEqual(train[i], correctResultTrain[i]);
+            }
+            for (int i = 0; i < correctResultTest.Count; i++)
+            {
+                CollectionAssert.AreEqual(test[i], correctResultTest[i]);
+            }
+        }
+
+        [TestMethod]
+        public void CanPerformFeatureSelectionUsingThreshold()
+        {
+            var train = new List<double[]>
+            {
+                new double[] {1, 9, 1, 1, 0},
+                new double[] {1, 0, 0, 1, 3},
+                new double[] {1, 0, 1, 1, 4},
+                new double[] {0, 4, 1, 1, 5}
+            };
+
+            var test = new List<double[]>
+            {
+                new double[] {0, 1, 1, 1, 2},
+                new double[] {9, 1, 0, 1, 2},
+                new double[] {7, 0, 1, 1, 2}
+            };
+
+            var threshold = 0.5;
+            //all features ( columns ) that have more than half non zero elements are removed with threshold 0.5
+            FeatureSelection.RemoveMostFrequentFeaturesUsingThreshold(ref train, ref test, threshold);
+
+            var correctResultTrain = new List<double[]>
+            {
+                new double[] {9},
+                new double[] {0},
+                new double[] {0},
+                new double[] {4}
+            };
+
+            var correctResultTest = new List<double[]>
+            {
+                new double[] {1},
+                new double[] {1},
+                new double[] {0}
+            };
+            for (int i = 0; i < correctResultTrain.Count; i++)
+            {
+                CollectionAssert.AreEqual(train[i], correctResultTrain[i]);
+            }
+            for (int i = 0; i < correctResultTest.Count; i++)
+            {
+                CollectionAssert.AreEqual(test[i], correctResultTest[i]);
+            }
+        }
+
+        [TestMethod]
+        public void CanPerformFeature()
+        {
+            const string trainDataPath = @"Data\Features\Phow_rgb_1_2_4_Lire_JavaML_1536_train.txt";
+            const string testDataPath = @"Data\Features\Phow_rgb_1_2_4_Lire_JavaML_1536_test.txt";
+
+            //MkLabRootSift_Lire_JavaML_512_test
+            var trainFeat = Files.ReadFileToListArrayList<double>(trainDataPath).ToList();
+            var testFeat = Files.ReadFileToListArrayList<double>(testDataPath).ToList();
+
+            var threshold = 0.1;
+            //all features ( columns ) that have more than half non zero elements are removed with threshold 0.5
+            Stopwatch wat = new Stopwatch();
+            wat.Start();
+            FeatureSelection.RemoveMostFrequentFeaturesUsingThreshold(ref trainFeat, ref testFeat, threshold);
+            wat.Stop();
+
+
         }
 
 

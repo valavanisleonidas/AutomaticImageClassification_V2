@@ -161,6 +161,21 @@ namespace AutomaticImageClassification.Utilities
             return df;
         }
 
+        public static double[] ComputeDf(double[][] array)
+        {
+            var columns = array[0].Length;
+            var df = new double[columns];
+            array = Arrays.TransposeMatrix(ref array);
+
+            for (var i = 0; i < array.Length; i++)
+            {
+                df[i] = ComputeDf(ref array[i]);
+            }
+
+            return df;
+        }
+
+
         public static int ComputeDf(ref double[] array)
         {
             return array.Count(feature => feature != 0);

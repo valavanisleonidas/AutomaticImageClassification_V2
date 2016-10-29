@@ -2,6 +2,7 @@
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
+using AutomaticImageClassification.Evaluation;
 using AutomaticImageClassification.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -18,11 +19,11 @@ namespace AutomaticImageClassificationTests
         {
             const string trainlabelsPath = @"Data\Features\boc_labels_test.txt";
             const string testlabelsPath = @"Data\Features\labelsTest.txt";
-
-            int[] categories = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31 };
-
+            
             var trueLabels = Files.ReadFileTo1DArray<int>(trainlabelsPath);
             var predictedLabels = Files.ReadFileTo1DArray<int>(testlabelsPath);
+            int[] categories = trueLabels.Distinct().ToArray();
+
             var accuracy = AutomaticImageClassification.Evaluation.Measures.Accuracy(trueLabels, predictedLabels);
             var macroF1 = AutomaticImageClassification.Evaluation.Measures.MacroF1(trueLabels, predictedLabels, categories);
             var microF1 = AutomaticImageClassification.Evaluation.Measures.MicroF1(trueLabels, predictedLabels, categories);
@@ -92,6 +93,6 @@ namespace AutomaticImageClassificationTests
             }
             
         }
-
+        
     }
 }

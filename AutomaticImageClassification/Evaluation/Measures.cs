@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutomaticImageClassification.Utilities;
+using MathWorks.MATLAB.NET.Arrays;
 
 namespace AutomaticImageClassification.Evaluation
 {
@@ -139,6 +140,26 @@ namespace AutomaticImageClassification.Evaluation
                 confusionMatrix[i] = Normalization.WeightArray(confusionMatrix[i], sum);
             }
             return confusionMatrix;
+        }
+
+        public static void PlotConfusionMatrix(ref double[][] confusionMatrix,string resFileName,string titleName,int[] categories,int rotationDegrees = 90)
+        {
+            try
+            {
+                var plotConfusionMatrix = new PlotAPI.Plot();
+
+                plotConfusionMatrix.PlotConfusionMatrix(
+                    new MWNumericArray(confusionMatrix),
+                    new MWCharArray(resFileName),
+                    new MWCharArray(titleName),
+                    new MWNumericArray(new[] { categories }),
+                    new MWNumericArray(rotationDegrees));
+                
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
     }

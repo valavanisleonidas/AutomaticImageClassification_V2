@@ -7,7 +7,12 @@ namespace AutomaticImageClassification.Utilities
 {
     public class Normalization
     {
-        
+
+        public static double Log(double value, double logBase)
+        {
+            return value == 0 ? 0 : Math.Log(value, logBase);
+        }
+
         public static void Normalize(ref List<double[]> list)
         {
             var sqrtArray = list.Select(x => x.Select(y => y * y).ToArray()).ToArray();
@@ -173,8 +178,6 @@ namespace AutomaticImageClassification.Utilities
             {
                 df[i] = ComputeDf(ref array[i]);
             }
-            array = Arrays.TransposeMatrix(ref array);
-
             return df;
         }
 

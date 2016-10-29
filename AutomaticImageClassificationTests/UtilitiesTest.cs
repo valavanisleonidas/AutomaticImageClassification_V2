@@ -214,7 +214,7 @@ namespace AutomaticImageClassificationTests
         }
 
         [TestMethod]
-        public void CanPerformFeatureSelectionUsingMostFrequent()
+        public void CanRemoveKMostFrequent()
         {
             var train = new List<double[]>
             {
@@ -232,7 +232,7 @@ namespace AutomaticImageClassificationTests
             };
 
             var kMostFrequent = 1;
-            FeatureSelection.RemoveMostFrequentFeatures(ref train, ref test, kMostFrequent);
+            FeatureSelection.RemoveKMostFrequentFeatures(ref train, ref test, kMostFrequent);
 
             var correctResultTrain = new List<double[]>
             {
@@ -259,7 +259,7 @@ namespace AutomaticImageClassificationTests
         }
 
         [TestMethod]
-        public void CanPerformFeatureSelectionUsingThreshold()
+        public void CanRemoveMostFrequestUsingThreshold()
         {
             var train = new List<double[]>
             {
@@ -279,7 +279,7 @@ namespace AutomaticImageClassificationTests
             var threshold = 0.5;
             //all features ( columns ) that have more than half non zero elements are removed with threshold 0.5
             FeatureSelection.RemoveMostFrequentFeaturesUsingThreshold(ref train, ref test, threshold);
-
+            
             var correctResultTrain = new List<double[]>
             {
                 new double[] {9},
@@ -305,24 +305,217 @@ namespace AutomaticImageClassificationTests
         }
 
         [TestMethod]
-        public void CanPerformFeature()
+        public void CanRemoveFeaturesWithInformationGainLessThanThreshold()
         {
+            var train = new List<double[]>
+            {
+                new double[] {1,  2,  1,  0,  3,  9,  0,  1,  2},
+                new double[] {0,  5,  2,  7,  1,  0,  2,  0,  1  },
+                new double[] {0,  1,  1 , 0,  2,  0,  1,  0,  1  },
+                new double[] {0,  0,  1,  0,  1,  0,  4,  0,  1  },
+                new double[] {3,  2,  5,  1,  0,  0,  1,  0,  2  },
+                new double[] {0,  0,  2,  0,  2,  2,  1,  5,  1  },
+                new double[] {2,  3,  0,  4,  0,  1,  1,  1,  1 },
+                new double[] {0,  0,  0,  3,  2,  0,  1,  1,  2  },
+                new double[] {0,  4,  3,  2,  5,  6,  1,  0,  3  },
+                new double[] {0,  1,  0,  7,  4,  0,  0,  2,  2},
+                new double[] {0,  0,  0,  1,  1,  2,  4,  5,  0 }
+            };
+
+
+            int[] labels = { 2, 1, 3, 4, 2, 1, 2, 4, 3, 4, 1 };
+            int[] categories = { 1, 2, 3, 4 };
+            var threshold = 0.1;
+
+            FeatureSelection.InformationGainThreshold(ref train, ref train, ref labels, threshold);
+
+            var results = new List<double[]>
+            {
+                new double[] {1,  2,  1,  3,  9,  0,  1,  2},
+                new double[] {0,  5,  2,  1,  0,  2,  0,  1  },
+                new double[] {0,  1,  1,  2,  0,  1,  0,  1  },
+                new double[] {0,  0,  1,  1,  0,  4,  0,  1  },
+                new double[] {3,  2,  5,  0,  0,  1,  0,  2  },
+                new double[] {0,  0,  2,  2,  2,  1,  5,  1  },
+                new double[] {2,  3,  0,  0,  1,  1,  1,  1 },
+                new double[] {0,  0,  0,  2,  0,  1,  1,  2  },
+                new double[] {0,  4,  3,  5,  6,  1,  0,  3  },
+                new double[] {0,  1,  0,  4,  0,  0,  2,  2},
+                new double[] {0,  0,  0,  1,  2,  4,  5,  0 }
+            };
+
+            for (int i = 0; i < train.Count; i++)
+            {
+                CollectionAssert.AreEqual(train[i], results[i]);
+            }
+
+            //correct results
+            //double[] resultIg = { 0.845, 0.444, 0.194, 0.012, 0.433, 0.311, 0.183, 0.242, 0.189 };
+            //CollectionAssert.AreEqual(ig,resultIg);
+
+        }
+
+        [TestMethod]
+        public void CanRemoveKFeaturesWithTheLeastInformationGain()
+        {
+            var train = new List<double[]>
+            {
+                new double[] {1,  2,  1,  0,  3,  9,  0,  1,  2},
+                new double[] {0,  5,  2,  7,  1,  0,  2,  0,  1  },
+                new double[] {0,  1,  1 , 0,  2,  0,  1,  0,  1  },
+                new double[] {0,  0,  1,  0,  1,  0,  4,  0,  1  },
+                new double[] {3,  2,  5,  1,  0,  0,  1,  0,  2  },
+                new double[] {0,  0,  2,  0,  2,  2,  1,  5,  1  },
+                new double[] {2,  3,  0,  4,  0,  1,  1,  1,  1 },
+                new double[] {0,  0,  0,  3,  2,  0,  1,  1,  2  },
+                new double[] {0,  4,  3,  2,  5,  6,  1,  0,  3  },
+                new double[] {0,  1,  0,  7,  4,  0,  0,  2,  2},
+                new double[] {0,  0,  0,  1,  1,  2,  4,  5,  0 }
+            };
+
+
+            int[] labels = { 2, 1, 3, 4, 2, 1, 2, 4, 3, 4, 1 };
+            int[] categories = { 1, 2, 3, 4 };
+            var kFirst = 2;
+
+            FeatureSelection.InformationGainKFirst(ref train, ref train, ref labels, kFirst);
+
+            var results = new List<double[]>
+            {
+                new double[] {1,  2,  1,  3,  9,  1,  2},
+                new double[] {0,  5,  2,  1,  0,  0,  1  },
+                new double[] {0,  1,  1,  2,  0,  0,  1  },
+                new double[] {0,  0,  1,  1,  0,  0,  1  },
+                new double[] {3,  2,  5,  0,  0,  0,  2  },
+                new double[] {0,  0,  2,  2,  2,  5,  1  },
+                new double[] {2,  3,  0,  0,  1,  1,  1 },
+                new double[] {0,  0,  0,  2,  0,  1,  2  },
+                new double[] {0,  4,  3,  5,  6,  0,  3  },
+                new double[] {0,  1,  0,  4,  0,  2,  2},
+                new double[] {0,  0,  0,  1,  2,  5,  0 }
+            };
+
+            for (int i = 0; i < train.Count; i++)
+            {
+                CollectionAssert.AreEqual(train[i], results[i]);
+            }
+
+            //correct results
+            //double[] resultIg = { 0.845, 0.444, 0.194, 0.012, 0.433, 0.311, 0.183, 0.242, 0.189 };
+            //CollectionAssert.AreEqual(ig,resultIg);
+
+        }
+
+        [TestMethod]
+        public void CanComputeInformationGain()
+        {
+            var train = new List<double[]>
+            {
+                new double[] {1,  2,  1,  0,  3,  9,  0,  1,  2},
+                new double[] {0,  5,  2,  7,  1,  0,  2,  0,  1  },
+                new double[] {0,  1,  1 , 0,  2,  0,  1,  0,  1  },
+                new double[] {0,  0,  1,  0,  1,  0,  4,  0,  1  },
+                new double[] {3,  2,  5,  1,  0,  0,  1,  0,  2  },
+                new double[] {0,  0,  2,  0,  2,  2,  1,  5,  1  },
+                new double[] {2,  3,  0,  4,  0,  1,  1,  1,  1 },
+                new double[] {0,  0,  0,  3,  2,  0,  1,  1,  2  },
+                new double[] {0,  4,  3,  2,  5,  6,  1,  0,  3  },
+                new double[] {0,  1,  0,  7,  4,  0,  0,  2,  2},
+                new double[] {0,  0,  0,  1,  1,  2,  4,  5,  0 }
+            };
+
+            int[] labels = { 2, 1, 3, 4, 2, 1, 2, 4, 3, 4, 1 };
+            int[] categories = { 1, 2, 3, 4 };
+
+            var ig = FeatureSelection.InformationGain(ref train, ref labels, categories);
+
+            //correct results
+            //double[] resultIg = { 0.845, 0.444, 0.194, 0.012, 0.433, 0.311, 0.183, 0.242, 0.189 };
+            //CollectionAssert.AreEqual(ig,resultIg);
+
+        }
+        
+
+        [TestMethod]
+        public void CanPerformFeatureSelectionUsingThresholdCompareMatlabCSharp()
+        {
+
             const string trainDataPath = @"Data\Features\Phow_rgb_1_2_4_Lire_JavaML_1536_train.txt";
             const string testDataPath = @"Data\Features\Phow_rgb_1_2_4_Lire_JavaML_1536_test.txt";
+            const string trainlabelsPath = @"Data\Features\boc_labels_train.txt";
 
             //MkLabRootSift_Lire_JavaML_512_test
             var trainFeat = Files.ReadFileToListArrayList<double>(trainDataPath).ToList();
             var testFeat = Files.ReadFileToListArrayList<double>(testDataPath).ToList();
 
+            var trainlabels = Files.ReadFileTo1DArray<int>(trainlabelsPath);
+            
             var threshold = 0.1;
+            var train = trainFeat;
+            var test = testFeat;
             //all features ( columns ) that have more than half non zero elements are removed with threshold 0.5
             Stopwatch wat = new Stopwatch();
             wat.Start();
-            FeatureSelection.RemoveMostFrequentFeaturesUsingThreshold(ref trainFeat, ref testFeat, threshold);
+            FeatureSelection.InformationGainThreshold(ref trainFeat, ref testFeat, ref trainlabels, threshold);
             wat.Stop();
 
+            Stopwatch _wat = new Stopwatch();
+            _wat.Start();
+            FeatureSelection.MatlabInformationGainUsingThreshold(ref train, ref test, ref trainlabels, threshold);
+            _wat.Stop();
+
+            for (int i = 0; i < trainFeat.Count; i++)
+            {
+                CollectionAssert.AreEqual(trainFeat[i], train[i]);
+            }
+
+            for (int i = 0; i < test.Count; i++)
+            {
+                CollectionAssert.AreEqual(testFeat[i], test[i]);
+            }
 
         }
+
+        [TestMethod]
+        public void CanPerformFeatureSelectionKFirstCompareMatlabCSharp()
+        {
+
+            const string trainDataPath = @"Data\Features\Phow_rgb_1_2_4_Lire_JavaML_1536_train.txt";
+            const string testDataPath = @"Data\Features\Phow_rgb_1_2_4_Lire_JavaML_1536_test.txt";
+            const string trainlabelsPath = @"Data\Features\boc_labels_train.txt";
+
+            //MkLabRootSift_Lire_JavaML_512_test
+            var trainFeat = Files.ReadFileToListArrayList<double>(trainDataPath).ToList();
+            var testFeat = Files.ReadFileToListArrayList<double>(testDataPath).ToList();
+
+            var trainlabels = Files.ReadFileTo1DArray<int>(trainlabelsPath);
+
+            var kFirst = 100;
+            var train = trainFeat;
+            var test = testFeat;
+            //all features ( columns ) that have more than half non zero elements are removed with threshold 0.5
+            Stopwatch wat = new Stopwatch();
+            wat.Start();
+            FeatureSelection.InformationGainKFirst(ref trainFeat, ref testFeat, ref trainlabels, kFirst);
+            wat.Stop();
+
+            Stopwatch _wat = new Stopwatch();
+            _wat.Start();
+            FeatureSelection.MatlabInformationGainKFirst(ref train, ref test, ref trainlabels, kFirst);
+            _wat.Stop();
+
+            for (int i = 0; i < trainFeat.Count; i++)
+            {
+                CollectionAssert.AreEqual(trainFeat[i], train[i]);
+            }
+
+            for (int i = 0; i < test.Count; i++)
+            {
+                CollectionAssert.AreEqual(testFeat[i], test[i]);
+            }
+
+        }
+
 
 
     }

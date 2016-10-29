@@ -3,6 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using AutomaticImageClassification.Classifiers;
+using AutomaticImageClassification.Evaluation;
 using AutomaticImageClassification.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -166,6 +167,216 @@ namespace AutomaticImageClassificationTests
 
         }
 
+        [TestMethod]
+        public void CanRemoveKMostFrequent()
+        {
+            var train = new List<double[]>
+            {
+                new double[] {0, 9, 1},
+                new double[] {0, 0, 0},
+                new double[] {0, 0, 1},
+                new double[] {0, 4, 1}
+            };
+
+            var test = new List<double[]>
+            {
+                new double[] {0, 1, 1},
+                new double[] {9, 1, 0},
+                new double[] {7, 0, 1}
+            };
+
+            var kMostFrequent = 1;
+            FeatureSelection.MatlabRemoveKMostFrequentFeatures(ref train, ref test, kMostFrequent);
+
+            var correctResultTrain = new List<double[]>
+            {
+                new double[] {0, 9},
+                new double[] {0, 0},
+                new double[] {0, 0},
+                new double[] {0, 4}
+            };
+
+            var correctResultTest = new List<double[]>
+            {
+                new double[] {0, 1},
+                new double[] {9, 1},
+                new double[] {7, 0}
+            };
+            for (int i = 0; i < correctResultTrain.Count; i++)
+            {
+                CollectionAssert.AreEqual(train[i], correctResultTrain[i]);
+            }
+            for (int i = 0; i < correctResultTest.Count; i++)
+            {
+                CollectionAssert.AreEqual(test[i], correctResultTest[i]);
+            }
+        }
+
+        [TestMethod]
+        public void CanRemoveMostFrequestUsingThreshold()
+        {
+            var train = new List<double[]>
+            {
+                new double[] {1, 9, 1, 1, 0},
+                new double[] {1, 0, 0, 1, 3},
+                new double[] {1, 0, 1, 1, 4},
+                new double[] {0, 4, 1, 1, 5}
+            };
+
+            var test = new List<double[]>
+            {
+                new double[] {0, 1, 1, 1, 2},
+                new double[] {9, 1, 0, 1, 2},
+                new double[] {7, 0, 1, 1, 2}
+            };
+
+            var threshold = 0.5;
+            //all features ( columns ) that have more than half non zero elements are removed with threshold 0.5
+            FeatureSelection.MatlabRemoveMostFrequentFeaturesUsingThreshold(ref train, ref test, threshold);
+
+            var correctResultTrain = new List<double[]>
+            {
+                new double[] {9},
+                new double[] {0},
+                new double[] {0},
+                new double[] {4}
+            };
+
+            var correctResultTest = new List<double[]>
+            {
+                new double[] {1},
+                new double[] {1},
+                new double[] {0}
+            };
+            for (int i = 0; i < correctResultTrain.Count; i++)
+            {
+                CollectionAssert.AreEqual(train[i], correctResultTrain[i]);
+            }
+            for (int i = 0; i < correctResultTest.Count; i++)
+            {
+                CollectionAssert.AreEqual(test[i], correctResultTest[i]);
+            }
+        }
+
+        [TestMethod]
+        public void CanRemoveFeaturesWithInformationGainLessThanThreshold()
+        {
+            var train = new List<double[]>
+            {
+                new double[] {1,  2,  1,  0,  3,  9,  0,  1,  2},
+                new double[] {0,  5,  2,  7,  1,  0,  2,  0,  1  },
+                new double[] {0,  1,  1 , 0,  2,  0,  1,  0,  1  },
+                new double[] {0,  0,  1,  0,  1,  0,  4,  0,  1  },
+                new double[] {3,  2,  5,  1,  0,  0,  1,  0,  2  },
+                new double[] {0,  0,  2,  0,  2,  2,  1,  5,  1  },
+                new double[] {2,  3,  0,  4,  0,  1,  1,  1,  1 },
+                new double[] {0,  0,  0,  3,  2,  0,  1,  1,  2  },
+                new double[] {0,  4,  3,  2,  5,  6,  1,  0,  3  },
+                new double[] {0,  1,  0,  7,  4,  0,  0,  2,  2},
+                new double[] {0,  0,  0,  1,  1,  2,  4,  5,  0 }
+            };
+
+
+            int[] labels = { 2, 1, 3, 4, 2, 1, 2, 4, 3, 4, 1 };
+            int[] categories = { 1, 2, 3, 4 };
+            var threshold = 0.1;
+
+            FeatureSelection.MatlabInformationGainUsingThreshold(ref train, ref train, ref labels, threshold);
+
+            var results = new List<double[]>
+            {
+                new double[] {1,  2,  1,  3,  9,  0,  1,  2},
+                new double[] {0,  5,  2,  1,  0,  2,  0,  1  },
+                new double[] {0,  1,  1,  2,  0,  1,  0,  1  },
+                new double[] {0,  0,  1,  1,  0,  4,  0,  1  },
+                new double[] {3,  2,  5,  0,  0,  1,  0,  2  },
+                new double[] {0,  0,  2,  2,  2,  1,  5,  1  },
+                new double[] {2,  3,  0,  0,  1,  1,  1,  1 },
+                new double[] {0,  0,  0,  2,  0,  1,  1,  2  },
+                new double[] {0,  4,  3,  5,  6,  1,  0,  3  },
+                new double[] {0,  1,  0,  4,  0,  0,  2,  2},
+                new double[] {0,  0,  0,  1,  2,  4,  5,  0 }
+            };
+
+            for (int i = 0; i < train.Count; i++)
+            {
+                CollectionAssert.AreEqual(train[i], results[i]);
+            }
+
+            //correct results
+            //double[] resultIg = { 0.845, 0.444, 0.194, 0.012, 0.433, 0.311, 0.183, 0.242, 0.189 };
+            //CollectionAssert.AreEqual(ig,resultIg);
+
+        }
+
+        [TestMethod]
+        public void CanRemoveKFeaturesWithTheLeastInformationGain()
+        {
+            var train = new List<double[]>
+            {
+                new double[] {1,  2,  1,  0,  3,  9,  0,  1,  2},
+                new double[] {0,  5,  2,  7,  1,  0,  2,  0,  1  },
+                new double[] {0,  1,  1 , 0,  2,  0,  1,  0,  1  },
+                new double[] {0,  0,  1,  0,  1,  0,  4,  0,  1  },
+                new double[] {3,  2,  5,  1,  0,  0,  1,  0,  2  },
+                new double[] {0,  0,  2,  0,  2,  2,  1,  5,  1  },
+                new double[] {2,  3,  0,  4,  0,  1,  1,  1,  1 },
+                new double[] {0,  0,  0,  3,  2,  0,  1,  1,  2  },
+                new double[] {0,  4,  3,  2,  5,  6,  1,  0,  3  },
+                new double[] {0,  1,  0,  7,  4,  0,  0,  2,  2},
+                new double[] {0,  0,  0,  1,  1,  2,  4,  5,  0 }
+            };
+
+
+            int[] labels = { 2, 1, 3, 4, 2, 1, 2, 4, 3, 4, 1 };
+            var kFirst = 2;
+
+            FeatureSelection.MatlabInformationGainKFirst(ref train, ref train, ref labels, kFirst);
+
+            var results = new List<double[]>
+            {
+                new double[] {1,  2,  1,  3,  9,  1,  2},
+                new double[] {0,  5,  2,  1,  0,  0,  1  },
+                new double[] {0,  1,  1,  2,  0,  0,  1  },
+                new double[] {0,  0,  1,  1,  0,  0,  1  },
+                new double[] {3,  2,  5,  0,  0,  0,  2  },
+                new double[] {0,  0,  2,  2,  2,  5,  1  },
+                new double[] {2,  3,  0,  0,  1,  1,  1 },
+                new double[] {0,  0,  0,  2,  0,  1,  2  },
+                new double[] {0,  4,  3,  5,  6,  0,  3  },
+                new double[] {0,  1,  0,  4,  0,  2,  2},
+                new double[] {0,  0,  0,  1,  2,  5,  0 }
+            };
+
+            for (int i = 0; i < train.Count; i++)
+            {
+                CollectionAssert.AreEqual(train[i], results[i]);
+            }
+
+            //correct results
+            //double[] resultIg = { 0.845, 0.444, 0.194, 0.012, 0.433, 0.311, 0.183, 0.242, 0.189 };
+            //CollectionAssert.AreEqual(ig,resultIg);
+
+        }
+
+        [TestMethod]
+        public void CanPlotConfusionMatrix()
+        {
+            const string trainlabelsPath = @"Data\Features\boc_labels_test.txt";
+            const string testlabelsPath = @"Data\Features\labelsTest.txt";
+
+            var trueLabels = Files.ReadFileTo1DArray<int>(trainlabelsPath);
+            var predictedLabels = Files.ReadFileTo1DArray<int>(testlabelsPath);
+            int[] categories = trueLabels.Distinct().ToArray();
+
+            var accuracy = AutomaticImageClassification.Evaluation.Measures.Accuracy(trueLabels, predictedLabels);
+            var macroF1 = AutomaticImageClassification.Evaluation.Measures.MacroF1(trueLabels, predictedLabels, categories);
+            var conf = AutomaticImageClassification.Evaluation.Measures.
+                        ConfusionMatrix(trueLabels, predictedLabels, categories);
+
+            Measures.PlotConfusionMatrix(ref conf, "plot", "a title"+accuracy+" "+macroF1, categories);
+
+        }
 
 
     }

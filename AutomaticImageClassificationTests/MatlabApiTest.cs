@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using AutomaticImageClassification.Classifiers;
 using AutomaticImageClassification.Evaluation;
@@ -375,7 +376,7 @@ namespace AutomaticImageClassificationTests
                         ConfusionMatrix(trueLabels, predictedLabels, categories);
 
             Measures.PlotConfusionMatrix(ref conf, "plot", "a title"+accuracy+" "+macroF1, categories);
-
+            
         }
 
 

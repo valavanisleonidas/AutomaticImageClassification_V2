@@ -279,7 +279,7 @@ namespace AutomaticImageClassificationTests
             var threshold = 0.5;
             //all features ( columns ) that have more than half non zero elements are removed with threshold 0.5
             FeatureSelection.RemoveMostFrequentFeaturesUsingThreshold(ref train, ref test, threshold);
-            
+
             var correctResultTrain = new List<double[]>
             {
                 new double[] {9},
@@ -434,7 +434,7 @@ namespace AutomaticImageClassificationTests
             //CollectionAssert.AreEqual(ig,resultIg);
 
         }
-        
+
 
         [TestMethod]
         public void CanPerformFeatureSelectionUsingThresholdCompareMatlabCSharp()
@@ -449,7 +449,7 @@ namespace AutomaticImageClassificationTests
             var testFeat = Files.ReadFileToListArrayList<double>(testDataPath).ToList();
 
             var trainlabels = Files.ReadFileTo1DArray<int>(trainlabelsPath);
-            
+
             var threshold = 0.1;
             var train = trainFeat;
             var test = testFeat;
@@ -516,7 +516,19 @@ namespace AutomaticImageClassificationTests
 
         }
 
+        [TestMethod]
+        public void CanComputePearsonCorrelation()
+        {
 
+            const string trainlabelsPath = @"Data\Features\boc_labels_test.txt";
+            const string testlabelsPath = @"Data\Features\labelsTest.txt";
+
+            var a = Files.ReadFileTo1DArray<int>(trainlabelsPath);
+            var b= Files.ReadFileTo1DArray<int>(testlabelsPath);
+
+            var result = PearsonCorrelationCoefficient.Compute(ref a,ref b);
+
+        }
 
     }
 }

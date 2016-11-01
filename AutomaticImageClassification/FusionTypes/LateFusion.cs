@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutomaticImageClassification.Evaluation;
 using AutomaticImageClassification.Utilities;
 using net.sf.javaml.filter.normalize;
 
@@ -11,17 +12,12 @@ namespace AutomaticImageClassification.FusionTypes
 {
     public class LateFusion
     {
-        public static Dictionary<double,int> PerformLateFusion(List<double[]> resultsModel1, List<double[]> resultsModel2,double weight)
+        public static Dictionary<double, int> PerformLateFusion(ref List<double[]> resultsModel1, ref List<double[]> resultsModel2, double weight, double sigmoid)
         {
+            Normalization.ReNormalize(ref resultsModel1, sigmoid);
+            Normalization.ReNormalize(ref resultsModel2, sigmoid);
 
-            //if we want to add the sigmoid..
-            //a = sigmoid;
-            //b = sigmoid;
-            //model1 = 1./ (1 + exp(-a * result_model1));
-            //model2 = 1./ (1 + exp(-b * result_model2));
-
-
-            Dictionary<double, int> categoriesProbs = new Dictionary<double, int>();
+            Dictionary<double, int> probsCategories = new Dictionary<double, int>();
 
             //initialize weights for models
             double weightModel1;
@@ -50,9 +46,37 @@ namespace AutomaticImageClassification.FusionTypes
                 var maxProbability = lateFusionProbs.Max();
                 // index max is category but plus 1 because arrays starts from zero
                 var category = Array.IndexOf(lateFusionProbs, maxProbability) + 1;
-                categoriesProbs.Add(maxProbability, category);
+                probsCategories.Add(maxProbability, category);
             }
-            return categoriesProbs;
+            return probsCategories;
         }
+
+        public static Dictionary<double, int> PerformLateFusion(ref List<double[]> resultsModel1,
+            ref List<double[]> resultsModel2, int[] trueLabels, double[] weights, double[] sigmoids,
+            out double bestAccuracy, out double bestWeight, out double bestSigmoid)
+        {
+            bestAccuracy = -1;
+            bestWeight = -1;
+            bestSigmoid = -1;
+            var probsCategories = new Dictionary<double, int>();
+
+            foreach (var weight in weights)
+            {
+                foreach (var sigmoid in sigmoids)
+                {
+                    //perform late fusion and get results
+                    probsCategories = PerformLateFusion(ref resultsModel1, ref resultsModel2, weight, sigmoid);
+                    //get accuracy
+                    var accuracy = Measures.Accuracy(trueLabels, probsCategories.Values.ToArray());
+                    if (!(accuracy >= bestAccuracy)) continue;
+
+                    bestAccuracy = accuracy;
+                    bestWeight = weight;
+                    bestSigmoid = sigmoid;
+                }
+            }
+            return probsCategories;
+        }
+
     }
 }

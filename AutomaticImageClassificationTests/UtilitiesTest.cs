@@ -15,14 +15,20 @@ namespace AutomaticImageClassificationTests
     public class UtilitiesTest
     {
         [TestMethod]
-        public void CanDivideWithSqrtSumPower()
+        public void CanNormalize()
         {
-            var list = new List<double[]>();
-            list.Add(new double[] { 0, 1, 1 });
-            list.Add(new double[] { 0, 2, 2 });
-            list.Add(new double[] { 0, 4, 5 });
+            var list = new List<double[]> { new double[] { 0, 1, 1 }, new double[] { 0, 2, 2 }, new double[] { 0, 4, 5 } };
 
             Normalization.Normalize(ref list);
+
+        }
+
+        [TestMethod]
+        public void CanRenormalize()
+        {
+            var list = new List<double[]> { new double[] { 0, 1, 1 }, new double[] { 0, 2, 2 }, new double[] { 0, 4, 5 } };
+            var sigmoid = 0.2;
+            Normalization.ReNormalize(ref list, sigmoid);
 
         }
 
@@ -205,8 +211,13 @@ namespace AutomaticImageClassificationTests
             resultsModel2.Add(new double[] { 1, 200, 1 });
 
             double weight = 0.5;
+            double sigmoid = 0.2;
+            var lateFusion = LateFusion.PerformLateFusion(ref resultsModel1, ref resultsModel2, weight, sigmoid);
 
-            var lateFusion = LateFusion.PerformLateFusion(resultsModel1, resultsModel2, weight);
+            //var arrayElementsNum = 100;
+            //double[] weights = Enumerable.Range(0, arrayElementsNum).Select(v => (double)v / arrayElementsNum).ToArray();
+            //double[] sigmoids = Enumerable.Range(0, arrayElementsNum).Select(v => (double)v / arrayElementsNum).ToArray();
+            //LateFusion.PerformLateFusion(ref resultsModel1, ref resultsModel2, weight, sigmoid);
 
             Dictionary<double, int> results = new Dictionary<double, int> { { 2, 3 }, { 101, 2 } };
 
@@ -524,10 +535,20 @@ namespace AutomaticImageClassificationTests
             const string testlabelsPath = @"Data\Features\labelsTest.txt";
 
             var a = Files.ReadFileTo1DArray<int>(trainlabelsPath);
-            var b= Files.ReadFileTo1DArray<int>(testlabelsPath);
+            var b = Files.ReadFileTo1DArray<int>(testlabelsPath);
 
-            var result = PearsonCorrelationCoefficient.Compute(ref a,ref b);
+            var result = PearsonCorrelationCoefficient.Compute(ref a, ref b);
 
+        }
+
+        [TestMethod]
+        public void CanComputePcaDimensionalityReduction()
+        {
+            const string trainDataPath = @"Data\Features\OpenCvSift_Lire_JavaML_512_test.txt";
+            var trainFeat = Files.ReadFileToListArrayList<double>(trainDataPath).ToArray();
+
+            var pca = new PcaDimensionalityReduction(PcaDimensionalityReduction.PcaMethod.Center,true,0.8);
+            pca.ComputePca(ref trainFeat);
         }
 
     }

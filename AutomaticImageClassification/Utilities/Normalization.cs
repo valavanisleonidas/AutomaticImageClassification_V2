@@ -13,15 +13,23 @@ namespace AutomaticImageClassification.Utilities
             return value == 0 ? 0 : Math.Log(value, logBase);
         }
 
+        //features = bsxfun(@times, features, 1./sqrt(sum(features.^2) + 0.00001 )) ;
         public static void Normalize(ref List<double[]> list)
         {
-            var sqrtArray = list.Select(x => x.Select(y => y * y).ToArray()).ToArray();
-            double[] columnSums = Arrays.TransposeMatrix(ref sqrtArray).ToList().Select(a => a.Sum()).ToArray();
+            var powArray = list.Select(x => x.Select(y => y * y).ToArray()).ToArray();
+            double[] columnSums = Arrays.TransposeMatrix(ref powArray).ToList().Select(a => a.Sum()).ToArray();
 
             list = list
                 .Select(a => a.Select((b, i) => b != 0 ? b * 1 / Math.Sqrt(columnSums[i]) : b).ToArray())
                 .ToList();
         }
+
+        //model1 = 1./ (1 + exp(-a* result_model1));
+        public static void ReNormalize(ref List<double[]> list, double sigmoid)
+        {
+            list = list.Select(a => a.Select((b, i) => 1 / (1 + Math.Exp(-sigmoid * b))).ToArray()).ToList();
+        }
+
 
         public static void HellKernelMapping(ref List<double[]> list)
         {

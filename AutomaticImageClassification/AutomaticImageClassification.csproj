@@ -199,6 +199,7 @@
     <Compile Include="Utilities\Files.cs" />
     <Compile Include="KDTree\JavaMlKdTree.cs" />
     <Compile Include="Utilities\FeatureSelection.cs" />
+    <Compile Include="Utilities\PcaDimensionalityReduction.cs" />
     <Compile Include="Utilities\PearsonCorrelationCoefficient.cs" />
     <Compile Include="Utilities\XmlFiguresReader.cs" />
     <Compile Include="Utilities\XmlSerializationExtensions.cs" />

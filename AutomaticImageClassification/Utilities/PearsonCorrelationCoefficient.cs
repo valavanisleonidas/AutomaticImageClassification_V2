@@ -10,6 +10,11 @@ namespace AutomaticImageClassification.Utilities
     {
         public static double Compute(ref int[] x,ref int[] y)
         {
+            if (x.Length != y.Length)
+            {
+                throw new ArgumentException("Wrong length. X has length : "+x.Length+ " elements while Y has : "+y.Length +" elements!");
+            }
+
             double sumX = 0.00, sumY = 0.00,
                    sumXSquare = 0.00, sumYSquare = 0.00,
                    sumXy = 0.00, r = 0.00;
@@ -35,6 +40,12 @@ namespace AutomaticImageClassification.Utilities
 
         public static double Compute(ref double[] x, ref double[] y)
         {
+
+            if (x.Length != y.Length)
+            {
+                throw new ArgumentException("Wrong length. X has length : " + x.Length + " elements while Y has : " + y.Length + " elements!");
+            }
+
             double sumX = 0.00, sumY = 0.00,
                    sumXSquare = 0.00, sumYSquare = 0.00,
                    sumXy = 0.00, r = 0.00;
@@ -60,6 +71,12 @@ namespace AutomaticImageClassification.Utilities
 
         public static double Compute(ref float[] x, ref float[] y)
         {
+
+            if (x.Length != y.Length)
+            {
+                throw new ArgumentException("Wrong length. X has length : " + x.Length + " elements while Y has : " + y.Length + " elements!");
+            }
+
             double sumX = 0.00, sumY = 0.00,
                    sumXSquare = 0.00, sumYSquare = 0.00,
                    sumXy = 0.00, r = 0.00;

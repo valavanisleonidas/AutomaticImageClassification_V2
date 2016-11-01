@@ -8,6 +8,7 @@ namespace AutomaticImageClassification.Feature.Bovw
         private IFeatures _featureExtractor;
         private VladAggregator _vlad;
         private List<double[]> _codebook;
+        private int _dimensionsNumber;
         public MkLabVlad()
         {
             _featureExtractor = new MkLabSurf();
@@ -22,6 +23,7 @@ namespace AutomaticImageClassification.Feature.Bovw
         {
             _featureExtractor = new MkLabSurf();
             _codebook = codebook;
+            _dimensionsNumber = codebook[0].Length;
             // _vlad = new VladAggregator(codebook.ToArray());
         }
 
@@ -29,6 +31,7 @@ namespace AutomaticImageClassification.Feature.Bovw
         {
             _featureExtractor = extractor;
             _codebook = codebook;
+            _dimensionsNumber = codebook[0].Length;
             //_vlad = new VladAggregator(codebook.ToArray());
         }
 
@@ -38,8 +41,7 @@ namespace AutomaticImageClassification.Feature.Bovw
 
             List<double[]> descriptors = _featureExtractor.ExtractDescriptors(input);
 
-            int descriptorLength = descriptors.Count;
-            double[] vlad = new double[_codebook.Count * descriptorLength];
+            double[] vlad = new double[_codebook.Count * _dimensionsNumber];
 
             if (descriptors.Count == 0)
             {
@@ -53,9 +55,9 @@ namespace AutomaticImageClassification.Feature.Bovw
                 //    ?? ClusterIndexOf(_dictionary, _boc);
 
                 int index = Utilities.DistanceMetrics.ComputeNearestCentroidL2(_codebook,descriptor);
-                for (int i = 0; i < descriptorLength; i++)
+                for (int i = 0; i < _dimensionsNumber; i++)
                 {
-                    vlad[index * descriptorLength + i] += descriptor[i] - _codebook[index][i];
+                    vlad[index * _dimensionsNumber + i] += descriptor[i] - _codebook[index][i];
                 }
             }
             return vlad;

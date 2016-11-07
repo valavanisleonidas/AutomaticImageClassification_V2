@@ -169,6 +169,7 @@
     <Compile Include="Classifiers\LibSVM.cs" />
     <Compile Include="Cluster\Kmeans\AccordKmeans.cs" />
     <Compile Include="Cluster\ICluster.cs" />
+    <Compile Include="Feature\Bovw\VlDenseSift.cs" />
     <Compile Include="KDTree\IKdTree.cs" />
     <Compile Include="KDTree\AccordKdTree.cs" />
     <Compile Include="Cluster\Kmeans\LireKmeans.cs" />

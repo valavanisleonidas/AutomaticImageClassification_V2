@@ -544,7 +544,7 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void CanComputePcaDimensionalityReduction()
         {
-            const string trainDataPath = @"Data\Features\OpenCvSift_Lire_JavaML_512_test.txt";
+            const string trainDataPath = @"Data\Features\MkLabRootSift_Lire_JavaML_512_train.txt";
             var trainFeat = Files.ReadFileToListArrayList<double>(trainDataPath).ToArray();
 
             var pca = new PcaDimensionalityReduction(PcaDimensionalityReduction.PcaMethod.Center,true,0.8);

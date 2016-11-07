@@ -81,10 +81,10 @@ namespace AutomaticImageClassification.Utilities
         
         public void ComputePca(ref double[][] data)
         {
-            if (data.Length > data[0].Length && _pca.Method != PrincipalComponentMethod.CovarianceMatrix)
-            {
-                _pca.Method = PrincipalComponentMethod.CovarianceMatrix;
-            }
+            //if (data.Length > data[0].Length && _pca.Method != PrincipalComponentMethod.CovarianceMatrix)
+            //{
+            //   _pca.Method = PrincipalComponentMethod.CovarianceMatrix;
+            //}
             
             // learn the linear projection from the data
             _pca.Learn(data);

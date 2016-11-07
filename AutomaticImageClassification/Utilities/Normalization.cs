@@ -56,8 +56,7 @@ namespace AutomaticImageClassification.Utilities
             {
                 return -1;
             }
-            //return 0
-            return feature;
+            return 0;
         }
 
 

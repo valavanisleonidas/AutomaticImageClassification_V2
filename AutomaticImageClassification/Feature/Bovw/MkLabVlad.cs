@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using AutomaticImageClassification.Cluster.KDTree;
+using AutomaticImageClassification.Utilities;
 using gr.iti.mklab.visual.aggregation;
 
 namespace AutomaticImageClassification.Feature.Bovw
@@ -8,7 +10,9 @@ namespace AutomaticImageClassification.Feature.Bovw
         private IFeatures _featureExtractor;
         private VladAggregator _vlad;
         private List<double[]> _codebook;
-        private int _dimensionsNumber;
+        private IKdTree _tree;
+        private int _clusterNum;
+
         public MkLabVlad()
         {
             _featureExtractor = new MkLabSurf();
@@ -19,11 +23,19 @@ namespace AutomaticImageClassification.Feature.Bovw
             _featureExtractor = extractor;
         }
 
+        public MkLabVlad(IKdTree tree, List<double[]> codebook)
+        {
+            _featureExtractor = new MkLabSurf();
+            _tree = tree;
+            _codebook = codebook;
+            _clusterNum = codebook[0].Length;
+        }
+
         public MkLabVlad(List<double[]> codebook)
         {
             _featureExtractor = new MkLabSurf();
             _codebook = codebook;
-            _dimensionsNumber = codebook[0].Length;
+            _clusterNum = codebook[0].Length;
             // _vlad = new VladAggregator(codebook.ToArray());
         }
 
@@ -31,7 +43,7 @@ namespace AutomaticImageClassification.Feature.Bovw
         {
             _featureExtractor = extractor;
             _codebook = codebook;
-            _dimensionsNumber = codebook[0].Length;
+            _clusterNum = codebook[0].Length;
             //_vlad = new VladAggregator(codebook.ToArray());
         }
 
@@ -41,7 +53,7 @@ namespace AutomaticImageClassification.Feature.Bovw
 
             List<double[]> descriptors = _featureExtractor.ExtractDescriptors(input);
 
-            double[] vlad = new double[_codebook.Count * _dimensionsNumber];
+            double[] vlad = new double[_codebook.Count * _clusterNum];
 
             if (descriptors.Count == 0)
             {
@@ -51,13 +63,12 @@ namespace AutomaticImageClassification.Feature.Bovw
 
             foreach (var descriptor in descriptors)
             {
-                //int indx = _lBoctree?.SearchTree(_boc)
-                //    ?? ClusterIndexOf(_dictionary, _boc);
+                int index = _tree?.SearchTree(descriptor)
+                    ?? DistanceMetrics.ComputeNearestCentroidL2NotSquare(ref _codebook, descriptor);
 
-                int index = Utilities.DistanceMetrics.ComputeNearestCentroidL2(_codebook,descriptor);
-                for (int i = 0; i < _dimensionsNumber; i++)
+                for (int i = 0; i < _clusterNum; i++)
                 {
-                    vlad[index * _dimensionsNumber + i] += descriptor[i] - _codebook[index][i];
+                    vlad[index * _clusterNum + i] += descriptor[i] - _codebook[index][i];
                 }
             }
             return vlad;
@@ -67,7 +78,7 @@ namespace AutomaticImageClassification.Feature.Bovw
         {
             return _featureExtractor.ExtractDescriptors(input);
         }
-        
+
         public override string ToString()
         {
             return "Vlad_" + _featureExtractor;

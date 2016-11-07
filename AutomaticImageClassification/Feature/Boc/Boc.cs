@@ -41,7 +41,7 @@ namespace AutomaticImageClassification.Feature.Boc
             _resize = resize;
             _cs = cs;
         }
-        
+
         public double[] ExtractHistogram(string input)
         {
             var img = new BufferedImage(new Bitmap(input));
@@ -86,7 +86,7 @@ namespace AutomaticImageClassification.Feature.Boc
 
         public override string ToString()
         {
-            return "Boc";
+            return "Boc_" + _tree + "_" + _palette.Length + "_" + _cs.toString();
         }
 
 

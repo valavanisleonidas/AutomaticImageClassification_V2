@@ -70,7 +70,7 @@ namespace AutomaticImageClassification.Feature.Boc
                 double[] _boc = boc.ExtractHistogram(b);
 
                 int indx = _lBoctree?.SearchTree(_boc) 
-                    ?? DistanceMetrics.ComputeNearestCentroidL2(_dictionary, _boc);
+                    ?? DistanceMetrics.ComputeNearestCentroidL2(ref _dictionary, _boc);
 
                 vector[indx]++;
             }

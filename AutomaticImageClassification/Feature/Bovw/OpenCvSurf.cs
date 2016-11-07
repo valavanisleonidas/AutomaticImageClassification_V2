@@ -58,7 +58,7 @@ namespace AutomaticImageClassification.Feature.Bovw
 
         public override string ToString()
         {
-            return "OpenCvSurf";
+            return "OpenCvSurf_" + _tree + "_" + _clusterNum;
         }
 
     }

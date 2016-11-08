@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -18,9 +21,7 @@ namespace AutomaticImageClassificationTests
         public void CanNormalize()
         {
             var list = new List<double[]> { new double[] { 0, 1, 1 }, new double[] { 0, 2, 2 }, new double[] { 0, 4, 5 } };
-
             Normalization.Normalize(ref list);
-
         }
 
         [TestMethod]
@@ -29,24 +30,20 @@ namespace AutomaticImageClassificationTests
             var list = new List<double[]> { new double[] { 0, 1, 1 }, new double[] { 0, 2, 2 }, new double[] { 0, 4, 5 } };
             var sigmoid = 0.2;
             Normalization.ReNormalize(ref list, sigmoid);
-
         }
 
         [TestMethod]
         public void CanUseHellKernel()
         {
-            var list = new List<double[]>();
-            list.Add(new double[] { 1, 2, 3 });
-            list.Add(new double[] { 0, 1, 2 });
-            list.Add(new double[] { 1, 2, -2 });
-
+            var list = new List<double[]> { new double[] { 1, 2, 3 }, new double[] { 0, 1, 2 }, new double[] { 1, 2, -2 } };
             Normalization.HellKernelMapping(ref list);
 
-            var results = new List<double[]>();
-            results.Add(new[] { 1, 1.4142135623730951, 1.7320508075688772 });
-            results.Add(new[] { 0, 1, 1.4142135623730951 });
-            results.Add(new[] { 1, 1.4142135623730951, -1.4142135623730951 });
-
+            var results = new List<double[]>
+            {
+                new[] {1, 1.4142135623730951, 1.7320508075688772},
+                new[] {0, 1, 1.4142135623730951},
+                new[] {1, 1.4142135623730951, -1.4142135623730951}
+            };
 
             for (var i = 0; i < list.Count; i++)
             {
@@ -58,7 +55,6 @@ namespace AutomaticImageClassificationTests
         public void CanReadAllImagesFromFolder()
         {
             var searchFolder = @"C:\Users\l.valavanis\Desktop\personal\dbs\Clef2013\Compound";
-
             string[] files = Files.GetFilesFrom(searchFolder);
 
             Console.WriteLine(files.Length);
@@ -135,14 +131,14 @@ namespace AutomaticImageClassificationTests
             double[][] arr = Arrays.ToJaggedArray(ref arr1);
 
             Normalization.SqrtArray(ref arr[1]);
+
             var norm1 = Normalization.ComputeL1Norm(ref arr[0]);
             var norm2 = Normalization.ComputeL2Norm(ref arr[0]);
-            Normalization.NormalizeArray(ref arr[0], ref norm1);
 
+            Normalization.NormalizeArray(ref arr[0], ref norm1);
             Normalization.Tfidf(ref arr);
 
             Console.WriteLine(arr);
-
         }
 
         [TestMethod]
@@ -414,7 +410,6 @@ namespace AutomaticImageClassificationTests
             //correct results
             //double[] resultIg = { 0.845, 0.444, 0.194, 0.012, 0.433, 0.311, 0.183, 0.242, 0.189 };
             //CollectionAssert.AreEqual(ig,resultIg);
-
         }
 
         [TestMethod]
@@ -443,9 +438,7 @@ namespace AutomaticImageClassificationTests
             //correct results
             //double[] resultIg = { 0.845, 0.444, 0.194, 0.012, 0.433, 0.311, 0.183, 0.242, 0.189 };
             //CollectionAssert.AreEqual(ig,resultIg);
-
         }
-
 
         [TestMethod]
         public void CanPerformFeatureSelectionUsingThresholdCompareMatlabCSharp()
@@ -530,7 +523,6 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void CanComputePearsonCorrelation()
         {
-
             const string trainlabelsPath = @"Data\Features\boc_labels_test.txt";
             const string testlabelsPath = @"Data\Features\labelsTest.txt";
 
@@ -547,9 +539,19 @@ namespace AutomaticImageClassificationTests
             const string trainDataPath = @"Data\Features\MkLabRootSift_Lire_JavaML_512_train.txt";
             var trainFeat = Files.ReadFileToListArrayList<double>(trainDataPath).ToArray();
 
-            var pca = new PcaDimensionalityReduction(PcaDimensionalityReduction.PcaMethod.Center,true,0.8);
+            var pca = new PcaDimensionalityReduction(PcaDimensionalityReduction.PcaMethod.Center, true, 0.8);
             pca.ComputePca(ref trainFeat);
         }
 
+        [TestMethod]
+        public void CanResizeSaveImage()
+        {
+            string imagePath = @"Data\database\einstein.jpg";
+            Bitmap image = new Bitmap(imagePath);
+            Bitmap im = ImageProcessing.ResizeImage(image, 256, 256);
+            ImageProcessing.SaveImage(im,"test.jpg");
+
+        }
+        
     }
 }

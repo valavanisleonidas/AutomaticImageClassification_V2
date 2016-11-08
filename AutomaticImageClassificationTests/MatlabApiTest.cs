@@ -119,7 +119,7 @@ namespace AutomaticImageClassificationTests
             // APPLY KERNEL MAPPING
             classifier.ApplyKernelMapping(ref trainFeat);
             classifier.GridSearch(ref trainFeat, ref trainlabels);
-            
+
         }
 
         //same results as matlab (check results file)
@@ -380,8 +380,8 @@ namespace AutomaticImageClassificationTests
             var conf = AutomaticImageClassification.Evaluation.Measures.
                         ConfusionMatrix(trueLabels, predictedLabels, categories);
 
-            Measures.PlotConfusionMatrix(ref conf, "plot", "a title"+accuracy+" "+macroF1, categories);
-            
+            Measures.PlotConfusionMatrix(ref conf, "plot", "a title" + accuracy + " " + macroF1, categories);
+
         }
 
         [TestMethod]
@@ -409,6 +409,38 @@ namespace AutomaticImageClassificationTests
             ClusterModel model = cluster.CreateClusters(clusters, numOfClusters);
         }
 
+        [TestMethod]
+        public void CanExtendGeometricallyFeatures()
+        {
+            List<double[]> frames = new List<double[]>
+            {
+                new [] {0.8147, 0.9134, 0.2785, 0.9649, 0.9572, 0.1419},
+                new [] {0.9058, 0.6324, 0.5469, 0.1576, 0.4854, 0.4218},
+                new [] {0.1270, 0.0975, 0.9575, 0.9706, 0.8003, 0.9157}
+            };
+
+            List<double[]> descriptors = new List<double[]>
+            {
+                new[] {0.7094, 0.6797, 0.1190, 0.3404},
+                new[] {0.7547, 0.6551, 0.4984, 0.5853},
+                new[] {0.2760, 0.1626, 0.9597, 0.2238}
+            };
+
+            Normalization.ExtendGeometricalyFeatures(ref descriptors, ref frames, "xy", 600, 600);
+
+            List<double[]> finalResultdescriptors = new List<double[]>
+            {
+                new[] {0.7094, 0.6797, 0.1190, 0.3404, -0.4986, -0.4985},
+                new[] {0.7547, 0.6551, 0.4984, 0.5853, -0.4985, -0.4989},
+                new[] {0.2760, 0.1626, 0.9597, 0.2238, -0.4998, -0.4998}
+            };
+
+            //for (int i = 0; i < descriptors.Count; i++)
+            //{
+            //    CollectionAssert.AreEqual(descriptors[i],finalResultdescriptors[i]);
+            //}
+
+        }
 
     }
 }

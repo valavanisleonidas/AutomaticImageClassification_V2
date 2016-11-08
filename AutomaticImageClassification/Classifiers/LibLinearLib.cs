@@ -35,9 +35,9 @@ namespace AutomaticImageClassification.Classifiers
         {
             try
             {
-                var classifier = new LibLinear();
+                var dataExtension = new ExtendFeatures();
 
-                MWArray[] result = classifier.ApplyKernelMapping(1,
+                MWArray[] result = dataExtension.ApplyKernelMapping(1,
                     new MWNumericArray(features.ToArray()),
                     _params.Kernel,
                     _params.Homker,
@@ -46,7 +46,7 @@ namespace AutomaticImageClassification.Classifiers
                 var mappedFeatures = (double[,])((MWNumericArray)result[0]).ToArray();
 
                 result = null;
-                classifier.Dispose();
+                dataExtension.Dispose();
                 features = Arrays.ToJaggedArray(ref mappedFeatures).ToList();
             }
             catch (Exception e)

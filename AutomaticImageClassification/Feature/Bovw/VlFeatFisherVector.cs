@@ -42,8 +42,7 @@ namespace AutomaticImageClassification.Feature.Bovw
                 var fisher = new MatlabAPI.FisherVector();
                 //features of descriptor
                 var features = ExtractDescriptors(input);
-                Files.WriteFile("features.txt", features);
-
+              
                 if (features[0].Length != _model.Means[0].Length)
                 {
                     throw new ArgumentException("Incorrect dimension size.Features dimensions : " + features[0].Length 

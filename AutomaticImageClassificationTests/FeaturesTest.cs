@@ -640,11 +640,7 @@ namespace AutomaticImageClassificationTests
             ClusterModel model = cluster.CreateClusters(clusters, numOfClusters);
 
             string imagePath = @"Data\database\einstein.jpg";
-
-            Files.WriteFile("means.txt",model.Means);
-            Files.WriteFile("covar.txt", model.Covariances);
-            Files.WriteFile("priors.txt", model.Priors.ToList());
-
+            
             IFeatures fisher = new VlFeatFisherVector(new AccordSurf(),model);
             var histogram = fisher.ExtractHistogram(imagePath);
         }

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using ikvm.extensions;
+using MathWorks.MATLAB.NET.Arrays;
+using MatlabAPI;
 
 namespace AutomaticImageClassification.Utilities
 {
@@ -13,7 +15,7 @@ namespace AutomaticImageClassification.Utilities
             return value == 0 ? 0 : Math.Log(value, logBase);
         }
 
-        //features = bsxfun(@times, features, 1./sqrt(sum(features.^2) + 0.00001 )) ;
+        //descriptors = bsxfun(@times, descriptors, 1./sqrt(sum(descriptors.^2) + 0.00001 )) ;
         public static void Normalize(ref List<double[]> list)
         {
             var powArray = list.Select(x => x.Select(y => y * y).ToArray()).ToArray();
@@ -59,6 +61,30 @@ namespace AutomaticImageClassification.Utilities
             return 0;
         }
 
+        public static void ExtendGeometricalyFeatures(ref List<double[]> descriptors, ref List<double[]> frames, string type, int width, int height)
+        {
+            try
+            {
+                var dataExtension = new ExtendFeatures();
+
+                MWArray[] result = dataExtension.ExtendDescriptorsWithGeometry(1,
+                    type,
+                    new MWNumericArray(frames.ToArray()),
+                    new MWNumericArray(descriptors.ToArray()),
+                    new MWNumericArray(width),
+                    new MWNumericArray(height));
+
+                var mappedFeatures = (double[,])((MWNumericArray)result[0]).ToArray();
+
+                result = null;
+                dataExtension.Dispose();
+                descriptors = Arrays.ToJaggedArray(ref mappedFeatures).ToList();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
 
         //multiply array with given weight
         public static double[] WeightArray(double[] array, double weight)
@@ -250,7 +276,7 @@ namespace AutomaticImageClassification.Utilities
         public static double[][] Tfidf(ref double[][] features)
         {
             var numOfDocs = features.Length;
-            // compute document frequency for features
+            // compute document frequency for descriptors
             var df = ComputeDf(ref features);
             // compute inverse words freq
             var idf = ComputeIdf(ref df, ref numOfDocs);

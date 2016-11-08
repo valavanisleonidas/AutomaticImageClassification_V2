@@ -252,8 +252,13 @@ namespace AutomaticImageClassificationTests
             IKdTree tree = new VlFeatKdTree();
             tree.CreateTree(model.Means);
 
+            string imaging = @"Data\database\einstein.jpg";
+            var feat = extractor.ExtractDescriptors(imaging);
 
-            double[] query=
+            List<int> indexes = feat.Select(doublese => tree.SearchTree(doublese)).ToList();
+
+
+            double[] query =
                 Enumerable.Range(0, model.Means[0].Length).Select(v => (double)new Random().Next(1, 1000)).ToArray();
 
             Console.WriteLine("querying tree");

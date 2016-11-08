@@ -73,8 +73,9 @@ namespace AutomaticImageClassification.KDTree
                     new MWNumericArray(centroid));
 
                 int index = (int)((MWNumericArray)result[0]).ToVector(MWArrayComponent.Real).GetValue(0);
-                double distance = (double)((MWNumericArray)result[1]).ToVector(MWArrayComponent.Real).GetValue(0);
+                //double distance = (double)((MWNumericArray)result[1]).ToVector(MWArrayComponent.Real).GetValue(0);
 
+                result = null;
                 kdtree.Dispose();
                 return index - 1;
             }

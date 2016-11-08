@@ -9,7 +9,7 @@ using MathWorks.MATLAB.NET.Arrays;
 
 namespace AutomaticImageClassification.Feature.Bovw
 {
-    public class VlDenseSift : IFeatures
+    public class VlFeatDenseSift : IFeatures
     {
         private static int _scale;
         private static bool _rootSift;
@@ -17,14 +17,14 @@ namespace AutomaticImageClassification.Feature.Bovw
         private IKdTree _tree;
         private int _clusterNum;
 
-        public VlDenseSift()
+        public VlFeatDenseSift()
         {
             _scale = 4;
             _rootSift = false;
             _normalizeSift = true;
         }
 
-        public VlDenseSift(int scale,bool isRootSift, bool isNormalizedSift)
+        public VlFeatDenseSift(int scale,bool isRootSift, bool isNormalizedSift)
         {
             _scale = scale;
             _rootSift = isRootSift;
@@ -32,7 +32,7 @@ namespace AutomaticImageClassification.Feature.Bovw
         }
 
 
-        public VlDenseSift(IKdTree tree, int clusterNum)
+        public VlFeatDenseSift(IKdTree tree, int clusterNum)
         {
             _tree = tree;
             _clusterNum = clusterNum;

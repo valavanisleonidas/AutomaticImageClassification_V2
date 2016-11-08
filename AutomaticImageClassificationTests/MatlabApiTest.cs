@@ -4,7 +4,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using AutomaticImageClassification.Classifiers;
+using AutomaticImageClassification.Cluster;
+using AutomaticImageClassification.Cluster.ClusterModels;
+using AutomaticImageClassification.Cluster.GaussianMixtureModel;
 using AutomaticImageClassification.Evaluation;
+using AutomaticImageClassification.Feature;
+using AutomaticImageClassification.Feature.Bovw;
 using AutomaticImageClassification.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -377,6 +382,31 @@ namespace AutomaticImageClassificationTests
 
             Measures.PlotConfusionMatrix(ref conf, "plot", "a title"+accuracy+" "+macroF1, categories);
             
+        }
+
+        [TestMethod]
+        public void CanClusterVlFeatGmm()
+        {
+            string baseFolder = @"Data";
+            //string trainPath = Path.Combine(baseFolder, "Train");
+
+            var numOfClusters = 10;
+            var sampleImgs = Files.GetFilesFrom(baseFolder);
+
+            IFeatures extractor = new AccordSurf();
+            ICluster cluster = new VlFeatGmm();
+            List<double[]> clusters = new List<double[]>();
+            int counter = 0;
+            foreach (var image in sampleImgs)
+            {
+                if (counter == 5)
+                {
+                    break;
+                }
+                counter++;
+                clusters.AddRange(extractor.ExtractDescriptors(image));
+            }
+            ClusterModel model = cluster.CreateClusters(clusters, numOfClusters);
         }
 
 

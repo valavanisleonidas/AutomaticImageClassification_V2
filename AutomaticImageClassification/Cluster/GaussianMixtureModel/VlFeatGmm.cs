@@ -1,36 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using AutomaticImageClassification.Cluster.ClusterModels;
 using AutomaticImageClassification.Utilities;
 using MathWorks.MATLAB.NET.Arrays;
 
-namespace AutomaticImageClassification.Cluster.EM
+namespace AutomaticImageClassification.Cluster.GaussianMixtureModel
 {
-    public class VlFeatEm : ICluster
+    public class VlFeatGmm : ICluster
     {
-        private bool _isRandomInit;
         private int _numberOfFeatures;
 
-        public VlFeatEm()
+        public VlFeatGmm()
         {
-            _isRandomInit = false;
             _numberOfFeatures = int.MaxValue;
         }
 
-        public VlFeatEm(bool isRandomInit)
+        public VlFeatGmm(int numberOfFeatures)
         {
-            _isRandomInit = isRandomInit;
-        }
-
-        public VlFeatEm(int numberOfFeatures)
-        {
-            _numberOfFeatures = numberOfFeatures;
-        }
-
-        public VlFeatEm(bool isRandomInit, int numberOfFeatures)
-        {
-            _isRandomInit = isRandomInit;
             _numberOfFeatures = numberOfFeatures;
         }
 
@@ -45,26 +34,26 @@ namespace AutomaticImageClassification.Cluster.EM
                     Arrays.GetSubsetOfFeatures(ref descriptorFeatures, _numberOfFeatures);
                 }
 
-                MWArray[] result = cluster.Em(3,
+                MWArray[] result = cluster.Gmm(3,
                     new MWNumericArray(descriptorFeatures.ToArray()),
-                    new MWNumericArray(clustersNum),
-                    new MWLogicalArray(_isRandomInit));
+                    new MWNumericArray(clustersNum));
 
-                var features = (double[,])result[0].ToArray();
+                var means = (double[,])result[0].ToArray();
+                var covariances= (double[,])result[1].ToArray();
+                var priors = (double[]) ((MWNumericArray) result[2]).ToVector(MWArrayComponent.Real);
+
                 result = null;
                 cluster.Dispose();
-                return new KmeansModel(Arrays.ToJaggedArray(ref features).ToList());
+                
+                return new GmmModel(
+                    Arrays.ToJaggedArray(ref means).ToList(),
+                    Arrays.ToJaggedArray(ref covariances).ToList(),
+                    priors);
             }
             catch (Exception e)
             {
                 throw e;
             }
         }
-
-        public override string ToString()
-        {
-            return "VlFeatEm";
-        }
-
     }
 }

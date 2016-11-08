@@ -3,6 +3,7 @@ using System.Linq;
 
 using AutomaticImageClassification.Utilities;
 using Accord.MachineLearning;
+using AutomaticImageClassification.Cluster.ClusterModels;
 
 namespace AutomaticImageClassification.Cluster.Kmeans
 {
@@ -17,7 +18,7 @@ namespace AutomaticImageClassification.Cluster.Kmeans
             _numberOfFeatures = numberOfFeatures;
         }
 
-        public List<double[]> CreateClusters(List<double[]> descriptorFeatures, int clustersNum)
+        public ClusterModel CreateClusters(List<double[]> descriptorFeatures, int clustersNum)
         {
             // Create a new K-Means algorithm with 3 clusters 
             KMeans kmeans = new KMeans(clustersNum);
@@ -30,7 +31,7 @@ namespace AutomaticImageClassification.Cluster.Kmeans
             //  containing the labels for each of the observations
             kmeans.Learn(descriptorFeatures.ToArray());
             
-            return kmeans.Clusters.Centroids.ToList();
+            return new KmeansModel(kmeans.Clusters.Centroids.ToList());
         }
 
         public static void ClusterpixelImages()

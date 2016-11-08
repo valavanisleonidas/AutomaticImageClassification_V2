@@ -167,9 +167,15 @@
     <Compile Include="Classifiers\IClassifier.cs" />
     <Compile Include="Classifiers\LibLinearLib.cs" />
     <Compile Include="Classifiers\LibSVM.cs" />
+    <Compile Include="Cluster\ClusterModels\ClusterModel.cs" />
+    <Compile Include="Cluster\ClusterModels\GmmModel.cs" />
+    <Compile Include="Cluster\ClusterModels\KmeansModel.cs" />
+    <Compile Include="Cluster\GaussianMixtureModel\AccordGmm.cs" />
+    <Compile Include="Cluster\GaussianMixtureModel\VlFeatGmm.cs" />
     <Compile Include="Cluster\Kmeans\AccordKmeans.cs" />
     <Compile Include="Cluster\ICluster.cs" />
-    <Compile Include="Feature\Bovw\VlDenseSift.cs" />
+    <Compile Include="Feature\Bovw\VlFeatDenseSift.cs" />
+    <Compile Include="Feature\Bovw\VlFeatFisherVector.cs" />
     <Compile Include="KDTree\IKdTree.cs" />
     <Compile Include="KDTree\AccordKdTree.cs" />
     <Compile Include="Cluster\Kmeans\LireKmeans.cs" />

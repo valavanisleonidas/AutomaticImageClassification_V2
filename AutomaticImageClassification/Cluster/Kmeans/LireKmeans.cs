@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using AutomaticImageClassification.Cluster.ClusterModels;
 using java.util;
 using net.semanticmetadata.lire.utils.cv;
 using Arrays = AutomaticImageClassification.Utilities.Arrays;
@@ -16,7 +17,7 @@ namespace AutomaticImageClassification.Cluster.Kmeans
             _numberOfFeatures = numberOfFeatures;
         }
 
-        public List<double[]> CreateClusters(List<double[]> descriptorFeatures, int clustersNum)
+        public ClusterModel CreateClusters(List<double[]> descriptorFeatures, int clustersNum)
         {
             if (descriptorFeatures.Count > _numberOfFeatures)
             {
@@ -34,7 +35,7 @@ namespace AutomaticImageClassification.Cluster.Kmeans
             //get centers 
             List javaCenters = mean.getMeans();
             //convert to generics list
-            return Arrays.ConvertArrayListToGenericList<double>(ref javaCenters);      
+            return new KmeansModel(Arrays.ConvertArrayListToGenericList<double>(ref javaCenters));      
         }
 
         public override string ToString()

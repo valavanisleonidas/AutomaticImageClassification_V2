@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using AutomaticImageClassification.Cluster.ClusterModels;
 
 
 namespace AutomaticImageClassification.Cluster
 {
     public interface ICluster
     {
-        List<double[]> CreateClusters(List<double[]> descriptorFeatures, int clustersNum);
+        ClusterModel CreateClusters(List<double[]> descriptorFeatures, int clustersNum);
     }
 }

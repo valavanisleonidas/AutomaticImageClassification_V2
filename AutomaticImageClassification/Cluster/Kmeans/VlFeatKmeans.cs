@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutomaticImageClassification.Cluster.ClusterModels;
 using AutomaticImageClassification.Utilities;
 using MathWorks.MATLAB.NET.Arrays;
 using MatlabAPI;
@@ -21,7 +22,7 @@ namespace AutomaticImageClassification.Cluster.Kmeans
             _numberOfFeatures = numberOfFeatures;
         }
 
-        public List<double[]> CreateClusters(List<double[]> descriptorFeatures, int clustersNum)
+        public ClusterModel CreateClusters(List<double[]> descriptorFeatures, int clustersNum)
         {
             try
             {
@@ -39,7 +40,7 @@ namespace AutomaticImageClassification.Cluster.Kmeans
                 result.Dispose();
                 cluster.Dispose();
 
-                return Arrays.ToJaggedArray(ref features).ToList();
+                return new KmeansModel(Arrays.ToJaggedArray(ref features).ToList());
             }
             catch (Exception e)
             {

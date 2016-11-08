@@ -4,7 +4,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using AutomaticImageClassification.Cluster;
+using AutomaticImageClassification.Cluster.ClusterModels;
 using AutomaticImageClassification.Cluster.EM;
+using AutomaticImageClassification.Cluster.GaussianMixtureModel;
 using AutomaticImageClassification.Feature;
 using AutomaticImageClassification.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -38,8 +40,8 @@ namespace AutomaticImageClassificationTests
             {
                 colors.AddRange(phow.ExtractDescriptors(image));
             }
-            List<double[]> vocab = cluster.CreateClusters(colors, numOfClusters);
-            phow = new Phow(vocab);
+            ClusterModel model = cluster.CreateClusters(colors, numOfClusters);
+            phow = new Phow(model.Means);
 
             foreach (var image in sampleImgs)
             {
@@ -58,7 +60,7 @@ namespace AutomaticImageClassificationTests
             IFeatures surf = new AccordSurf();
             List<double[]> featu = surf.ExtractDescriptors(imagePath);
         }
-
+        
         //pass test
         [TestMethod]
         public void CanUseJOpenSurf()
@@ -160,7 +162,10 @@ namespace AutomaticImageClassificationTests
                 Arrays.GetDistinctObjects(ref colors);
             }
 
-            List<double[]> centers = cluster.CreateClusters(colors, numOfcolors);
+            ClusterModel model = cluster.CreateClusters(colors, numOfcolors);
+            ClusterModel mod = new GmmModel(new List<double[]>(),new List<double[]>(),new double[10]  );
+            
+            List<double[]> centers = model.Means;
             centers = centers.OrderByDescending(b => b[0]).ToList();
 
             Files.WriteFile(paleteFile, centers);
@@ -252,7 +257,9 @@ namespace AutomaticImageClassificationTests
                 Arrays.GetDistinctObjects(ref bocColors);
             }
 
-            List<double[]> bocCenters = cluster.CreateClusters(bocColors, numOfcolors);
+            ClusterModel Bocmodel = cluster.CreateClusters(bocColors, numOfcolors);
+            List<double[]> bocCenters = Bocmodel.Means;
+                
             bocCenters = bocCenters.OrderByDescending(b => b[0]).ToList();
 
             Files.WriteFile(paleteFile, bocCenters);
@@ -278,7 +285,9 @@ namespace AutomaticImageClassificationTests
                 Arrays.GetDistinctObjects(ref lbocColors);
             }
 
-            List<double[]> lbocCenters = cluster.CreateClusters(lbocColors, numOfVisualWords);
+            ClusterModel lbocModel= cluster.CreateClusters(lbocColors, numOfVisualWords);
+            List<double[]> lbocCenters = lbocModel.Means;
+
             lbocCenters = lbocCenters.OrderByDescending(b => b[0]).ToList();
 
             Files.WriteFile(dictionaryFile, lbocCenters);
@@ -342,9 +351,11 @@ namespace AutomaticImageClassificationTests
                 clusters.AddRange(feature.ExtractDescriptors(image));
             }
             sampleImgs = null;
-            var finalClusters = cluster.CreateClusters(clusters, clusterNum);
+            ClusterModel model= cluster.CreateClusters(clusters, clusterNum);
+
             clusters.Clear();
 
+            List<double[]> finalClusters = model.Means;
             IKdTree tree = new JavaMlKdTree();
             tree.CreateTree(finalClusters);
 
@@ -410,12 +421,12 @@ namespace AutomaticImageClassificationTests
                 clusters.AddRange(feature.ExtractDescriptors(image).OrderBy(x => Guid.NewGuid()).Take(clusterFeaturesPerImage));
             }
             sampleImgs = null;
-            var finalClusters = cluster.CreateClusters(clusters, clusterNum);
+            ClusterModel model = cluster.CreateClusters(clusters, clusterNum);
             clusters.Clear();
 
             //IKdTree tree = new JavaMlKdTree();
             //tree.CreateTree(finalClusters);
-
+            List<double[]> finalClusters = model.Means;
             Files.WriteFile(clustersFile, finalClusters);
 
             #endregion
@@ -457,7 +468,7 @@ namespace AutomaticImageClassificationTests
             const int maxNumberClusterFeatures = 200000;
 
             ICluster cluster = new VlFeatKmeans();
-            IFeatures feature = new VlDenseSift();
+            IFeatures feature = new VlFeatDenseSift();
 
             const string baseFolder = @"C:\Users\leonidas\Desktop\libsvm\databases\Clef2013\Compound";
             var trainPath = Path.Combine(baseFolder, "TrainSet");
@@ -478,8 +489,9 @@ namespace AutomaticImageClassificationTests
                 clusters.AddRange(feature.ExtractDescriptors(image).OrderBy(x => Guid.NewGuid()).Take(clusterFeaturesPerImage));
             }
             sampleImgs = null;
-            var finalClusters = cluster.CreateClusters(clusters, clusterNum);
+            ClusterModel model = cluster.CreateClusters(clusters, clusterNum);
             clusters.Clear();
+            List<double[]> finalClusters = model.Means;
 
             IKdTree tree = new JavaMlKdTree();
             tree.CreateTree(finalClusters);
@@ -488,7 +500,7 @@ namespace AutomaticImageClassificationTests
 
             #endregion
 
-            feature = new VlDenseSift(tree, clusterNum);
+            feature = new VlFeatDenseSift(tree, clusterNum);
 
             #region features extraction
 
@@ -602,5 +614,41 @@ namespace AutomaticImageClassificationTests
 
 
         }
+
+        [TestMethod]
+        public void CanUseVlFeatFisherVectors()
+        {
+            string baseFolder = @"Data";
+            //string trainPath = Path.Combine(baseFolder, "Train");
+
+            var numOfClusters = 10;
+            var sampleImgs = Files.GetFilesFrom(baseFolder);
+
+            IFeatures extractor = new AccordSurf();
+            ICluster cluster = new VlFeatGmm();
+            List<double[]> clusters = new List<double[]>();
+            int counter = 0;
+            foreach (var image in sampleImgs)
+            {
+                if (counter == 5)
+                {
+                    break;
+                }
+                counter++;
+                clusters.AddRange(extractor.ExtractDescriptors(image));
+            }
+            ClusterModel model = cluster.CreateClusters(clusters, numOfClusters);
+
+            string imagePath = @"Data\database\einstein.jpg";
+
+            Files.WriteFile("means.txt",model.Means);
+            Files.WriteFile("covar.txt", model.Covariances);
+            Files.WriteFile("priors.txt", model.Priors.ToList());
+
+            IFeatures fisher = new VlFeatFisherVector(new AccordSurf(),model);
+            var histogram = fisher.ExtractHistogram(imagePath);
+        }
+
+
     }
 }

@@ -5,7 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutomaticImageClassification.Cluster;
+using AutomaticImageClassification.Cluster.ClusterModels;
 using AutomaticImageClassification.Cluster.EM;
+using AutomaticImageClassification.Cluster.GaussianMixtureModel;
 using AutomaticImageClassification.Cluster.KDTree;
 using AutomaticImageClassification.Cluster.Kmeans;
 using AutomaticImageClassification.Feature;
@@ -13,6 +15,7 @@ using AutomaticImageClassification.Feature.Bovw;
 using AutomaticImageClassification.KDTree;
 using AutomaticImageClassification.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using sun.security.jca;
 
 namespace AutomaticImageClassificationTests
 {
@@ -80,7 +83,7 @@ namespace AutomaticImageClassificationTests
                 counter++;
                 colors.AddRange(phow.ExtractDescriptors(image));
             }
-            List<double[]> vocab = cluster.CreateClusters(colors, numOfClusters);
+            ClusterModel model = cluster.CreateClusters(colors, numOfClusters);
 
         }
 
@@ -108,7 +111,7 @@ namespace AutomaticImageClassificationTests
                 counter++;
                 colors.AddRange(phow.ExtractDescriptors(image));
             }
-            List<double[]> vocab = cluster.CreateClusters(colors, numOfClusters);
+            ClusterModel model = cluster.CreateClusters(colors, numOfClusters);
 
         }
 
@@ -136,7 +139,7 @@ namespace AutomaticImageClassificationTests
                 counter++;
                 colors.AddRange(phow.ExtractDescriptors(image));
             }
-            List<double[]> vocab = cluster.CreateClusters(colors, numOfClusters);
+            ClusterModel model = cluster.CreateClusters(colors, numOfClusters);
 
         }
 
@@ -162,8 +165,66 @@ namespace AutomaticImageClassificationTests
                 counter++;
                 colors.AddRange(colorFeatures.ExtractDescriptors(image));
             }
-            List<double[]> vocab = cluster.CreateClusters(colors, numOfClusters);
+            ClusterModel model = cluster.CreateClusters(colors, numOfClusters);
+
+
         }
+
+        [TestMethod]
+        public void CanClusterAccordGmm()
+        {
+            string baseFolder = @"Data";
+            //string trainPath = Path.Combine(baseFolder, "Train");
+
+            var numOfClusters = 10;
+            var sampleImgs = Files.GetFilesFrom(baseFolder);
+
+            IFeatures extractor = new AccordSurf();
+            ICluster cluster = new AccordGmm();
+            List<double[]> clusters = new List<double[]>();
+            int counter = 0;
+            foreach (var image in sampleImgs)
+            {
+                if (counter == 5)
+                {
+                    break;
+                }
+                counter++;
+                clusters.AddRange(extractor.ExtractDescriptors(image));
+            }
+            ClusterModel model = cluster.CreateClusters(clusters, numOfClusters);
+        }
+
+        [TestMethod]
+        public void CanClusterVlFeatGmm()
+        {
+            string baseFolder = @"Data";
+            //string trainPath = Path.Combine(baseFolder, "Train");
+
+            var numOfClusters = 10;
+            var sampleImgs = Files.GetFilesFrom(baseFolder);
+
+            IFeatures extractor = new AccordSurf();
+            ICluster cluster = new VlFeatGmm();
+            List<double[]> clusters = new List<double[]>();
+            int counter = 0;
+            foreach (var image in sampleImgs)
+            {
+                if (counter == 5)
+                {
+                    break;
+                }
+                counter++;
+                clusters.AddRange(extractor.ExtractDescriptors(image));
+            }
+            ClusterModel model = cluster.CreateClusters(clusters, numOfClusters);
+
+            ICluster cluster2 = new AccordGmm();
+            ClusterModel model2 = cluster2.CreateClusters(clusters, numOfClusters);
+
+        }
+
+
 
 
     }

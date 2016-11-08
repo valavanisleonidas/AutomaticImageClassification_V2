@@ -54,25 +54,6 @@ namespace AutomaticImageClassification.Utilities
             }
             objects = objects.Distinct(new CustomGenericArrayEqualityComparator<T>()).ToList();
         }
-
-        public static double[] ConvertJagged2DToDouble1D(ref double[,] array)
-        {
-            //double[] arr = new double[array.Length * array.Length];
-            //for (int i = 0; i < array.Length; i++)
-            //{
-            //    for (int j = 0; j < array[i].; j++)
-            //    {
-            //        arr[j] = array[i][j];
-            //    }
-
-            //}
-            //foreach (double d in array)
-            //{
-
-            //}
-
-            return null;
-        }
         
         public static T[][] TransposeMatrix<T>(ref T[][] matrix)
         {

@@ -219,12 +219,68 @@ namespace AutomaticImageClassificationTests
             }
             ClusterModel model = cluster.CreateClusters(clusters, numOfClusters);
 
-            ICluster cluster2 = new AccordGmm();
-            ClusterModel model2 = cluster2.CreateClusters(clusters, numOfClusters);
+        }
+
+        [TestMethod]
+        public void CanCreateVlFeatKdTree()
+        {
+            Console.WriteLine("starting");
+
+            string baseFolder = @"Data";
+            //string trainPath = Path.Combine(baseFolder, "Train");
+
+            var numOfClusters = 10;
+            var sampleImgs = Files.GetFilesFrom(baseFolder);
+
+            IFeatures extractor = new AccordSurf();
+            ICluster cluster = new AccordKmeans();
+            List<double[]> clusters = new List<double[]>();
+            int counter = 0;
+            foreach (var image in sampleImgs)
+            {
+                if (counter == 5)
+                {
+                    break;
+                }
+                counter++;
+                clusters.AddRange(extractor.ExtractDescriptors(image));
+            }
+            ClusterModel model = cluster.CreateClusters(clusters, numOfClusters);
+
+            Console.WriteLine("creating tree");
+
+            IKdTree tree = new VlFeatKdTree();
+            tree.CreateTree(model.Means);
+
+
+            double[] query=
+                Enumerable.Range(0, model.Means[0].Length).Select(v => (double)new Random().Next(1, 1000)).ToArray();
+
+            Console.WriteLine("querying tree");
+
+            var index = tree.SearchTree(query);
 
         }
 
+        [TestMethod]
+        public void CanSearchVlFeatKdTree()
+        {
+            List<double[]> vocab = new List<double[]>
+            {
+                new double[] {1, 1, 1, 1},
+                new double[] {100, 100, 100, 100},
+                new double[] {1000, 1000, 1000, 1000},
+                new double[] {2000, 1200, 200, 2000}
+            };
 
+            IKdTree tree = new VlFeatKdTree();
+            tree.CreateTree(vocab);
+
+            double[] query = new double[] { 1, 2, 3, 1 };
+
+            int index = tree.SearchTree(query);
+            Assert.AreEqual(index,0);
+        }
 
 
     }

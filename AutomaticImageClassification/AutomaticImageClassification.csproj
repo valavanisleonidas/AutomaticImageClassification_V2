@@ -199,6 +199,7 @@
     <Compile Include="FusionTypes\EarlyFusion.cs" />
     <Compile Include="FusionTypes\IFusion.cs" />
     <Compile Include="FusionTypes\LateFusion.cs" />
+    <Compile Include="KDTree\VlFeatKdTree.cs" />
     <Compile Include="Utilities\Arrays.cs" />
     <Compile Include="Utilities\CustomGenericArrayEqualityComparator.cs" />
     <Compile Include="Utilities\DistanceMetrics.cs" />

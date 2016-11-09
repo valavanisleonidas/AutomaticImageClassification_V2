@@ -44,7 +44,7 @@ namespace AutomaticImageClassificationTests
 
             IKdTree tree = new VlFeatKdTree();
             tree.CreateTree(model.Means);
-            phow = new VlFeatPhow(tree, model.Means[0].Length, 256, 256);
+            phow = new VlFeatPhow(tree, model.Means[0].Length);
 
             foreach (var image in sampleImgs)
             {
@@ -405,9 +405,9 @@ namespace AutomaticImageClassificationTests
             ICluster cluster = new VlFeatKmeans();
             IFeatures feature = new VlFeatPhow();
 
-            const string baseFolder = @"C:\Users\leonidas\Desktop\libsvm\databases\Clef2013\Compound";
-            var trainPath = Path.Combine(baseFolder, "TrainSet");
-            var testPath = Path.Combine(baseFolder, "TestSet");
+            const string baseFolder = @"C:\Users\l.valavanis\Desktop\personal\dbs\Clef2013\Compound";
+            var trainPath = Path.Combine(baseFolder, "Train");
+            var testPath = Path.Combine(baseFolder, "Test");
 
             var trainFile = @"Data\Features\" + feature + "_Lire_JavaML_" + clusterNum + "_train.txt";
             var testFile = @"Data\Features\" + feature + "_Lire_JavaML_" + clusterNum + "_test.txt";

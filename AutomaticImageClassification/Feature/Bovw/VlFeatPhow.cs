@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,14 +19,14 @@ namespace AutomaticImageClassification.Feature.Bovw
         private int _clusterNum, _width = 256, _height = 256;
 
         public VlFeatPhow() { }
-        
+
         public VlFeatPhow(IKdTree tree, int clusterNum)
         {
             _tree = tree;
             _clusterNum = clusterNum;
         }
 
-        public VlFeatPhow(IKdTree tree, int clusterNum, int width, int height)
+        public VlFeatPhow(IKdTree tree, int clusterNum,int width,int height)
         {
             _tree = tree;
             _clusterNum = clusterNum;
@@ -49,11 +50,17 @@ namespace AutomaticImageClassification.Feature.Bovw
         {
             try
             {
+                //if not right width height then error so if not 256 BE CAREFUL
+                //get image width and height
+                //Bitmap image = new Bitmap(input);
+                //_width = image.Width > 256 ? 256 : image.Width;
+                //_height = image.Height > 256 ? 256 : image.Height;
+                
                 List<double[]> features;
                 List<double[]> frames;
                 ExtractPhow(input, out features, out frames);
                 List<int> indexes = _tree.SearchTree(features);
-
+                
                 return CombineQuantizations(frames, indexes);
             }
             catch (Exception e)
@@ -115,11 +122,11 @@ namespace AutomaticImageClassification.Feature.Bovw
             try
             {
                 var quantizations = new MatlabAPI.Quantizations();
-
+                
                 //return frames descriptors( features )
                 MWArray[] result = quantizations.CombineQuantizations(1,
                     new MWNumericArray(frames.ToArray()),
-                    new MWNumericArray(indexes.ToArray()),
+                    new MWNumericArray(new[] { indexes.Select(a => a + 1).ToArray() }),
                     new MWNumericArray(_width),
                     new MWNumericArray(_height),
                     new MWNumericArray(_clusterNum),

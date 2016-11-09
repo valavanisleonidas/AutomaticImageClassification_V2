@@ -61,7 +61,7 @@ namespace AutomaticImageClassification.Feature.Bovw
                 ExtractPhow(input, out features, out frames);
                 List<int> indexes = _tree.SearchTree(features);
                 
-                return CombineQuantizations(frames, indexes);
+                return Quantization.CombineQuantizations(frames, indexes,_width,_height,_clusterNum,_numSpatialX,_numSpatialY);
             }
             catch (Exception e)
             {
@@ -116,33 +116,7 @@ namespace AutomaticImageClassification.Feature.Bovw
                 throw e;
             }
         }
-
-        private double[] CombineQuantizations(List<double[]> frames, List<int> indexes)
-        {
-            try
-            {
-                var quantizations = new MatlabAPI.Quantizations();
-                
-                //return frames descriptors( features )
-                MWArray[] result = quantizations.CombineQuantizations(1,
-                    new MWNumericArray(frames.ToArray()),
-                    new MWNumericArray(new[] { indexes.Select(a => a + 1).ToArray() }),
-                    new MWNumericArray(_width),
-                    new MWNumericArray(_height),
-                    new MWNumericArray(_clusterNum),
-                    new MWNumericArray(_numSpatialX),
-                    new MWNumericArray(_numSpatialY)
-                    );
-
-                quantizations.Dispose();
-                return (double[])((MWNumericArray)result[0]).ToVector(MWArrayComponent.Real);
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-
+        
         public override string ToString()
         {
             return "Phow_" + _extractionColor + "_" + string.Join("_", Arrays.ToJaggedArray(ref _numSpatialX)[0]);

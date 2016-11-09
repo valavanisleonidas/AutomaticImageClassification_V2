@@ -44,7 +44,7 @@ namespace AutomaticImageClassificationTests
 
             IKdTree tree = new VlFeatKdTree();
             tree.CreateTree(model.Means);
-            phow = new VlFeatPhow(tree, model.Means[0].Length);
+            phow = new VlFeatPhow(tree, model.Means[0].Length, 256, 256);
 
             foreach (var image in sampleImgs)
             {
@@ -333,15 +333,15 @@ namespace AutomaticImageClassificationTests
             const int clusterNum = 512;
             const int sampleImages = 10;
 
-            ICluster cluster = new LireKmeans();
-            IFeatures feature = new MkLabVlad();
+            ICluster cluster = new VlFeatGmm();
+            IFeatures feature = new VlFeatFisherVector();
 
             const string baseFolder = @"C:\Users\leonidas\Desktop\libsvm\databases\Clef2013\Compound";
             var trainPath = Path.Combine(baseFolder, "TrainSet");
             var testPath = Path.Combine(baseFolder, "TestSet");
 
-            var trainFile = @"Data\Features\" + feature + "_Lire_" + clusterNum + "_train.txt";
-            var testFile = @"Data\Features\" + feature + "_Lire_" + clusterNum + "_test.txt";
+            var trainFile = @"Data\Features\" + feature + "_"+ cluster + "_" + clusterNum + "_train.txt";
+            var testFile = @"Data\Features\" + feature + "_" + cluster + "_" + clusterNum + "_test.txt";
             var clustersFile = @"Data\Palettes\" + feature + "_" + clusterNum + "_clusters.txt";
 
             #region Clustering
@@ -366,7 +366,7 @@ namespace AutomaticImageClassificationTests
 
             #endregion
 
-            feature = new MkLabVlad(finalClusters);
+            feature = new VlFeatFisherVector(model);
 
 
             #region features extraction
@@ -405,12 +405,12 @@ namespace AutomaticImageClassificationTests
             ICluster cluster = new VlFeatKmeans();
             IFeatures feature = new VlFeatPhow();
 
-            const string baseFolder = @"C:\Users\l.valavanis\Desktop\personal\dbs\Clef2013\Compound";
-            var trainPath = Path.Combine(baseFolder, "Train");
-            var testPath = Path.Combine(baseFolder, "Test");
+            const string baseFolder = @"C:\Users\leonidas\Desktop\libsvm\databases\Clef2013\Compound";
+            var trainPath = Path.Combine(baseFolder, "TrainSet");
+            var testPath = Path.Combine(baseFolder, "TestSet");
 
-            var trainFile = @"Data\Features\" + feature + "_Lire_JavaML_" + clusterNum + "_train.txt";
-            var testFile = @"Data\Features\" + feature + "_Lire_JavaML_" + clusterNum + "_test.txt";
+            var trainFile = @"Data\Features\" + feature + "_RandomizedTree_" + clusterNum + "_train.txt";
+            var testFile = @"Data\Features\" + feature + "_RandomizedTree_" + clusterNum + "_test.txt";
             var clustersFile = @"Data\Palettes\" + feature + "_" + clusterNum + "_clusters.txt";
 
             #region Clustering
@@ -427,8 +427,9 @@ namespace AutomaticImageClassificationTests
             ClusterModel model = cluster.CreateClusters(clusters, clusterNum);
             clusters.Clear();
 
-            IKdTree tree = new VlFeatKdTree();
+            IKdTree tree = new VlFeatKdTree(true);
             tree.CreateTree(model.Means);
+
             List<double[]> finalClusters = model.Means;
             Files.WriteFile(clustersFile, finalClusters);
 

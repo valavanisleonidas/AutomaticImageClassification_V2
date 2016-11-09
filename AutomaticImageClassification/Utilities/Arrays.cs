@@ -151,7 +151,7 @@ namespace AutomaticImageClassification.Utilities
         //{
         //    try
         //    {
-        //        MatlabAPI.Phow phow = new MatlabAPI.Phow();
+        //        MatlabAPI.VlFeatPhow phow = new MatlabAPI.VlFeatPhow();
 
         //        MWArray[] result = phow.getSubsetDescriptors(
         //            1,

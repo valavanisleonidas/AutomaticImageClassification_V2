@@ -192,7 +192,7 @@
     <Compile Include="Feature\IFeatures.cs" />
     <Compile Include="Feature\Bovw\JOpenSurf.cs" />
     <Compile Include="Feature\Bovw\OpenCvSurf.cs" />
-    <Compile Include="Feature\Bovw\Phow.cs" />
+    <Compile Include="Feature\Bovw\VlFeatPhow.cs" />
     <Compile Include="Feature\Bovw\AccordSurf.cs" />
     <Compile Include="Feature\Textual\TfIdf.cs" />
     <Compile Include="Feature\Textual\WordEmbedding.cs" />

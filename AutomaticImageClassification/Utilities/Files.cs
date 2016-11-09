@@ -13,6 +13,11 @@ namespace AutomaticImageClassification.Utilities
         //default for pictures
         public static string[] GetFilesFrom(string searchFolder, string[] filters = null, bool isRecursive = true)
         {
+            if (!Directory.Exists(searchFolder))
+            {
+                throw new ArgumentException("Folder : " + searchFolder + " does not exist.Give valid folder to search");
+            }
+
             if (filters == null)
                 filters = new[] { "jpg", "jpeg", "png", "gif", "tiff", "bmp" };
 
@@ -27,6 +32,11 @@ namespace AutomaticImageClassification.Utilities
         //default for pictures
         public static string[] GetFilesFrom(string searchFolder, int filesFromEachSubFolder, string[] filters = null, bool isRecursive = true)
         {
+            if (!Directory.Exists(searchFolder))
+            {
+                throw  new ArgumentException("Folder : " + searchFolder +" does not exist.Give valid folder to search");
+            }
+
             if (filters == null)
                 filters = new[] { "jpg", "jpeg", "png", "gif", "tiff", "bmp" };
 
@@ -42,6 +52,10 @@ namespace AutomaticImageClassification.Utilities
 
         public static string[] GetSubFolders(string path)
         {
+            if (!Directory.Exists(path))
+            {
+                throw new ArgumentException("Folder : " + path + " does not exist.Give valid folder to search");
+            }
             return Directory.GetDirectories(path).Select(a => a.Remove(0, path.Length).Replace("\\", "")).ToArray();
         }
 

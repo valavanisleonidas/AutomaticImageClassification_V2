@@ -60,6 +60,7 @@ namespace AutomaticImageClassification.KDTree
                 throw e;
             }
         }
+        
         //returns index - 1 because matlab index starts from 1, not 0 
         public int SearchTree(double[] centroid)
         {
@@ -78,6 +79,31 @@ namespace AutomaticImageClassification.KDTree
                 result = null;
                 kdtree.Dispose();
                 return index - 1;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        //returns index - 1 because matlab index starts from 1, not 0 
+        public List<int> SearchTree(List<double[]> centers)
+        {
+            try
+            {
+                var kdtree = new MatlabAPI.KdTree();
+
+                MWArray[] result = kdtree.SearchTree(2,
+                    _kdtree,
+                    new MWNumericArray(_vocab.ToArray()),
+                    new MWNumericArray(centers.ToArray()));
+
+                int[] indexes = (int[])((MWNumericArray)result[0]).ToVector(MWArrayComponent.Real);
+                //double[] distances = (double[])((MWNumericArray)result[1]).ToVector(MWArrayComponent.Real);
+
+                result = null;
+                kdtree.Dispose();
+                return indexes.Select(a => a - 1).ToList();
             }
             catch (Exception e)
             {

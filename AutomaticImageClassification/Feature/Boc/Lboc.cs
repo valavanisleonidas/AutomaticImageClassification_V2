@@ -64,12 +64,12 @@ namespace AutomaticImageClassification.Feature.Boc
             var vector = new double[_dictionary.Count];
             BufferedImage[] blocks = ImageProcessor.splitImage(input, _patches, _patches);
 
-            var boc = new Feature.Boc.Boc(_resize, _cs, _palette, _boctree );
+            var boc = new Feature.Boc.Boc(_resize, _cs, _palette, _boctree);
             foreach (var b in blocks)
             {
                 double[] _boc = boc.ExtractHistogram(b);
 
-                int indx = _lBoctree?.SearchTree(_boc) 
+                int indx = _lBoctree?.SearchTree(_boc)
                     ?? DistanceMetrics.ComputeNearestCentroidL2(ref _dictionary, _boc);
 
                 vector[indx]++;
@@ -85,17 +85,17 @@ namespace AutomaticImageClassification.Feature.Boc
             img = ImageProcessor.resizeImage(img, _resize, _resize, false);
             BufferedImage[] blocks = ImageProcessor.splitImage(img, _patches, _patches);
 
-            var boc = new Feature.Boc.Boc(_resize,_cs,_palette,_boctree);
+            var boc = new Feature.Boc.Boc(_resize, _cs, _palette, _boctree);
             foreach (var b in blocks)
             {
                 colors.Add(boc.ExtractHistogram(b));
             }
-           return colors;
+            return colors;
         }
-        
+
         public override string ToString()
         {
-            return "LBoc";
+            return "LBoc" + _lBoctree + "_" + _palette.Length + "_Palette" + _dictionary + "VWords_" + _cs.toString();
         }
 
     }

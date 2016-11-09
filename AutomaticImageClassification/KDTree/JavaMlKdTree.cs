@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using AutomaticImageClassification.Cluster.KDTree;
 using ikvm.extensions;
 using java.lang;
@@ -24,6 +25,11 @@ namespace AutomaticImageClassification.KDTree
         {
             var nearestObject = _tree.nearest(centroid);
             return Integer.parseInt(nearestObject.toString());
+        }
+
+        public List<int> SearchTree(List<double[]> centers)
+        {
+            return centers.Select(center => SearchTree(center)).ToList();
         }
 
         public override string ToString()

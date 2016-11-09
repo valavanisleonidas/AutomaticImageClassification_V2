@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using AutomaticImageClassification.Cluster.KDTree;
 
 namespace AutomaticImageClassification.KDTree
@@ -25,6 +26,11 @@ namespace AutomaticImageClassification.KDTree
             //find nearest object to query (centroid)
             var a = _kdtree.Nearest(centroid, 1);
             return _centers.FindIndex(da => da[0] == a.Nearest.Position[0] && da[1] == a.Nearest.Position[1] && da[2] == a.Nearest.Position[2]);
+        }
+
+        public List<int> SearchTree(List<double[]> centers)
+        {
+            return centers.Select(center => SearchTree(center)).ToList();
         }
 
         public override string ToString()

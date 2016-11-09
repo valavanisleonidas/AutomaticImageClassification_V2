@@ -33,5 +33,11 @@ namespace AutomaticImageClassification.Cluster.GaussianMixtureModel
             var covariance = clusters.Model.Covariance;
             return new GmmModel(clusters.Means.ToList(), Arrays.ConvertArrayToList(ref covariance), clusters.Proportions);
         }
+
+        public override string ToString()
+        {
+            return "AccordGmm";
+        }
+
     }
 }

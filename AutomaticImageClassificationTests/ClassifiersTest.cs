@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using AutomaticImageClassification.Classifiers;
 using AutomaticImageClassification.Utilities;
@@ -14,10 +15,11 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void CanUseLibLinear()
         {
-            
+            Stopwatch stopwatch = Stopwatch.StartNew(); //creates and start the instance of Stopwatch
 
-            const string trainDataPath = @"Data\Features\Phow_rgb_1_2_4_Lire_JavaML_1536_train.txt";
-            const string testDataPath = @"Data\Features\Phow_rgb_1_2_4_Lire_JavaML_1536_test.txt";
+
+            const string trainDataPath = @"Data\Features\DenseSift_normalized_Lire_JavaML_4096_train.txt";
+            const string testDataPath = @"Data\Features\DenseSift_normalized_Lire_JavaML_4096_test.txt";
 
             const string trainlabelsPath = @"Data\Features\boc_labels_train.txt";
             const string testlabelsPath = @"Data\Features\boc_labels_test.txt";
@@ -26,7 +28,7 @@ namespace AutomaticImageClassificationTests
             var trainlabels = Files.ReadFileTo1DArray<double>(trainlabelsPath);
 
             const bool doCrossVal = false;
-            
+
             //normalize
             const bool sqrt = false;
             const bool tfidf = false;
@@ -41,7 +43,7 @@ namespace AutomaticImageClassificationTests
                 Cost = 8,
                 BiasMultiplier = 1,
                 Solver = "liblinear",
-                SolverType = 2,
+                SolverType = 0,
                 IsManualCv = false
             };
 
@@ -68,7 +70,7 @@ namespace AutomaticImageClassificationTests
 
             // APPLY KERNEL MAPPING
             classifier.ApplyKernelMapping(ref trainFeat);
-            
+
             if (doCrossVal)
             {
                 classifier.GridSearch(ref trainFeat, ref trainlabels);
@@ -76,7 +78,7 @@ namespace AutomaticImageClassificationTests
 
             classifier.Train(ref trainFeat, ref trainlabels);
             trainFeat.Clear();
-            
+
 
             var testFeat = Files.ReadFileToListArrayList<double>(testDataPath).ToList();
             var testlabels = Files.ReadFileTo1DArray<double>(testlabelsPath);
@@ -102,7 +104,7 @@ namespace AutomaticImageClassificationTests
             classifier.ApplyKernelMapping(ref testFeat);
 
             classifier.Predict(ref testFeat);
-            
+
 
             var predictedLabelsText = @"Data\Results\LibLinearBocPredictedLabels.txt";
             var predictedprobstext = @"Data\Results\LibLinearBocPredictedProbabilities.txt";
@@ -112,11 +114,15 @@ namespace AutomaticImageClassificationTests
 
             //compute accuracy
             int[] predictedLabels = Array.ConvertAll(classifier.GetPredictedCategories(), x => (int)x);
-            int[] labels = Array.ConvertAll(testlabels, x => (int)x);
+            int[] trueLabels = Array.ConvertAll(testlabels, x => (int)x);
 
 
-            var accuracy = AutomaticImageClassification.Evaluation.Measures.Accuracy(labels, predictedLabels);
-            Console.WriteLine(@"Accuracy is : " + accuracy);
+            var accuracy = AutomaticImageClassification.Evaluation.Measures.Accuracy(trueLabels, predictedLabels);
+            var macrof1 = AutomaticImageClassification.Evaluation.Measures.MacroF1(trueLabels, predictedLabels, trainlabels.Distinct().Select(a => (int)a).ToArray());
+            Console.WriteLine(@"Accuracy is : " + accuracy + " , macro f1 : " + macrof1);
+
+            stopwatch.Stop();
+            Console.WriteLine("program run for : " + stopwatch.Elapsed);
 
         }
 
@@ -124,6 +130,7 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void CanUseLibSvm()
         {
+            Stopwatch stopwatch = Stopwatch.StartNew(); //creates and start the instance of Stopwatch
 
             var trainDataPath = @"Data\Features\lboc_50_1024_train.txt";
             var testDataPath = @"Data\Features\lboc_50_1024_test.txt";
@@ -170,10 +177,14 @@ namespace AutomaticImageClassificationTests
 
             //compute accuracy
             int[] predictedLabels = Array.ConvertAll(classifier.GetPredictedCategories(), x => (int)x);
-            int[] labels = Array.ConvertAll(testlabels, x => (int)x);
+            int[] trueLabels = Array.ConvertAll(testlabels, x => (int)x);
 
-            var accuracy = AutomaticImageClassification.Evaluation.Measures.Accuracy(labels, predictedLabels);
-            Console.WriteLine(@"Accuracy is : " + accuracy);
+            var accuracy = AutomaticImageClassification.Evaluation.Measures.Accuracy(trueLabels, predictedLabels);
+            var macrof1 = AutomaticImageClassification.Evaluation.Measures.MacroF1(trueLabels, predictedLabels, trainlabels.Distinct().Select(a => (int)a).ToArray());
+            Console.WriteLine(@"Accuracy is : " + accuracy + " , macro f1 : " + macrof1);
+
+            stopwatch.Stop();
+            Console.WriteLine("program run for : " + stopwatch.Elapsed);
 
             // Normalize the datasets if you want: L2 Norm => x / ||x||
 

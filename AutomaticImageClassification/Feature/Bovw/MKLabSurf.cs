@@ -59,12 +59,11 @@ namespace AutomaticImageClassification.Feature.Bovw
             double[] imgVocVector = new double[_clusterNum];//num of clusters
 
             //for each centroid find min position in tree and increase corresponding index
-            foreach (var feature in features)
+            List<int> indexes = _tree.SearchTree(features);
+            foreach (var index in indexes)
             {
-                int positionofMin = _tree.SearchTree(feature);
-                imgVocVector[positionofMin]++;
+                imgVocVector[index]++;
             }
-
             return imgVocVector;
         }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AutomaticImageClassification.Cluster.KDTree;
 using AutomaticImageClassification.Utilities;
 using gr.iti.mklab.visual.aggregation;
@@ -52,6 +53,12 @@ namespace AutomaticImageClassification.Feature.Bovw
             //return _vlad.aggregate(_featureExtractor.ExtractDescriptors(input).ToArray());
 
             List<double[]> descriptors = _featureExtractor.ExtractDescriptors(input);
+
+            if (descriptors[0].Length != _codebook[0].Length)
+            {
+                throw new ArgumentException("Incorrect dimension size.Features dimensions : " + descriptors[0].Length
+                    + ".Clusters dimensions : " + _codebook[0].Length + ".Please use features of the same dimensions!");
+            }
 
             double[] vlad = new double[_codebook.Count * _clusterNum];
 

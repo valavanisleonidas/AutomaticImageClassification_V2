@@ -63,7 +63,7 @@ namespace AutomaticImageClassification.Cluster.EM
 
         public override string ToString()
         {
-            return "VlFeatEm";
+            return "VlFeatEm_" + (_isRandomInit ? "RandomInit" : "KmeansInit");
         }
 
     }

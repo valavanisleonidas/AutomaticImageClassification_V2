@@ -8,9 +8,12 @@ namespace AutomaticImageClassification.Cluster.Kmeans
 {
     public class LireKmeans : ICluster
     {
-        private int _numberOfFeatures = int.MaxValue;
+        private int _numberOfFeatures;
 
-        public LireKmeans() { }
+        public LireKmeans()
+        {
+            _numberOfFeatures = int.MaxValue;
+        }
 
         public LireKmeans(int numberOfFeatures)
         {
@@ -21,7 +24,6 @@ namespace AutomaticImageClassification.Cluster.Kmeans
         {
             if (descriptorFeatures.Count > _numberOfFeatures)
             {
-                //TODO check results because vl_colSubset was removed
                 Arrays.GetSubsetOfFeatures(ref descriptorFeatures, _numberOfFeatures);
             }
 

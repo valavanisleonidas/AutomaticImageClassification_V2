@@ -26,10 +26,10 @@ namespace AutomaticImageClassification.Feature.Bovw
             var imgVocVector = new double[_clusterNum];//num of clusters
 
             //for each centroid find min position in tree and increase corresponding index
-            foreach (var feature in features)
+            List<int> indexes = _tree.SearchTree(features);
+            foreach (var index in indexes)
             {
-                var positionofMin = _tree.SearchTree(feature);
-                imgVocVector[positionofMin]++;
+                imgVocVector[index]++;
             }
             return imgVocVector;
         }
@@ -38,7 +38,7 @@ namespace AutomaticImageClassification.Feature.Bovw
         {
             try
             {
-                return _surf.ProcessImage(new Bitmap(input)).ConvertAll( descriptor => descriptor.Descriptor);
+                return _surf.ProcessImage(new Bitmap(input)).ConvertAll(descriptor => descriptor.Descriptor);
             }
             catch (Exception e)
             {
@@ -48,7 +48,7 @@ namespace AutomaticImageClassification.Feature.Bovw
 
         public override string ToString()
         {
-            return "AccordSurf";
+            return "AccordSurf_" + _tree;
         }
 
     }

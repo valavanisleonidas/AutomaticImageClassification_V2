@@ -9,9 +9,12 @@ namespace AutomaticImageClassification.Cluster.Kmeans
 {
     public class AccordKmeans : ICluster
     {
-        private int _numberOfFeatures = int.MaxValue;
+        private int _numberOfFeatures;
 
-        public AccordKmeans() { }
+        public AccordKmeans()
+        {
+            _numberOfFeatures = int.MaxValue;
+        }
 
         public AccordKmeans(int numberOfFeatures)
         {
@@ -24,7 +27,6 @@ namespace AutomaticImageClassification.Cluster.Kmeans
             KMeans kmeans = new KMeans(clustersNum);
             if (descriptorFeatures.Count > _numberOfFeatures)
             {
-                //TODO check results because vl_colSubset was removed
                 Arrays.GetSubsetOfFeatures(ref descriptorFeatures, _numberOfFeatures);
             }
             // Compute the algorithm, retrieving an integer array

@@ -30,7 +30,6 @@ namespace AutomaticImageClassification.Cluster.GaussianMixtureModel
                 var cluster = new MatlabAPI.Cluster();
                 if (descriptorFeatures.Count > _numberOfFeatures)
                 {
-                    //TODO check results because vl_colSubset was removed
                     Arrays.GetSubsetOfFeatures(ref descriptorFeatures, _numberOfFeatures);
                 }
 
@@ -55,5 +54,11 @@ namespace AutomaticImageClassification.Cluster.GaussianMixtureModel
                 throw e;
             }
         }
+
+        public override string ToString()
+        {
+            return "VlFeatGmm";
+        }
+
     }
 }

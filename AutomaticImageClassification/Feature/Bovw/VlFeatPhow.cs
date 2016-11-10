@@ -26,7 +26,7 @@ namespace AutomaticImageClassification.Feature.Bovw
             _clusterNum = clusterNum;
         }
 
-        public VlFeatPhow(IKdTree tree, int clusterNum,int width,int height)
+        public VlFeatPhow(IKdTree tree, int clusterNum, int width, int height)
         {
             _tree = tree;
             _clusterNum = clusterNum;
@@ -64,8 +64,8 @@ namespace AutomaticImageClassification.Feature.Bovw
                 List<double[]> frames;
                 ExtractPhow(input, out features, out frames);
                 List<int> indexes = _tree.SearchTree(features);
-                
-                return Quantization.CombineQuantizations(frames, indexes,_width,_height,_clusterNum,_numSpatialX,_numSpatialY);
+
+                return Quantization.CombineQuantizations(frames, indexes, _width, _height, _clusterNum, _numSpatialX, _numSpatialY);
             }
             catch (Exception e)
             {
@@ -87,7 +87,11 @@ namespace AutomaticImageClassification.Feature.Bovw
                 var phow = new MatlabAPI.Phow();
 
                 //return frames descriptors( features )
-                MWArray[] result = phow.GetPhow(2, new MWCharArray(input), _extractionColor);
+                MWArray[] result = phow.GetPhow(2,
+                    new MWCharArray(input),
+                    new MWNumericArray(_height),
+                    new MWNumericArray(_width),
+                    _extractionColor);
                 var desc = (double[,])result[1].ToArray();
 
                 phow.Dispose();
@@ -120,7 +124,7 @@ namespace AutomaticImageClassification.Feature.Bovw
                 throw e;
             }
         }
-        
+
         public override string ToString()
         {
             return "Phow_" + _extractionColor + "_" + string.Join("_", Arrays.ToJaggedArray(ref _numSpatialX)[0]);

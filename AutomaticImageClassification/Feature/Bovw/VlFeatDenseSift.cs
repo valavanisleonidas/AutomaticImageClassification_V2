@@ -93,6 +93,8 @@ namespace AutomaticImageClassification.Feature.Bovw
 
                 //return frames, descriptors( features ), contrast
                 MWArray[] result = phow.GetDenseSIFT(3, new MWCharArray(input),
+                    new MWNumericArray(_height),
+                    new MWNumericArray(_width),
                     new MWLogicalArray(_rootSift),
                     new MWLogicalArray(_normalizeSift),
                     _scale);

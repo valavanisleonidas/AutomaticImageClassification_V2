@@ -45,13 +45,13 @@ namespace AutomaticImageClassification.Feature.Bovw
 
             //if not right width height then error so  BE CAREFUL
             //get image width and height
-            //Bitmap image = new Bitmap(input);
-            //if (image.Height > 480)
-            //{
-            //    image = ImageProcessing.ResizeImage(image, 480);
-            //}
-            //_width = image.Width;
-            //_height = image.Height;
+            Bitmap image = new Bitmap(input);
+            if (image.Height > 480)
+            {
+                image = ImageProcessing.ResizeImage(image, 480);
+            }
+            _width = image.Width;
+            _height = image.Height;
 
             if (!_useCombinedQuantization)
             {
@@ -70,7 +70,7 @@ namespace AutomaticImageClassification.Feature.Bovw
                 
                 List<double[]> features;
                 List<double[]> frames;
-                ExtractDenseSift(input, out features, out frames, out _height, out _width);
+                ExtractDenseSift(input, out features, out frames);
                 List<int> indexes = _tree.SearchTree(features);
 
                 imgVocVector = Quantization.CombineQuantizations(frames, indexes, _width, _height, _clusterNum, _numSpatialX, _numSpatialY);
@@ -104,6 +104,8 @@ namespace AutomaticImageClassification.Feature.Bovw
                 
                 //return frames, descriptors( features ), contrast
                 MWArray[] result = phow.GetDenseSIFT(3, new MWCharArray(input),
+                    new MWNumericArray(_height),
+                    new MWNumericArray(_width),
                     new MWLogicalArray(_rootSift),
                     new MWLogicalArray(_normalizeSift),
                     _scale);
@@ -127,40 +129,14 @@ namespace AutomaticImageClassification.Feature.Bovw
 
                 //return frames, descriptors( features ), contrast
                 MWArray[] result = phow.GetDenseSIFT(3, new MWCharArray(input),
+                    new MWNumericArray(_height),
+                    new MWNumericArray(_width),
                     new MWLogicalArray(_rootSift),
                     new MWLogicalArray(_normalizeSift),
                     _scale);
 
                 var fr= (double[,])result[0].ToArray();
                 var features = (double[,])result[1].ToArray();
-
-                phow.Dispose();
-
-                descriptors = Arrays.ToJaggedArray(ref features).ToList();
-                frames = Arrays.ToJaggedArray(ref fr).ToList();
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-
-        public void ExtractDenseSift(string input, out List<double[]> descriptors, out List<double[]> frames, out int height, out int width)
-        {
-            try
-            {
-                var phow = new MatlabAPI.DenseSift();
-
-                //return frames, descriptors( features ), contrast
-                MWArray[] result = phow.GetDenseSIFT(3, new MWCharArray(input),
-                    new MWLogicalArray(_rootSift),
-                    new MWLogicalArray(_normalizeSift),
-                    _scale);
-
-                var fr = (double[,])result[0].ToArray();
-                var features = (double[,])result[1].ToArray();
-                height = ((MWNumericArray)result[2]).ToScalarInteger();
-                width = ((MWNumericArray)result[3]).ToScalarInteger();
 
                 phow.Dispose();
 

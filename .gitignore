@@ -3,3 +3,9 @@ AutomaticImageClassification/obj/
 AutomaticImageClassification/bin/
 AutomaticImageClassificationTests/obj/
 AutomaticImageClassificationTests/Data/
+packages/
+AutomaticImageClassificationWebApp/bin/
+AutomaticImageClassificationWebApp.Tests/bin/
+AutomaticImageClassificationWebApp/obj/
+AutomaticImageClassificationWebApp.Tests/obj/
+.vs/AutomaticImageClassification/v14/.suo

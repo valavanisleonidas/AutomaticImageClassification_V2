@@ -43,6 +43,16 @@ namespace AutomaticImageClassification.Feature.Bovw
         {
             double[] imgVocVector = new double[_clusterNum];//num of clusters
 
+            //if not right width height then error so  BE CAREFUL
+            //get image width and height
+            Bitmap image = new Bitmap(input);
+            if (image.Height > 480)
+            {
+                image = ImageProcessing.ResizeImage(image, 480);
+            }
+            _width = image.Width;
+            _height = image.Height;
+
             if (!_useCombinedQuantization)
             {
                 List<double[]> features;
@@ -57,16 +67,7 @@ namespace AutomaticImageClassification.Feature.Bovw
             }
             else
             {
-                //if not right width height then error so  BE CAREFUL
-                //get image width and height
-                Bitmap image = new Bitmap(input);
-                if (image.Height > 480)
-                {
-                    image = ImageProcessing.ResizeImage(image, 480);
-                }
-                _width = image.Width;
-                _height = image.Height;
-
+                
                 List<double[]> features;
                 List<double[]> frames;
                 ExtractDenseSift(input, out features, out frames);
@@ -80,9 +81,19 @@ namespace AutomaticImageClassification.Feature.Bovw
 
         public List<double[]> ExtractDescriptors(string input)
         {
+            //if not right width height then error so  BE CAREFUL
+            //get image width and height
+            Bitmap image = new Bitmap(input);
+            if (image.Height > 480)
+            {
+                image = ImageProcessing.ResizeImage(image, 480);
+            }
+            _width = image.Width;
+            _height = image.Height;
+
             List<double[]> descriptors;
             ExtractDenseSift(input,out descriptors);
-            return descriptors;;
+            return descriptors;
         }
 
         public void ExtractDenseSift(string input,out List<double[]> descriptors)
@@ -90,7 +101,7 @@ namespace AutomaticImageClassification.Feature.Bovw
             try
             {
                 var phow = new MatlabAPI.DenseSift();
-
+                
                 //return frames, descriptors( features ), contrast
                 MWArray[] result = phow.GetDenseSIFT(3, new MWCharArray(input),
                     new MWNumericArray(_height),
@@ -118,6 +129,8 @@ namespace AutomaticImageClassification.Feature.Bovw
 
                 //return frames, descriptors( features ), contrast
                 MWArray[] result = phow.GetDenseSIFT(3, new MWCharArray(input),
+                    new MWNumericArray(_height),
+                    new MWNumericArray(_width),
                     new MWLogicalArray(_rootSift),
                     new MWLogicalArray(_normalizeSift),
                     _scale);

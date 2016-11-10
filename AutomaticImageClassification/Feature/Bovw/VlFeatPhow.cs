@@ -75,6 +75,16 @@ namespace AutomaticImageClassification.Feature.Bovw
 
         public List<double[]> ExtractDescriptors(string input)
         {
+            //if not right width height then error so  BE CAREFUL
+            //get image width and height
+            Bitmap image = new Bitmap(input);
+            if (image.Height > 480)
+            {
+                image = ImageProcessing.ResizeImage(image, 480);
+            }
+            _width = image.Width;
+            _height = image.Height;
+
             List<double[]> features;
             ExtractPhow(input, out features);
             return features;
@@ -110,7 +120,12 @@ namespace AutomaticImageClassification.Feature.Bovw
                 var phow = new MatlabAPI.Phow();
 
                 //return frames descriptors( features )
-                MWArray[] result = phow.GetPhow(2, new MWCharArray(input), _extractionColor);
+                MWArray[] result = phow.GetPhow(2, 
+                    new MWCharArray(input),
+                    new MWNumericArray(_height),
+                    new MWNumericArray(_width), 
+                    _extractionColor);
+
                 var _frames = (double[,])result[0].ToArray();
                 var _descriptors = (double[,])result[1].ToArray();
 

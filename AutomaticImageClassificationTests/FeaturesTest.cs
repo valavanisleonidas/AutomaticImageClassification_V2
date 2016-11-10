@@ -113,12 +113,12 @@ namespace AutomaticImageClassificationTests
             List<double[]> centroids = javasift.ExtractDescriptors(imagePath);
             IKdTree kdtree = new AccordKdTree(centroids);
 
-            //Arrays.GetSubsetOfFeatures(ref centroids,10);
-            //kdtree.CreateTree(centroids);
-            //javasift = new MkLabSift(kdtree, clusterNum);
+            Arrays.GetSubsetOfFeatures(ref centroids, 10);
+            kdtree.CreateTree(centroids);
+            javasift = new MkLabSift(kdtree, clusterNum);
 
-            //double[] featu = javasift.ExtractHistogram(imagePath);
-            //Files.WriteFile(@"C:\Users\l.valavanis\Desktop\sift.txt", new List<double[]> { featu });
+            double[] featu = javasift.ExtractHistogram(imagePath);
+            Files.WriteFile(@"C:\Users\l.valavanis\Desktop\sift.txt", new List<double[]> { featu });
             Files.WriteFile(@"C:\Users\l.valavanis\Desktop\sift.txt", centroids);
         }
 

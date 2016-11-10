@@ -59,7 +59,6 @@ namespace AutomaticImageClassificationTests
         public void CanTrainLibLinear()
         {
             var trainDataPath = @"Data\Features\boc_train.txt";
-            var testDataPath = @"Data\Features\boc_test.txt";
             var trainlabelsPath = @"Data\Features\train_labels.txt";
 
             var trainFeat = Files.ReadFileToListArrayList<double>(trainDataPath).ToList();

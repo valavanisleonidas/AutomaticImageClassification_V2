@@ -94,7 +94,7 @@ namespace AutomaticImageClassificationTests
             Files.WriteFile(fileToWrite, features);
 
             string fileToWrite_2 = @"Data\test2.txt";
-            string fileToWrite_2Binary = @"Data\test2binary.txt";
+            //string fileToWrite_2Binary = @"Data\test2binary.txt";
 
             Files.WriteFile(fileToWrite, features);
 

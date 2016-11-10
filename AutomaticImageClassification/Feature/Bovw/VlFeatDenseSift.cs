@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -56,6 +57,16 @@ namespace AutomaticImageClassification.Feature.Bovw
             }
             else
             {
+                //if not right width height then error so  BE CAREFUL
+                //get image width and height
+                Bitmap image = new Bitmap(input);
+                if (image.Height > 480)
+                {
+                    image = ImageProcessing.ResizeImage(image, 480);
+                }
+                _width = image.Width;
+                _height = image.Height;
+
                 List<double[]> features;
                 List<double[]> frames;
                 ExtractDenseSift(input, out features, out frames);

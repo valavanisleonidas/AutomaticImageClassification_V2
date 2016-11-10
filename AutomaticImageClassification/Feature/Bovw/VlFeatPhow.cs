@@ -16,7 +16,7 @@ namespace AutomaticImageClassification.Feature.Bovw
         private string _extractionColor = "rgb";
         private IKdTree _tree;
         private int[,] _numSpatialX = { { 1, 2, 4 } }, _numSpatialY = { { 1, 2, 4 } };
-        private int _clusterNum, _width = 256, _height = 256;
+        private int _clusterNum, _width, _height;
 
         public VlFeatPhow() { }
 
@@ -50,12 +50,16 @@ namespace AutomaticImageClassification.Feature.Bovw
         {
             try
             {
-                //if not right width height then error so if not 256 BE CAREFUL
+                //if not right width height then error so  BE CAREFUL
                 //get image width and height
-                //Bitmap image = new Bitmap(input);
-                //_width = image.Width > 256 ? 256 : image.Width;
-                //_height = image.Height > 256 ? 256 : image.Height;
-                
+                Bitmap image = new Bitmap(input);
+                if (image.Height > 480)
+                {
+                    image = ImageProcessing.ResizeImage(image, 480);
+                }
+                _width = image.Width;
+                _height = image.Height;
+
                 List<double[]> features;
                 List<double[]> frames;
                 ExtractPhow(input, out features, out frames);

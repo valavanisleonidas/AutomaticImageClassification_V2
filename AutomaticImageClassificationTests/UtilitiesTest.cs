@@ -549,9 +549,17 @@ namespace AutomaticImageClassificationTests
             string imagePath = @"Data\database\einstein.jpg";
             Bitmap image = new Bitmap(imagePath);
             Bitmap im = ImageProcessing.ResizeImage(image, 256, 256);
-            ImageProcessing.SaveImage(im,"test.jpg");
+            ImageProcessing.SaveImage(im, "test.jpg");
+
+            Bitmap ima = new Bitmap(@"C:\Users\l.valavanis\Desktop\personal\dbs\Clef2013\Compound\Test\COMP\1423-0127-16-57-3.jpg");
+            Bitmap resizedImage = (Bitmap)ImageProcessing.ResizeImageFixedHeight(ima, 550);
+            ImageProcessing.SaveImage(resizedImage, "test1.jpg");
 
         }
-        
+
+
+
+
+
     }
 }

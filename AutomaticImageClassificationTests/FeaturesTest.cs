@@ -44,7 +44,7 @@ namespace AutomaticImageClassificationTests
 
             IKdTree tree = new VlFeatKdTree();
             tree.CreateTree(model.Means);
-            phow = new VlFeatPhow(tree, model.Means[0].Length, 256, 256);
+            phow = new VlFeatPhow(tree, model.Means[0].Length, 256, 256,true);
 
             foreach (var image in sampleImgs)
             {
@@ -414,29 +414,41 @@ namespace AutomaticImageClassificationTests
             var testFile = @"Data\Features\" + feature + "_Tree" + tree + "_Cluster" + cluster + "_" + clusterNum + "_test.txt";
             var clustersFile = @"Data\Palettes\" + feature + "_" + clusterNum + "_clusters.txt";
 
-            #region Clustering
 
-            var sampleImgs = Files.GetFilesFrom(trainPath, sampleImages);
-            var clusterFeaturesPerImage = maxNumberClusterFeatures / sampleImgs.Length;
-
-            var clusters = new List<double[]>();
-            foreach (var image in sampleImgs)
+            List<double[]> finalClusters;
+            if (File.Exists(clustersFile))
             {
-                clusters.AddRange(feature.ExtractDescriptors(image).OrderBy(x => Guid.NewGuid()).Take(clusterFeaturesPerImage));
+                #region read Clusters from File
+
+                finalClusters = Files.ReadFileToListArrayList<double>(clustersFile);
+
+                #endregion
             }
-            sampleImgs = null;
-            ClusterModel model = cluster.CreateClusters(clusters, clusterNum);
-            clusters.Clear();
+            else
+            {
+                #region Clustering
 
-            tree.CreateTree(model.Means);
+                var sampleImgs = Files.GetFilesFrom(trainPath, sampleImages);
+                var clusterFeaturesPerImage = maxNumberClusterFeatures / sampleImgs.Length;
 
-            List<double[]> finalClusters = model.Means;
-            Files.WriteFile(clustersFile, finalClusters);
+                var clusters = new List<double[]>();
+                foreach (var image in sampleImgs)
+                {
+                    clusters.AddRange(feature.ExtractDescriptors(image).OrderBy(x => Guid.NewGuid()).Take(clusterFeaturesPerImage));
+                }
+                sampleImgs = null;
+                ClusterModel model = cluster.CreateClusters(clusters, clusterNum);
+                clusters.Clear();
+                finalClusters = model.Means;
 
-            #endregion
 
-            feature = new VlFeatPhow(tree, clusterNum);
-            //finalClusters.Clear();
+                Files.WriteFile(clustersFile, finalClusters);
+
+                #endregion
+            }
+
+            //tree.CreateTree(finalClusters);
+            feature = new VlFeatPhow(finalClusters,true);
 
             #region features extraction
 

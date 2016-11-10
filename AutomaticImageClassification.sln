@@ -1,11 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutomaticImageClassification", "AutomaticImageClassification\AutomaticImageClassification.csproj", "{0C27D2A1-BE6B-45A6-9EDB-A65D9A7D7891}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutomaticImageClassificationTests", "AutomaticImageClassificationTests\AutomaticImageClassificationTests.csproj", "{CA9AB2A6-B859-4999-9A55-8C136097BA3C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutomaticImageClassificationWebApp", "AutomaticImageClassificationWebApp\AutomaticImageClassificationWebApp.csproj", "{7633720E-AD7F-4AE2-9D62-76C781E608C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutomaticImageClassificationWebApp.Tests", "AutomaticImageClassificationWebApp.Tests\AutomaticImageClassificationWebApp.Tests.csproj", "{ED5185AB-80D9-4587-97D3-F4CE33CB7569}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +35,22 @@ Global
 		{CA9AB2A6-B859-4999-9A55-8C136097BA3C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CA9AB2A6-B859-4999-9A55-8C136097BA3C}.Release|x64.ActiveCfg = Release|x64
 		{CA9AB2A6-B859-4999-9A55-8C136097BA3C}.Release|x64.Build.0 = Release|x64
+		{7633720E-AD7F-4AE2-9D62-76C781E608C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7633720E-AD7F-4AE2-9D62-76C781E608C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7633720E-AD7F-4AE2-9D62-76C781E608C3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7633720E-AD7F-4AE2-9D62-76C781E608C3}.Debug|x64.Build.0 = Debug|Any CPU
+		{7633720E-AD7F-4AE2-9D62-76C781E608C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7633720E-AD7F-4AE2-9D62-76C781E608C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7633720E-AD7F-4AE2-9D62-76C781E608C3}.Release|x64.ActiveCfg = Release|Any CPU
+		{7633720E-AD7F-4AE2-9D62-76C781E608C3}.Release|x64.Build.0 = Release|Any CPU
+		{ED5185AB-80D9-4587-97D3-F4CE33CB7569}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED5185AB-80D9-4587-97D3-F4CE33CB7569}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED5185AB-80D9-4587-97D3-F4CE33CB7569}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{ED5185AB-80D9-4587-97D3-F4CE33CB7569}.Debug|x64.Build.0 = Debug|Any CPU
+		{ED5185AB-80D9-4587-97D3-F4CE33CB7569}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED5185AB-80D9-4587-97D3-F4CE33CB7569}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED5185AB-80D9-4587-97D3-F4CE33CB7569}.Release|x64.ActiveCfg = Release|Any CPU
+		{ED5185AB-80D9-4587-97D3-F4CE33CB7569}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

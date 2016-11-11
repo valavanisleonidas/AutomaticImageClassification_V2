@@ -8,7 +8,9 @@ namespace AutomaticImageClassificationWebApp
     {
         public void Configuration(IAppBuilder app)
         {
+            log4net.Config.XmlConfigurator.Configure();
             ConfigureAuth(app);
+
         }
     }
 }

@@ -24,7 +24,7 @@ namespace AutomaticImageClassificationWebApp.Controllers
         public ActionResult Contact()
         {
             ViewBag.Message = "Having Trouble? Send us a message!";
-
+            
             log4net.LogManager.GetLogger("HomeController").Warn("fuge");
             log4net.LogManager.GetLogger(GetType()).Debug("Error parsing WSDL");
 

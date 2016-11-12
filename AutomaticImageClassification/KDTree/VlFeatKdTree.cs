@@ -113,7 +113,7 @@ namespace AutomaticImageClassification.KDTree
 
         public override string ToString()
         {
-            return "VlFeatKdTree_" + _isRandomizedTree;
+            return "VlFeatKdTree" + (_isRandomizedTree ? "_Randomized" : "");
         }
 
     }

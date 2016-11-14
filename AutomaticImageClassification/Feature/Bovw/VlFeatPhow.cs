@@ -16,7 +16,6 @@ namespace AutomaticImageClassification.Feature.Bovw
         private string _extractionColor = "rgb", _quantizer = "kdtree";
         private IKdTree _tree;
         private List<double[]> _vocab;
-
         private int[,] _numSpatialX = { { 1, 2, 4 } }, _numSpatialY = { { 1, 2, 4 } };
         private int _clusterNum, _width, _height;
         private bool _isFastPhow = true;
@@ -94,7 +93,7 @@ namespace AutomaticImageClassification.Feature.Bovw
                 {
                     List<double[]> features;
                     List<double[]> frames;
-                    ExtractPhow(input, out features, out frames, out _height, out _width);
+                    ExtractPhow(input, out features, out frames);
                     List<int> indexes = _tree.SearchTree(features);
                     imgVocVector = Quantization.CombineQuantizations(frames, indexes, _width, _height, _clusterNum, _numSpatialX, _numSpatialY);
                 }
@@ -132,7 +131,11 @@ namespace AutomaticImageClassification.Feature.Bovw
                 //return frames descriptors( features )
                 MWArray[] result = phow.GetPhow(2,
                     new MWCharArray(input),
-                    _extractionColor);
+                    _extractionColor,
+                    new MWLogicalArray(_resizeImage),
+                    new MWNumericArray(_height));
+
+
                 var desc = (double[,])result[1].ToArray();
 
                 phow.Dispose();
@@ -153,37 +156,12 @@ namespace AutomaticImageClassification.Feature.Bovw
                 //return frames descriptors( features )
                 MWArray[] result = phow.GetPhow(2,
                     new MWCharArray(input),
-                    _extractionColor);
+                    _extractionColor,
+                    new MWLogicalArray(_resizeImage),
+                    new MWNumericArray(_height));
 
                 var _frames = (double[,])result[0].ToArray();
                 var _descriptors = (double[,])result[1].ToArray();
-
-                phow.Dispose();
-
-                descriptors = Arrays.ToJaggedArray(ref _descriptors).ToList();
-                frames = Arrays.ToJaggedArray(ref _frames).ToList();
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-
-        public void ExtractPhow(string input, out List<double[]> descriptors, out List<double[]> frames, out int height, out int width)
-        {
-            try
-            {
-                var phow = new MatlabAPI.Phow();
-
-                //return frames descriptors( features )
-                MWArray[] result = phow.GetPhow(2,
-                    new MWCharArray(input),
-                    _extractionColor);
-
-                var _frames = (double[,])result[0].ToArray();
-                var _descriptors = (double[,])result[1].ToArray();
-                height = ((MWNumericArray)result[2]).ToScalarInteger();
-                width = ((MWNumericArray)result[3]).ToScalarInteger();
 
                 phow.Dispose();
 

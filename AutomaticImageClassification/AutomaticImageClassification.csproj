@@ -175,6 +175,7 @@
     <Compile Include="Cluster\ICluster.cs" />
     <Compile Include="Feature\Bovw\VlFeatDenseSift.cs" />
     <Compile Include="Feature\Bovw\VlFeatFisherVector.cs" />
+    <Compile Include="Feature\Bovw\VlFeatSift.cs" />
     <Compile Include="KDTree\IKdTree.cs" />
     <Compile Include="KDTree\AccordKdTree.cs" />
     <Compile Include="Cluster\Kmeans\LireKmeans.cs" />
@@ -199,6 +200,8 @@
     <Compile Include="FusionTypes\IFusion.cs" />
     <Compile Include="FusionTypes\LateFusion.cs" />
     <Compile Include="KDTree\VlFeatKdTree.cs" />
+    <Compile Include="Managers\ClusterManager.cs" />
+    <Compile Include="Managers\ImageRepresentationManager.cs" />
     <Compile Include="Utilities\Arrays.cs" />
     <Compile Include="Utilities\CustomGenericArrayEqualityComparator.cs" />
     <Compile Include="Utilities\DistanceMetrics.cs" />

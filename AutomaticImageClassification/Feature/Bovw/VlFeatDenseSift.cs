@@ -12,31 +12,43 @@ namespace AutomaticImageClassification.Feature.Bovw
 {
     public class VlFeatDenseSift : IFeatures
     {
-        private static int _scale, _clusterNum, _width = 256, _height = 256;
+        private static int _step, _clusterNum, _width = 256, _height = 480;
         private int[,] _numSpatialX = { { 1, 2, 4 } }, _numSpatialY = { { 1, 2, 4 } };
-        private static bool _rootSift, _normalizeSift, _useCombinedQuantization;
+        private static bool _rootSift, _normalizeSift, _useCombinedQuantization, _resizeImage;
         private IKdTree _tree;
 
         public VlFeatDenseSift()
         {
-            _scale = 4;
+            _step = 4;
             _rootSift = false;
             _normalizeSift = true;
             _useCombinedQuantization = true;
+            _resizeImage = true;
         }
 
-        public VlFeatDenseSift(int scale, bool isRootSift, bool isNormalizedSift, bool useCombinedQuantization)
+        public VlFeatDenseSift(int step, bool isRootSift, bool isNormalizedSift, bool useCombinedQuantization, bool resizeImage, int height)
         {
-            _scale = scale;
+            _step = step;
             _rootSift = isRootSift;
             _normalizeSift = isNormalizedSift;
             _useCombinedQuantization = useCombinedQuantization;
+            _resizeImage = resizeImage;
+            _height = height;
         }
 
         public VlFeatDenseSift(IKdTree tree, int clusterNum)
         {
             _tree = tree;
             _clusterNum = clusterNum;
+            _resizeImage = true;
+        }
+
+        public VlFeatDenseSift(IKdTree tree, int clusterNum, bool resizeImage, int height)
+        {
+            _tree = tree;
+            _clusterNum = clusterNum;
+            _resizeImage = resizeImage;
+            _height = height;
         }
 
         public double[] ExtractHistogram(string input)
@@ -69,7 +81,7 @@ namespace AutomaticImageClassification.Feature.Bovw
             {
                 List<double[]> features;
                 List<double[]> frames;
-                ExtractDenseSift(input, out features, out frames, out _height, out _width);
+                ExtractDenseSift(input, out features, out frames);
                 List<int> indexes = _tree.SearchTree(features);
 
                 imgVocVector = Quantization.CombineQuantizations(frames, indexes, _width, _height, _clusterNum, _numSpatialX, _numSpatialY);
@@ -105,7 +117,10 @@ namespace AutomaticImageClassification.Feature.Bovw
                 MWArray[] result = phow.GetDenseSIFT(3, new MWCharArray(input),
                     new MWLogicalArray(_rootSift),
                     new MWLogicalArray(_normalizeSift),
-                    _scale);
+                    _step,
+                    new MWLogicalArray(_resizeImage),
+                    new MWNumericArray(_height));
+
                 var features = (double[,])result[1].ToArray();
 
                 phow.Dispose();
@@ -128,38 +143,12 @@ namespace AutomaticImageClassification.Feature.Bovw
                 MWArray[] result = phow.GetDenseSIFT(3, new MWCharArray(input),
                     new MWLogicalArray(_rootSift),
                     new MWLogicalArray(_normalizeSift),
-                    _scale);
+                    _step,
+                    new MWLogicalArray(_resizeImage),
+                    new MWNumericArray(_height));
 
                 var fr = (double[,])result[0].ToArray();
                 var features = (double[,])result[1].ToArray();
-
-                phow.Dispose();
-
-                descriptors = Arrays.ToJaggedArray(ref features).ToList();
-                frames = Arrays.ToJaggedArray(ref fr).ToList();
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-
-        public void ExtractDenseSift(string input, out List<double[]> descriptors, out List<double[]> frames, out int height, out int width)
-        {
-            try
-            {
-                var phow = new MatlabAPI.DenseSift();
-
-                //return frames, descriptors( features ), contrast
-                MWArray[] result = phow.GetDenseSIFT(3, new MWCharArray(input),
-                    new MWLogicalArray(_rootSift),
-                    new MWLogicalArray(_normalizeSift),
-                    _scale);
-
-                var fr = (double[,])result[0].ToArray();
-                var features = (double[,])result[1].ToArray();
-                height = ((MWNumericArray)result[2]).ToScalarInteger();
-                width = ((MWNumericArray)result[3]).ToScalarInteger();
 
                 phow.Dispose();
 

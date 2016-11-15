@@ -19,7 +19,7 @@ namespace AutomaticImageClassification.Utilities
             }
 
             if (filters == null)
-                filters = new[] { "jpg", "jpeg", "png", "gif", "tiff", "bmp" };
+                filters = new[] {"jpg", "jpeg", "png", "gif", "tiff", "bmp"};
 
             var filesFound = new List<string>();
             var searchOption = isRecursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
@@ -29,23 +29,28 @@ namespace AutomaticImageClassification.Utilities
             }
             return filesFound.ToArray();
         }
+
         //default for pictures
-        public static string[] GetFilesFrom(string searchFolder, int filesFromEachSubFolder, string[] filters = null, bool isRecursive = true)
+        public static string[] GetFilesFrom(string searchFolder, int filesFromEachSubFolder, string[] filters = null,
+            bool isRecursive = true)
         {
             if (!Directory.Exists(searchFolder))
             {
-                throw  new ArgumentException("Folder : " + searchFolder +" does not exist.Give valid folder to search");
+                throw new ArgumentException("Folder : " + searchFolder + " does not exist.Give valid folder to search");
             }
 
             if (filters == null)
-                filters = new[] { "jpg", "jpeg", "png", "gif", "tiff", "bmp" };
+                filters = new[] {"jpg", "jpeg", "png", "gif", "tiff", "bmp"};
 
             var filesInDirectory = Directory.GetDirectories(searchFolder);
             var filesFound = new List<string>();
             var searchOption = isRecursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
             foreach (var subfolder in filesInDirectory)
             {
-                filesFound.AddRange(Directory.GetFiles(subfolder, string.Format("*.{0}", filters), searchOption).OrderBy(x => Guid.NewGuid()).Take(filesFromEachSubFolder));
+                filesFound.AddRange(
+                    Directory.GetFiles(subfolder, string.Format("*.{0}", filters), searchOption)
+                        .OrderBy(x => Guid.NewGuid())
+                        .Take(filesFromEachSubFolder));
             }
             return filesFound.ToArray();
         }
@@ -78,7 +83,9 @@ namespace AutomaticImageClassification.Utilities
         public static void WriteFile<T>(string fileToWrite, List<T[]> contentList)
         {
             var encoderShouldEmitUtf8Identifier = false;
-            using (StreamWriter sw = new StreamWriter(File.Open(fileToWrite, FileMode.Create), new UTF8Encoding(encoderShouldEmitUtf8Identifier)))
+            using (
+                StreamWriter sw = new StreamWriter(File.Open(fileToWrite, FileMode.Create),
+                    new UTF8Encoding(encoderShouldEmitUtf8Identifier)))
             {
                 foreach (var features in contentList)
                 {
@@ -91,7 +98,9 @@ namespace AutomaticImageClassification.Utilities
         public static void WriteFile<T>(string fileToWrite, List<T> contentList)
         {
             var encoderShouldEmitUtf8Identifier = false;
-            using (StreamWriter sw = new StreamWriter(File.Open(fileToWrite, FileMode.Create), new UTF8Encoding(encoderShouldEmitUtf8Identifier)))
+            using (
+                StreamWriter sw = new StreamWriter(File.Open(fileToWrite, FileMode.Create),
+                    new UTF8Encoding(encoderShouldEmitUtf8Identifier)))
             {
                 foreach (var feature in contentList)
                 {
@@ -104,7 +113,9 @@ namespace AutomaticImageClassification.Utilities
         public static void WriteAppendFile<T>(string fileToWrite, T[] contentArray)
         {
             var encoderShouldEmitUtf8Identifier = false;
-            using (StreamWriter sw = new StreamWriter(File.Open(fileToWrite, FileMode.Append), new UTF8Encoding(encoderShouldEmitUtf8Identifier)))
+            using (
+                StreamWriter sw = new StreamWriter(File.Open(fileToWrite, FileMode.Append),
+                    new UTF8Encoding(encoderShouldEmitUtf8Identifier)))
             {
                 sw.WriteLine(string.Join(" ", contentArray.Select(p => p.ToString()).ToArray()));
             }
@@ -134,13 +145,17 @@ namespace AutomaticImageClassification.Utilities
         public static T[][] ReadFileTo2DArray<T>(string path)
         {
             return File.ReadAllLines(path)
-                .Select(l => l.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(i => (T)Convert.ChangeType(i, typeof(T))).ToArray())
+                .Select(
+                    l =>
+                        l.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries)
+                            .Select(i => (T) Convert.ChangeType(i, typeof(T)))
+                            .ToArray())
                 .ToArray();
         }
 
         public static T[] ReadFileTo1DArray<T>(string path)
         {
-            return File.ReadAllLines(path).Select(i => (T)Convert.ChangeType(i, typeof(T))).ToArray();
+            return File.ReadAllLines(path).Select(i => (T) Convert.ChangeType(i, typeof(T))).ToArray();
         }
 
     }

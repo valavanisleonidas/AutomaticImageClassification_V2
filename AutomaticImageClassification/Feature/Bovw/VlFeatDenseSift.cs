@@ -4,7 +4,8 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AutomaticImageClassification.Cluster.KDTree;
+using AutomaticImageClassification.Cluster.ClusterModels;
+using AutomaticImageClassification.KDTree;
 using AutomaticImageClassification.Utilities;
 using MathWorks.MATLAB.NET.Arrays;
 
@@ -12,10 +13,11 @@ namespace AutomaticImageClassification.Feature.Bovw
 {
     public class VlFeatDenseSift : IFeatures
     {
-        private static int _step, _clusterNum, _width = 256, _height = 480;
-        private int[,] _numSpatialX = { { 1, 2, 4 } }, _numSpatialY = { { 1, 2, 4 } };
-        private static bool _rootSift, _normalizeSift, _useCombinedQuantization, _resizeImage;
-        private IKdTree _tree;
+        private static int _step, _width, _height;
+        private readonly int[,] _numSpatialX = { { 1, 2, 4 } };
+        private readonly int[,] _numSpatialY = { { 1, 2, 4 } };
+        private static bool _rootSift, _normalizeSift, _useCombinedQuantization;
+        private readonly ClusterModel _clusterModel;
 
         public VlFeatDenseSift()
         {
@@ -23,37 +25,34 @@ namespace AutomaticImageClassification.Feature.Bovw
             _rootSift = false;
             _normalizeSift = true;
             _useCombinedQuantization = true;
-            _resizeImage = true;
         }
 
-        public VlFeatDenseSift(int step, bool isRootSift, bool isNormalizedSift, bool useCombinedQuantization, bool resizeImage, int height)
+        public VlFeatDenseSift(int step, bool isRootSift, bool isNormalizedSift, bool useCombinedQuantization, int height, int width)
         {
             _step = step;
             _rootSift = isRootSift;
             _normalizeSift = isNormalizedSift;
             _useCombinedQuantization = useCombinedQuantization;
-            _resizeImage = resizeImage;
             _height = height;
+            _width = width;
         }
 
-        public VlFeatDenseSift(IKdTree tree, int clusterNum)
+
+        public VlFeatDenseSift(ClusterModel clusterModel)
         {
-            _tree = tree;
-            _clusterNum = clusterNum;
-            _resizeImage = true;
+            _clusterModel = clusterModel;
         }
 
-        public VlFeatDenseSift(IKdTree tree, int clusterNum, bool resizeImage, int height)
+        public VlFeatDenseSift(ClusterModel clusterModel, int height, int width)
         {
-            _tree = tree;
-            _clusterNum = clusterNum;
-            _resizeImage = resizeImage;
+            _clusterModel = clusterModel;
             _height = height;
+            _width = width;
         }
 
         public double[] ExtractHistogram(string input)
         {
-            double[] imgVocVector = new double[_clusterNum];//num of clusters
+            double[] imgVocVector = new double[_clusterModel.ClusterNum];//num of clusters
 
             //if not right width height then error so  BE CAREFUL
             //get image width and height
@@ -71,7 +70,7 @@ namespace AutomaticImageClassification.Feature.Bovw
                 ExtractDenseSift(input, out features);
 
                 //for each centroid find min position in tree and increase corresponding index
-                List<int> indexes = _tree.SearchTree(features);
+                List<int> indexes = _clusterModel.Tree.SearchTree(features);
                 foreach (var index in indexes)
                 {
                     imgVocVector[index]++;
@@ -82,9 +81,9 @@ namespace AutomaticImageClassification.Feature.Bovw
                 List<double[]> features;
                 List<double[]> frames;
                 ExtractDenseSift(input, out features, out frames);
-                List<int> indexes = _tree.SearchTree(features);
+                List<int> indexes = _clusterModel.Tree.SearchTree(features);
 
-                imgVocVector = Quantization.CombineQuantizations(frames, indexes, _width, _height, _clusterNum, _numSpatialX, _numSpatialY);
+                imgVocVector = Quantization.CombineQuantizations(frames, indexes, _width, _height, _clusterModel.ClusterNum, _numSpatialX, _numSpatialY);
             }
 
             return imgVocVector;
@@ -94,13 +93,13 @@ namespace AutomaticImageClassification.Feature.Bovw
         {
             //if not right width height then error so  BE CAREFUL
             //get image width and height
-            Bitmap image = new Bitmap(input);
-            if (image.Height > 480)
-            {
-                image = ImageProcessing.ResizeImage(image, 480);
-            }
-            _width = image.Width;
-            _height = image.Height;
+            //Bitmap image = new Bitmap(input);
+            //if (image.Height > 480)
+            //{
+            //    image = ImageProcessing.ResizeImage(image, 480);
+            //}
+            //_width = image.Width;
+            //_height = image.Height;
 
             List<double[]> descriptors;
             ExtractDenseSift(input, out descriptors);
@@ -118,8 +117,8 @@ namespace AutomaticImageClassification.Feature.Bovw
                     new MWLogicalArray(_rootSift),
                     new MWLogicalArray(_normalizeSift),
                     _step,
-                    new MWLogicalArray(_resizeImage),
-                    new MWNumericArray(_height));
+                    new MWNumericArray(_height),
+                    new MWNumericArray(_width));
 
                 var features = (double[,])result[1].ToArray();
 
@@ -144,8 +143,9 @@ namespace AutomaticImageClassification.Feature.Bovw
                     new MWLogicalArray(_rootSift),
                     new MWLogicalArray(_normalizeSift),
                     _step,
-                    new MWLogicalArray(_resizeImage),
-                    new MWNumericArray(_height));
+                    new MWNumericArray(_height),
+                    new MWNumericArray(_width));
+
 
                 var fr = (double[,])result[0].ToArray();
                 var features = (double[,])result[1].ToArray();

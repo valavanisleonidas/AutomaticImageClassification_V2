@@ -5,31 +5,31 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Accord.Math;
+using AutomaticImageClassification.Cluster.ClusterModels;
+using AutomaticImageClassification.KDTree;
 using OpenSURFcs;
-using AutomaticImageClassification.Cluster.KDTree;
 
 namespace AutomaticImageClassification.Feature.Bovw
 {
     public class JOpenSurf : IFeatures
     {
 
-        private IKdTree _tree;
-        private int _clusterNum;
+        private readonly ClusterModel _clusterModel;
 
-        public JOpenSurf(IKdTree tree, int clusterNum)
-        {
-            _tree = tree;
-            _clusterNum = clusterNum;
-        }
         public JOpenSurf() { }
 
+        public JOpenSurf(ClusterModel clusterModel)
+        {
+            _clusterModel = clusterModel;
+        }
+        
         public double[] ExtractHistogram(string input)
         {
             List<double[]> features = ExtractDescriptors(input);
-            double[] imgVocVector = new double[_clusterNum];//num of clusters
+            double[] imgVocVector = new double[_clusterModel.ClusterNum];//num of clusters
 
             //for each centroid find min position in tree and increase corresponding index
-            List<int> indexes = _tree.SearchTree(features);
+            List<int> indexes = _clusterModel.Tree.SearchTree(features);
             foreach (var index in indexes)
             {
                 imgVocVector[index]++;

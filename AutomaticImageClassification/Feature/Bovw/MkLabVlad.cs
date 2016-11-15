@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using AutomaticImageClassification.Cluster.KDTree;
+using AutomaticImageClassification.KDTree;
 using AutomaticImageClassification.Utilities;
 using gr.iti.mklab.visual.aggregation;
 

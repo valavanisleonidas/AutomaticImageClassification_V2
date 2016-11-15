@@ -2,31 +2,31 @@
 using System.Collections.Generic;
 using System.Drawing;
 using Accord.Imaging;
-using AutomaticImageClassification.Cluster.KDTree;
+using AutomaticImageClassification.Cluster.ClusterModels;
+using AutomaticImageClassification.KDTree;
 
 namespace AutomaticImageClassification.Feature.Bovw
 {
     public class AccordSurf : IFeatures
     {
         // Create a new SURF Features Detector using default parameters
-        private SpeededUpRobustFeaturesDetector _surf = new SpeededUpRobustFeaturesDetector();
-        private IKdTree _tree;
-        private int _clusterNum;
+        private readonly SpeededUpRobustFeaturesDetector _surf = new SpeededUpRobustFeaturesDetector();
+        private readonly ClusterModel _clusterModel;
 
-        public AccordSurf(IKdTree tree, int clusterNum)
-        {
-            _tree = tree;
-            _clusterNum = clusterNum;
-        }
         public AccordSurf() { }
 
+        public AccordSurf(ClusterModel clusterModel)
+        {
+            _clusterModel = clusterModel;
+        }
+        
         public double[] ExtractHistogram(string input)
         {
             List<double[]> features = ExtractDescriptors(input);
-            var imgVocVector = new double[_clusterNum];//num of clusters
+            var imgVocVector = new double[_clusterModel.ClusterNum];//num of clusters
 
             //for each centroid find min position in tree and increase corresponding index
-            List<int> indexes = _tree.SearchTree(features);
+            List<int> indexes = _clusterModel.Tree.SearchTree(features);
             foreach (var index in indexes)
             {
                 imgVocVector[index]++;
@@ -48,7 +48,7 @@ namespace AutomaticImageClassification.Feature.Bovw
 
         public override string ToString()
         {
-            return "AccordSurf_" + _tree;
+            return "AccordSurf_" + _clusterModel.Tree;
         }
 
     }

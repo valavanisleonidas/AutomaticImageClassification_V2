@@ -8,7 +8,6 @@ using AutomaticImageClassification.Cluster;
 using AutomaticImageClassification.Cluster.ClusterModels;
 using AutomaticImageClassification.Cluster.EM;
 using AutomaticImageClassification.Cluster.GaussianMixtureModel;
-using AutomaticImageClassification.Cluster.KDTree;
 using AutomaticImageClassification.Cluster.Kmeans;
 using AutomaticImageClassification.Feature;
 using AutomaticImageClassification.Feature.Bovw;

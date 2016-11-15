@@ -8,9 +8,6 @@ namespace AutomaticImageClassification.Cluster.ClusterModels
 {
     public class KmeansModel : ClusterModel
     {
-        public List<double[]> Clusters;
-
         public KmeansModel(List<double[]> means) : base(means) { }
-
     }
 }

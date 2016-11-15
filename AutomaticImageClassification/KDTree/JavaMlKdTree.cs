@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using AutomaticImageClassification.Cluster.KDTree;
 using ikvm.extensions;
 using java.lang;
 

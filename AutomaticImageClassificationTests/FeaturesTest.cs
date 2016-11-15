@@ -10,7 +10,6 @@ using AutomaticImageClassification.Cluster.GaussianMixtureModel;
 using AutomaticImageClassification.Feature;
 using AutomaticImageClassification.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using AutomaticImageClassification.Cluster.KDTree;
 using AutomaticImageClassification.Cluster.Kmeans;
 using AutomaticImageClassification.Feature.Boc;
 using AutomaticImageClassification.Feature.Bovw;
@@ -44,7 +43,7 @@ namespace AutomaticImageClassificationTests
 
             IKdTree tree = new VlFeatKdTree();
             tree.CreateTree(model.Means);
-            phow = new VlFeatPhow(tree, model.Means[0].Length, 256, 256,true);
+            phow = new VlFeatPhow(model, true);
 
             foreach (var image in sampleImgs)
             {
@@ -101,27 +100,7 @@ namespace AutomaticImageClassificationTests
             double[] featu = colorCorrelo.ExtractHistogram(imagePath);
             Files.WriteFile(@"C:\Users\l.valavanis\Desktop\colorCorre.txt", new List<double[]> { featu });
         }
-
-        [TestMethod]
-        public void CanUseJavaSift()
-        {
-            IFeatures javasift = new MkLabSift();
-
-            string imagePath = @"Data\einstein.jpg";
-            int clusterNum = 10;
-
-            List<double[]> centroids = javasift.ExtractDescriptors(imagePath);
-            IKdTree kdtree = new AccordKdTree(centroids);
-
-            Arrays.GetSubsetOfFeatures(ref centroids, 10);
-            kdtree.CreateTree(centroids);
-            javasift = new MkLabSift(kdtree, clusterNum);
-
-            double[] featu = javasift.ExtractHistogram(imagePath);
-            Files.WriteFile(@"C:\Users\l.valavanis\Desktop\sift.txt", new List<double[]> { featu });
-            Files.WriteFile(@"C:\Users\l.valavanis\Desktop\sift.txt", centroids);
-        }
-
+        
         //TODO THEMA OTAN GRAFW DECIMAL KAI DIAVAZW ME TELEIES KAI KOMMATA
         //TODO cannot read Dictionary
         //TODO NEED TO CHECK vsexecution problem.exe PROBLEM
@@ -179,7 +158,7 @@ namespace AutomaticImageClassificationTests
             tree.CreateTree(centers);
 
             int[][] palette = Arrays.ConvertDoubleListToIntArray(ref centers);
-            boc = new Boc(colorspace, palette, tree);
+            boc = new Boc(colorspace, model);
 
             //Feature extraction BOC
             var trainFeatures = new List<double[]>();
@@ -414,13 +393,14 @@ namespace AutomaticImageClassificationTests
             var testFile = @"Data\Features\" + feature + "_Tree" + tree + "_Cluster" + cluster + "_" + clusterNum + "_test.txt";
             var clustersFile = @"Data\Palettes\" + feature + "_" + clusterNum + "_clusters.txt";
 
-
+            ClusterModel model;
             List<double[]> finalClusters;
             if (File.Exists(clustersFile))
             {
                 #region read Clusters from File
 
                 finalClusters = Files.ReadFileToListArrayList<double>(clustersFile);
+                model = new KmeansModel(finalClusters);
 
                 #endregion
             }
@@ -437,7 +417,7 @@ namespace AutomaticImageClassificationTests
                     clusters.AddRange(feature.ExtractDescriptors(image).OrderBy(x => Guid.NewGuid()).Take(clusterFeaturesPerImage));
                 }
                 sampleImgs = null;
-                ClusterModel model = cluster.CreateClusters(clusters, clusterNum);
+                model = cluster.CreateClusters(clusters, clusterNum);
                 clusters.Clear();
                 finalClusters = model.Means;
 
@@ -448,7 +428,7 @@ namespace AutomaticImageClassificationTests
             }
 
             //tree.CreateTree(finalClusters);
-            feature = new VlFeatPhow(finalClusters,true);
+            feature = new VlFeatPhow(model);
 
             #region features extraction
 
@@ -516,7 +496,7 @@ namespace AutomaticImageClassificationTests
 
             #endregion
 
-            feature = new VlFeatDenseSift(tree, clusterNum);
+            feature = new VlFeatDenseSift(model);
 
             #region features extraction
 
@@ -547,7 +527,7 @@ namespace AutomaticImageClassificationTests
         {
             Stopwatch stopwatch = Stopwatch.StartNew(); //creates and start the instance of Stopwatch
 
-            IFeatures feature = new ColorCorrelogram(ColorCorrelogram.ExtractionMethod.DynamicProgrammingHuangAlgorithm);
+            IFeatures feature = new ColorCorrelogram(ColorCorrelogram.ColorCorrelogramExtractionMethod.DynamicProgrammingHuangAlgorithm);
 
             const string baseFolder = @"C:\Users\leonidas\Desktop\libsvm\databases\Clef2013\Compound";
             var trainPath = Path.Combine(baseFolder, "TrainSet");

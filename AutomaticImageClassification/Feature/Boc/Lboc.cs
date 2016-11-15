@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
-using AutomaticImageClassification.Cluster.KDTree;
+using AutomaticImageClassification.KDTree;
 using AutomaticImageClassification.Utilities;
 using java.awt.image;
 
@@ -9,12 +9,13 @@ namespace AutomaticImageClassification.Feature.Boc
     public class Lboc : IFeatures
     {
 
-        private int[][] _palette;
-        private int _resize = 256, _patches = 64;
-        private ColorConversion.ColorSpace _cs;
+        private readonly int[][] _palette;
+        private readonly int _resize = 256;
+        private readonly int _patches = 64;
+        private readonly ColorConversion.ColorSpace _cs;
         private List<double[]> _dictionary;
-        private IKdTree _boctree;
-        private IKdTree _lBoctree;
+        private readonly IKdTree _boctree;
+        private readonly IKdTree _lBoctree;
 
         public Lboc(int resize, int patches, List<double[]> dictionary, ColorConversion.ColorSpace cs, int[][] palette, IKdTree boctree, IKdTree lBoctree)
         {

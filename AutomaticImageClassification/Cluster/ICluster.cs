@@ -8,4 +8,14 @@ namespace AutomaticImageClassification.Cluster
     {
         ClusterModel CreateClusters(List<double[]> descriptorFeatures, int clustersNum);
     }
+
+    public enum ClusterMethod
+    {
+        VlFeatEm,
+        VlFeatGmm,
+        VlFeatKmeans,
+        AccordKmeans,
+        LireKmeans
+    }
+
 }

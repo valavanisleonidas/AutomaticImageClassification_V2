@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using AutomaticImageClassification.Cluster;
 using AutomaticImageClassification.Cluster.ClusterModels;
-using AutomaticImageClassification.Cluster.KDTree;
 using AutomaticImageClassification.Utilities;
 using MathWorks.MATLAB.NET.Arrays;
 

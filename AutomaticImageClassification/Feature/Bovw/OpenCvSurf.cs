@@ -4,32 +4,32 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutomaticImageClassification.Cluster.ClusterModels;
+using AutomaticImageClassification.KDTree;
 using AutomaticImageClassification.Utilities;
 using OpenCvSharp.CPlusPlus;
-using AutomaticImageClassification.Cluster.KDTree;
 
 namespace AutomaticImageClassification.Feature.Bovw
 {
     public class OpenCvSurf : IFeatures
     {
-        private SURF _surf = new SURF();
-        private IKdTree _tree;
-        private int _clusterNum;
+        private readonly SURF _surf = new SURF();
+        private readonly ClusterModel _clusterModel;
 
-        public OpenCvSurf(IKdTree tree, int clusterNum)
+        public OpenCvSurf(ClusterModel clusterModel)
         {
-            _tree = tree;
-            _clusterNum = clusterNum;
+            _clusterModel = clusterModel;
         }
+
         public OpenCvSurf() { }
 
         public double[] ExtractHistogram(string input)
         {
             List<double[]> features = ExtractDescriptors(input);
-            double[] imgVocVector = new double[_clusterNum];//num of clusters
+            double[] imgVocVector = new double[_clusterModel.ClusterNum];//num of clusters
 
             //for each centroid find min position in tree and increase corresponding index
-            List<int> indexes = _tree.SearchTree(features);
+            List<int> indexes = _clusterModel.Tree.SearchTree(features);
             foreach (var index in indexes)
             {
                 imgVocVector[index]++;
@@ -58,7 +58,7 @@ namespace AutomaticImageClassification.Feature.Bovw
 
         public override string ToString()
         {
-            return "OpenCvSurf_" + _tree + "_" + _clusterNum;
+            return "OpenCvSurf_" + _clusterModel.Tree + "_" + _clusterModel.ClusterNum;
         }
 
     }

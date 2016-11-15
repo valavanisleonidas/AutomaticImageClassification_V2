@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AutomaticImageClassification.Cluster.KDTree;
+using AutomaticImageClassification.Cluster.ClusterModels;
 using AutomaticImageClassification.KDTree;
 using AutomaticImageClassification.Utilities;
 using MathWorks.MATLAB.NET.Arrays;
@@ -13,58 +13,46 @@ namespace AutomaticImageClassification.Feature.Bovw
 {
     public class VlFeatPhow : IFeatures
     {
-        private string _extractionColor = "rgb", _quantizer = "kdtree";
-        private IKdTree _tree;
-        private List<double[]> _vocab;
-        private int[,] _numSpatialX = { { 1, 2, 4 } }, _numSpatialY = { { 1, 2, 4 } };
-        private int _clusterNum, _width, _height;
-        private bool _isFastPhow = true;
+        private readonly string _extractionColor = "rgb";
+        private string _quantizer = "kdtree";
+        private int[,] _numSpatialX = { { 1, 2, 4 } };
+        private readonly int[,] _numSpatialY = { { 1, 2, 4 } };
+        private readonly int _width;
+        private readonly int _height;
+        private readonly bool _isFastPhow;
+        private readonly ClusterModel _clusterModel;
+
 
         public VlFeatPhow() { }
 
-        public VlFeatPhow(List<double[]> vocab, bool isFastPhow)
+        public VlFeatPhow(ClusterModel clusterModel)
         {
-            _vocab = vocab;
-            _isFastPhow = isFastPhow;
-        }
-
-        public VlFeatPhow(List<double[]> vocab)
-        {
-            _vocab = vocab;
+            _clusterModel = clusterModel;
             _isFastPhow = true;
         }
 
-        public VlFeatPhow(IKdTree tree, int clusterNum)
+        public VlFeatPhow(ClusterModel clusterModel, bool isFastPhow)
         {
-            _tree = tree;
-            _clusterNum = clusterNum;
-        }
-
-        public VlFeatPhow(IKdTree tree, int clusterNum, bool isFastPhow)
-        {
-            _tree = tree;
-            _clusterNum = clusterNum;
+            _clusterModel = clusterModel;
             _isFastPhow = isFastPhow;
         }
 
-        public VlFeatPhow(IKdTree tree, int clusterNum, int width, int height, bool isFastPhow)
+        public VlFeatPhow(ClusterModel clusterModel, int width, int height, bool isFastPhow)
         {
-            _tree = tree;
-            _clusterNum = clusterNum;
+            _clusterModel = clusterModel;
             _width = width;
             _height = height;
             _isFastPhow = isFastPhow;
 
         }
 
-        public VlFeatPhow(string extractionColor, IKdTree tree, int[,] numSpatialX, int[,] numSpatialY,
-            int clusterNum, int width, int height, bool isFastPhow)
+        public VlFeatPhow(ClusterModel clusterModel, string extractionColor, int[,] numSpatialX, int[,] numSpatialY,
+            int width, int height, bool isFastPhow)
         {
+            _clusterModel = clusterModel;
             _extractionColor = extractionColor;
-            _tree = tree;
             _numSpatialX = numSpatialX;
             _numSpatialY = numSpatialY;
-            _clusterNum = clusterNum;
             _width = width;
             _height = height;
             _isFastPhow = isFastPhow;
@@ -94,8 +82,8 @@ namespace AutomaticImageClassification.Feature.Bovw
                     List<double[]> features;
                     List<double[]> frames;
                     ExtractPhow(input, out features, out frames);
-                    List<int> indexes = _tree.SearchTree(features);
-                    imgVocVector = Quantization.CombineQuantizations(frames, indexes, _width, _height, _clusterNum, _numSpatialX, _numSpatialY);
+                    List<int> indexes = _clusterModel.Tree.SearchTree(features);
+                    imgVocVector = Quantization.CombineQuantizations(frames, indexes, _width, _height, _clusterModel.ClusterNum, _numSpatialX, _numSpatialY);
                 }
                 return imgVocVector;
             }
@@ -132,8 +120,8 @@ namespace AutomaticImageClassification.Feature.Bovw
                 MWArray[] result = phow.GetPhow(2,
                     new MWCharArray(input),
                     _extractionColor,
-                    new MWLogicalArray(_resizeImage),
-                    new MWNumericArray(_height));
+                    new MWNumericArray(_height),
+                    new MWNumericArray(_width));
 
 
                 var desc = (double[,])result[1].ToArray();
@@ -157,8 +145,8 @@ namespace AutomaticImageClassification.Feature.Bovw
                 MWArray[] result = phow.GetPhow(2,
                     new MWCharArray(input),
                     _extractionColor,
-                    new MWLogicalArray(_resizeImage),
-                    new MWNumericArray(_height));
+                    new MWNumericArray(_height),
+                    new MWNumericArray(_width));
 
                 var _frames = (double[,])result[0].ToArray();
                 var _descriptors = (double[,])result[1].ToArray();
@@ -183,7 +171,7 @@ namespace AutomaticImageClassification.Feature.Bovw
                 //return histogram
                 MWArray[] result = phow.ExtractFeatures(1,
                     new MWCharArray(input),
-                    new MWNumericArray(_vocab.ToArray()),
+                    new MWNumericArray(_clusterModel.Means.ToArray()),
                     _quantizer,
                     new MWNumericArray(_numSpatialX),
                     new MWNumericArray(_numSpatialY),

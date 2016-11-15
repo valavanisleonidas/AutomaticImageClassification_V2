@@ -10,30 +10,30 @@ namespace AutomaticImageClassification.Feature.Bovw
 {
     public class ColorCorrelogram : IFeatures
     {
-        private ExtractionMethod _extractionMethod;
+        private ColorCorrelogramExtractionMethod _colorCorrelogramExtractionMethod;
         private IAutoCorrelogramFeatureExtractor _extractionAlgorithm;
 
         public ColorCorrelogram()
         {
-            _extractionMethod = ExtractionMethod.LireAlgorithm;
+            _colorCorrelogramExtractionMethod = ColorCorrelogramExtractionMethod.LireAlgorithm;
         }
 
-        public ColorCorrelogram(ExtractionMethod extractionMethod)
+        public ColorCorrelogram(ColorCorrelogramExtractionMethod colorCorrelogramExtractionMethod)
         {
-            switch (extractionMethod)
+            switch (colorCorrelogramExtractionMethod)
             {
-                case ExtractionMethod.LireAlgorithm:
+                case ColorCorrelogramExtractionMethod.LireAlgorithm:
                     _extractionAlgorithm = new MLuxAutoCorrelogramExtraction();
                     break;
-                case ExtractionMethod.NaiveHuangAlgorithm:
+                case ColorCorrelogramExtractionMethod.NaiveHuangAlgorithm:
                     _extractionAlgorithm = new NaiveAutoCorrelogramExtraction();
                     break;
                 // this implementation consumes all the memory and is really slow
-                //case ExtractionMethod.DynamicProgrammingHuangAlgorithm:
+                //case ColorCorrelogramExtractionMethod.DynamicProgrammingHuangAlgorithm:
                 //    _extractionAlgorithm = DynamicProgrammingAutoCorrelogramExtraction.getInstance();
                 //    break;
                 default:
-                    _extractionMethod = ExtractionMethod.NaiveHuangAlgorithm;
+                    _colorCorrelogramExtractionMethod = ColorCorrelogramExtractionMethod.NaiveHuangAlgorithm;
                     break;
             }
 
@@ -62,7 +62,7 @@ namespace AutomaticImageClassification.Feature.Bovw
             throw new NotImplementedException("Auto color correlogram returns the final histogram and not descriptors of an image!");
         }
 
-        public enum ExtractionMethod
+        public enum ColorCorrelogramExtractionMethod
         {
             LireAlgorithm,
             NaiveHuangAlgorithm,
@@ -153,7 +153,7 @@ namespace AutomaticImageClassification.Feature.Bovw
 
         public override string ToString()
         {
-            return "ColorCorrelogram" + _extractionMethod;
+            return "ColorCorrelogram" + _colorCorrelogramExtractionMethod;
         }
     }
 }

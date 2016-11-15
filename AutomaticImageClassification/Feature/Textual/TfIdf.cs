@@ -11,7 +11,9 @@ namespace AutomaticImageClassification.Feature.Textual
     public class TfIdf : IFeatures
     {
         private TfidfApproach _tfidf;
-        private  Dictionary<string, double> _wordIdf = new Dictionary<string, double>();
+        private Dictionary<string, double> _wordIdf = new Dictionary<string, double>();
+
+        public TfIdf() { }
 
         public TfIdf(TfidfApproach tfidfApproach)
         {
@@ -23,7 +25,7 @@ namespace AutomaticImageClassification.Feature.Textual
             var tfidfvector = new double[_tfidf.AllTerms.Count];
 
             //get terms of sentence
-            var tokenizedSentence = Regex.Split(input.Replace(@"[\W&&[^\s]]", ""), @"\W+"); 
+            var tokenizedSentence = Regex.Split(input.Replace(@"[\W&&[^\s]]", ""), @"\W+");
 
             //for each term
             foreach (var term in tokenizedSentence)
@@ -96,13 +98,13 @@ namespace AutomaticImageClassification.Feature.Textual
 
         public void ParseData(List<Figure> images, bool isTrainSet)
         {
-            
+
             //each row contains one doc (image)    	
             foreach (var figurese in images)
             {
                 //var doc = figurese.Title + " " + figurese.Caption;
                 var doc = figurese.Caption;
-                
+
                 //get terms of sentence
                 var tokenizedTerms = Regex.Split(doc.Replace(@"[\W&&[^\s]]", ""), @"\W+");
 
@@ -121,7 +123,7 @@ namespace AutomaticImageClassification.Feature.Textual
                     //avoid stopwords
                     if (RemoveStopwords && Stopwords.Contains(termLower))
                         continue;
-                    
+
                     AllTerms.Add(termLower);
                 }
             }

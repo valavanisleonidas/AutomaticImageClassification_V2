@@ -1,5 +1,4 @@
-﻿using AutomaticImageClassification.Cluster.KDTree;
-using gr.iti.mklab.visual.extraction;
+﻿using gr.iti.mklab.visual.extraction;
 using java.awt.image;
 using System;
 using System.Collections.Generic;
@@ -7,37 +6,37 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutomaticImageClassification.Cluster.ClusterModels;
+using AutomaticImageClassification.KDTree;
 
 namespace AutomaticImageClassification.Feature.Bovw
 {
     public class MkLabSift : IFeatures
     {
         private AbstractFeatureExtractor _sift;
-        private IKdTree _tree;
-        private ExtractionMethod _extractionMethod;
-        private int _clusterNum;
+        private MkLabSiftExtractionMethod _mkLabSiftExtractionMethod;
+        private readonly ClusterModel _clusterModel;
 
-        public MkLabSift(IKdTree tree, int clusterNum)
+        public MkLabSift(ClusterModel clusterModel)
         {
-            _tree = tree;
-            _clusterNum = clusterNum;
+            _clusterModel = clusterModel;
         }
 
         public MkLabSift()
         {
-            _extractionMethod = ExtractionMethod.RootSift;
+            _mkLabSiftExtractionMethod = MkLabSiftExtractionMethod.RootSift;
             _sift = new RootSIFTExtractor();
         }
 
-        public MkLabSift(ExtractionMethod extractionMethod)
+        public MkLabSift(MkLabSiftExtractionMethod mkLabSiftExtractionMethod)
         {
-            _extractionMethod = extractionMethod;
-            switch (_extractionMethod)
+            _mkLabSiftExtractionMethod = mkLabSiftExtractionMethod;
+            switch (_mkLabSiftExtractionMethod)
             {
-                case ExtractionMethod.Sift:
+                case MkLabSiftExtractionMethod.Sift:
                     _sift = new SIFTExtractor();
                     break;
-                case ExtractionMethod.RootSift:
+                case MkLabSiftExtractionMethod.RootSift:
                     _sift = new RootSIFTExtractor();
                     break;
                 default:
@@ -56,10 +55,10 @@ namespace AutomaticImageClassification.Feature.Bovw
         public double[] ExtractHistogram(string input)
         {
             List<double[]> features = ExtractDescriptors(input);
-            double[] imgVocVector = new double[_clusterNum];//num of clusters
+            double[] imgVocVector = new double[_clusterModel.ClusterNum];//num of clusters
 
             //for each centroid find min position in tree and increase corresponding index
-            List<int> indexes = _tree.SearchTree(features);
+            List<int> indexes = _clusterModel.Tree.SearchTree(features);
             foreach (var index in indexes)
             {
                 imgVocVector[index]++;
@@ -67,7 +66,7 @@ namespace AutomaticImageClassification.Feature.Bovw
             return imgVocVector;
         }
 
-        public enum ExtractionMethod
+        public enum MkLabSiftExtractionMethod
         {
             Sift,
             RootSift
@@ -75,7 +74,7 @@ namespace AutomaticImageClassification.Feature.Bovw
 
         public override string ToString()
         {
-            return _extractionMethod.ToString();
+            return _mkLabSiftExtractionMethod.ToString();
         }
 
     }

@@ -15,8 +15,6 @@ namespace AutomaticImageClassification.Feature.Boc
         private readonly int _patches = 64;
         private readonly ColorConversion.ColorSpace _cs;
         private readonly ClusterModel _clusterModel;
-        private int[][] _palette;
-        private IKdTree _boctree;
 
         public Boc(int resize, ColorConversion.ColorSpace cs, ClusterModel clusterModel)
         {
@@ -41,15 +39,6 @@ namespace AutomaticImageClassification.Feature.Boc
             _patches = patches;
             _resize = resize;
             _cs = cs;
-        }
-
-        // TO DELETE
-        public Boc(int _resize, ColorConversion.ColorSpace _cs, int[][] _palette, IKdTree _boctree)
-        {
-            this._resize = _resize;
-            this._cs = _cs;
-            this._palette = _palette;
-            this._boctree = _boctree;
         }
 
         public double[] ExtractHistogram(string input)

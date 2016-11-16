@@ -19,14 +19,14 @@ namespace AutomaticImageClassificationTests
     public class ManagerTest
     {
         private ClusterManager _clusterManager;
-        private ClusterParameters _clusterParameters;
+        private readonly ClusterParameters _clusterParameters;
         private ClusterModel _clusterModel;
 
-        private ImageRepresentationManager _imageRepresentationManager;
-        private ImageRepresentationParameters _imageRepresentationParameters;
+        private readonly ImageRepresentationManager _imageRepresentationManager;
+        private readonly ImageRepresentationParameters _imageRepresentationParameters;
 
         private KdTreeManager _kdTreeManager;
-        private KdTreeParameters _kdTreeParameters;
+        private readonly KdTreeParameters _kdTreeParameters;
 
         private IFeatures _feature;
 

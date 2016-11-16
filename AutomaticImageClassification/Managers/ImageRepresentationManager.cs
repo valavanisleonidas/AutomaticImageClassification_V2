@@ -16,7 +16,7 @@ namespace AutomaticImageClassification.Managers
     public class ImageRepresentationManager
     {
         private IFeatures _feature;
-        private ImageRepresentationParameters _params;
+        private readonly ImageRepresentationParameters _params;
 
 
         public ImageRepresentationManager(ImageRepresentationParameters imageRepresentationParameters)
@@ -32,7 +32,7 @@ namespace AutomaticImageClassification.Managers
                     _feature = new Boc(_params.ColorSpace);
                     break;
                 case ImageRepresentationMethod.Lboc:
-                    _feature = new Lboc(_params.ColorSpace, _params.Palette, _params.Boctree);
+                    _feature = new Lboc(_params.ColorSpace, _params.BocClusterModel);
                     break;
                 case ImageRepresentationMethod.AccordSurf:
                     _feature = new AccordSurf();
@@ -96,8 +96,7 @@ namespace AutomaticImageClassification.Managers
                     _feature = new Boc(_params.ColorSpace,_params.ClusterModel);
                     break;
                 case ImageRepresentationMethod.Lboc:
-                    //new Lboc(lbocCenters, colorspace, palette, boctree, lboctree);
-                    //_feature = new Lboc(_params.ColorSpace, _params.Palette, _params.Boctree);
+                    _feature = new Lboc(_params.ColorSpace, _params.BocClusterModel,_params.LbocClusterModel);
                     break;
                 case ImageRepresentationMethod.AccordSurf:
                     _feature = new AccordSurf(_params.ClusterModel);
@@ -174,9 +173,9 @@ namespace AutomaticImageClassification.Managers
 
         //boc , lboc
         public ColorConversion.ColorSpace ColorSpace;
-        public int[][] Palette;
-        public IKdTree Boctree;
-        public IKdTree LBoctree;
+        public ClusterModel BocClusterModel;
+        public ClusterModel LbocClusterModel;
+
 
     }
 

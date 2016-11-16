@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using AutomaticImageClassification.Cluster.ClusterModels;
 using AutomaticImageClassification.KDTree;
 using AutomaticImageClassification.Utilities;
 using java.awt.image;
@@ -9,49 +10,35 @@ namespace AutomaticImageClassification.Feature.Boc
     public class Lboc : IFeatures
     {
 
-        private readonly int[][] _palette;
         private readonly int _resize = 256;
         private readonly int _patches = 64;
         private readonly ColorConversion.ColorSpace _cs;
-        private List<double[]> _dictionary;
-        private readonly IKdTree _boctree;
-        private readonly IKdTree _lBoctree;
+        private readonly ClusterModel _lbocClusterModel;
+        private readonly ClusterModel _bocClusterModel;
 
-        public Lboc(int resize, int patches, List<double[]> dictionary, ColorConversion.ColorSpace cs, int[][] palette, IKdTree boctree, IKdTree lBoctree)
+        public Lboc(int resize, int patches, ColorConversion.ColorSpace cs)
         {
             _resize = resize;
             _cs = cs;
-            _palette = palette;
             _patches = patches;
-            _dictionary = dictionary;
-            _boctree = boctree;
-            _lBoctree = lBoctree;
+
         }
 
-        public Lboc(List<double[]> dictionary, ColorConversion.ColorSpace cs, int[][] palette, IKdTree boctree, IKdTree lBoctree)
+        public Lboc(ColorConversion.ColorSpace cs, ClusterModel bocClusterModel)
         {
             _cs = cs;
-            _palette = palette;
-            _dictionary = dictionary;
-            _boctree = boctree;
-            _lBoctree = lBoctree;
+            _bocClusterModel = bocClusterModel;
         }
 
-        public Lboc(int resize, int patches, ColorConversion.ColorSpace cs, int[][] palette, IKdTree boctree)
+        public Lboc(ColorConversion.ColorSpace cs, ClusterModel bocClusterModel, ClusterModel lbocClusterModel)
         {
-            _resize = resize;
             _cs = cs;
-            _palette = palette;
-            _patches = patches;
-            _boctree = boctree;
+            _bocClusterModel = bocClusterModel;
+            _lbocClusterModel = lbocClusterModel;
         }
 
-        public Lboc(ColorConversion.ColorSpace cs, int[][] palette, IKdTree boctree)
-        {
-            _cs = cs;
-            _palette = palette;
-            _boctree = boctree;
-        }
+
+
 
         public double[] ExtractHistogram(string input)
         {
@@ -62,16 +49,16 @@ namespace AutomaticImageClassification.Feature.Boc
         public double[] ExtractHistogram(BufferedImage input)
         {
             input = ImageProcessor.resizeImage(input, _resize, _resize, false);
-            var vector = new double[_dictionary.Count];
+            var vector = new double[_lbocClusterModel.Means.Count];
             BufferedImage[] blocks = ImageProcessor.splitImage(input, _patches, _patches);
 
-            var boc = new Feature.Boc.Boc(_resize, _cs, _palette, _boctree);
+            var boc = new Boc(_resize, _cs, _bocClusterModel);
             foreach (var b in blocks)
             {
                 double[] _boc = boc.ExtractHistogram(b);
 
-                int indx = _lBoctree?.SearchTree(_boc)
-                    ?? DistanceMetrics.ComputeNearestCentroidL2(ref _dictionary, _boc);
+                int indx = _lbocClusterModel.Tree?.SearchTree(_boc)
+                    ?? DistanceMetrics.ComputeNearestCentroidL2(ref _lbocClusterModel.Means, _boc);
 
                 vector[indx]++;
             }
@@ -86,7 +73,7 @@ namespace AutomaticImageClassification.Feature.Boc
             img = ImageProcessor.resizeImage(img, _resize, _resize, false);
             BufferedImage[] blocks = ImageProcessor.splitImage(img, _patches, _patches);
 
-            var boc = new Feature.Boc.Boc(_resize, _cs, _palette, _boctree);
+            var boc = new Boc(_resize, _cs, _bocClusterModel);
             foreach (var b in blocks)
             {
                 colors.Add(boc.ExtractHistogram(b));
@@ -96,7 +83,8 @@ namespace AutomaticImageClassification.Feature.Boc
 
         public override string ToString()
         {
-            return "LBoc" + _lBoctree + "_" + _palette.Length + "_Palette" + _dictionary + "VWords_" + _cs.toString();
+            return "LBoc" + (_lbocClusterModel.Tree?.ToString() ?? "L2") + "_" + _bocClusterModel.Means.Count
+                + "_Palette" + _lbocClusterModel.Means.Count + "VWords_" + _cs.toString();
         }
 
     }

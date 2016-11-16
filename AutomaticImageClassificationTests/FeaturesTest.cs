@@ -255,7 +255,7 @@ namespace AutomaticImageClassificationTests
 
             #region cluster lboc and create dictionary
 
-            IFeatures lboc = new Lboc(colorspace, palette, boctree);
+            IFeatures lboc = new Lboc(colorspace, Bocmodel);
 
             List<double[]> lbocColors = new List<double[]>();
             foreach (var img in sampleImgs)
@@ -280,7 +280,7 @@ namespace AutomaticImageClassificationTests
 
             #endregion
 
-            lboc = new Lboc(lbocCenters, colorspace, palette, boctree, lboctree);
+            lboc = new Lboc(colorspace, Bocmodel, lbocModel);
 
             //Feature extraction BOC
             List<double[]> trainFeatures = new List<double[]>();
@@ -527,7 +527,7 @@ namespace AutomaticImageClassificationTests
         {
             Stopwatch stopwatch = Stopwatch.StartNew(); //creates and start the instance of Stopwatch
 
-            IFeatures feature = new ColorCorrelogram(ColorCorrelogram.ColorCorrelogramExtractionMethod.DynamicProgrammingHuangAlgorithm);
+            IFeatures feature = new ColorCorrelogram(ColorCorrelogram.ColorCorrelogramExtractionMethod.LireAlgorithm);
 
             const string baseFolder = @"C:\Users\leonidas\Desktop\libsvm\databases\Clef2013\Compound";
             var trainPath = Path.Combine(baseFolder, "TrainSet");

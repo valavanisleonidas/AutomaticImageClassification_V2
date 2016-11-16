@@ -66,7 +66,7 @@ namespace AutomaticImageClassification.Feature.Bovw
         {
             LireAlgorithm,
             NaiveHuangAlgorithm,
-            DynamicProgrammingHuangAlgorithm
+            //DynamicProgrammingHuangAlgorithm
         }
 
         private static int[][][] HsvImage(Raster r)

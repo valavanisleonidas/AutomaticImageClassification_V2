@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Accord.Math;
 using AutomaticImageClassification.Cluster.ClusterModels;
 using AutomaticImageClassification.KDTree;
+using AutomaticImageClassification.Utilities;
 using OpenSURFcs;
 
 namespace AutomaticImageClassification.Feature.Bovw
@@ -23,7 +24,7 @@ namespace AutomaticImageClassification.Feature.Bovw
             _clusterModel = clusterModel;
         }
         
-        public double[] ExtractHistogram(string input)
+        public double[] ExtractHistogram(LocalBitmap input)
         {
             List<double[]> features = ExtractDescriptors(input);
             double[] imgVocVector = new double[_clusterModel.ClusterNum];//num of clusters
@@ -37,15 +38,12 @@ namespace AutomaticImageClassification.Feature.Bovw
             return imgVocVector;
         }
 
-        public List<double[]> ExtractDescriptors(string input)
+        public List<double[]> ExtractDescriptors(LocalBitmap input)
         {
             try
             {
-                // Load an Image
-                Bitmap img = new Bitmap(input);
-
                 // Create Integral Image
-                IntegralImage iimg = IntegralImage.FromImage(img);
+                IntegralImage iimg = IntegralImage.FromImage(input.Bitmap);
 
                 // Extract the interest points
                 List<IPoint> ipts = FastHessian.getIpoints(0.0002f, 5, 2, iimg);
@@ -55,9 +53,7 @@ namespace AutomaticImageClassification.Feature.Bovw
 
                // List<double[]> aaa = ipts.Select(a => a.descriptor.Select( b => Convert.ToDouble(b) ).ToArray() ).ToList();
 
-                return ipts.ConvertAll(
-                            new Converter<IPoint, double[]>(
-                                des => Array.ConvertAll(des.descriptor, x => (double)x)));
+                return ipts.ConvertAll(des => Array.ConvertAll(des.descriptor, x => (double)x));
             }
             catch (Exception e)
             {

@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Drawing;
+using AutomaticImageClassification.Utilities;
+
 
 namespace AutomaticImageClassification.Feature
 {
     public interface IFeatures
     {
-        double[] ExtractHistogram(string input);
-        List<double[]> ExtractDescriptors(string input);   
+        double[] ExtractHistogram(LocalBitmap input);
+        List<double[]> ExtractDescriptors(LocalBitmap input);   
     }
 
     public enum ImageRepresentationMethod

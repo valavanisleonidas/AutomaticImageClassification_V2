@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutomaticImageClassification.Cluster.ClusterModels;
 using AutomaticImageClassification.KDTree;
+using AutomaticImageClassification.Utilities;
 
 namespace AutomaticImageClassification.Feature.Bovw
 {
@@ -45,14 +46,14 @@ namespace AutomaticImageClassification.Feature.Bovw
             }
         }
 
-        public List<double[]> ExtractDescriptors(string input)
+        public List<double[]> ExtractDescriptors(LocalBitmap input)
         {
-            var bimage = new BufferedImage(new Bitmap(input));
+            var bimage = new BufferedImage(input.Bitmap);
             double[][] siftFeatures = _sift.extractFeatures(bimage);
             return siftFeatures.ToList();
         }
 
-        public double[] ExtractHistogram(string input)
+        public double[] ExtractHistogram(LocalBitmap input)
         {
             List<double[]> features = ExtractDescriptors(input);
             double[] imgVocVector = new double[_clusterModel.ClusterNum];//num of clusters

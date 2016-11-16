@@ -207,6 +207,7 @@
     <Compile Include="Utilities\CustomGenericArrayEqualityComparator.cs" />
     <Compile Include="Utilities\DistanceMetrics.cs" />
     <Compile Include="Utilities\ImageProcessing.cs" />
+    <Compile Include="Utilities\LocalBitmap.cs" />
     <Compile Include="Utilities\Normalization.cs" />
     <Compile Include="Utilities\Files.cs" />
     <Compile Include="KDTree\JavaMlKdTree.cs" />

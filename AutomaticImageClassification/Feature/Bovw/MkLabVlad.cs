@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using AutomaticImageClassification.Cluster.ClusterModels;
 using AutomaticImageClassification.KDTree;
 using AutomaticImageClassification.Utilities;
 using gr.iti.mklab.visual.aggregation;
@@ -8,11 +10,11 @@ namespace AutomaticImageClassification.Feature.Bovw
 {
     public class MkLabVlad : IFeatures
     {
-        private IFeatures _featureExtractor;
-        private VladAggregator _vlad;
-        private List<double[]> _codebook;
-        private IKdTree _tree;
-        private int _clusterNum;
+        private readonly IFeatures _featureExtractor;
+        private ClusterModel _clusterModel;
+        /*
+                private VladAggregator _vlad;
+        */
 
         public MkLabVlad()
         {
@@ -24,43 +26,35 @@ namespace AutomaticImageClassification.Feature.Bovw
             _featureExtractor = extractor;
         }
 
-        public MkLabVlad(IKdTree tree, List<double[]> codebook)
+        public MkLabVlad(ClusterModel clusterModel)
         {
             _featureExtractor = new MkLabSurf();
-            _tree = tree;
-            _codebook = codebook;
-            _clusterNum = codebook[0].Length;
-        }
-
-        public MkLabVlad(List<double[]> codebook)
-        {
-            _featureExtractor = new MkLabSurf();
-            _codebook = codebook;
-            _clusterNum = codebook[0].Length;
+            _clusterModel = clusterModel;
             // _vlad = new VladAggregator(codebook.ToArray());
         }
 
-        public MkLabVlad(List<double[]> codebook, IFeatures extractor)
+        public MkLabVlad(ClusterModel clusterModel, IFeatures extractor)
         {
             _featureExtractor = extractor;
-            _codebook = codebook;
-            _clusterNum = codebook[0].Length;
+            _clusterModel = clusterModel;
             //_vlad = new VladAggregator(codebook.ToArray());
         }
 
-        public double[] ExtractHistogram(string input)
+        public double[] ExtractHistogram(LocalBitmap input)
         {
             //return _vlad.aggregate(_featureExtractor.ExtractDescriptors(input).ToArray());
+            var codebookDimensions = _clusterModel.Means[0].Length;
+            var clusterNum = _clusterModel.Means.Count;
 
             List<double[]> descriptors = _featureExtractor.ExtractDescriptors(input);
 
-            if (descriptors[0].Length != _codebook[0].Length)
+            if (descriptors[0].Length != codebookDimensions)
             {
                 throw new ArgumentException("Incorrect dimension size.Features dimensions : " + descriptors[0].Length
-                    + ".Clusters dimensions : " + _codebook[0].Length + ".Please use features of the same dimensions!");
+                    + ".Clusters dimensions : " + codebookDimensions + ".Please use features of the same dimensions!");
             }
 
-            double[] vlad = new double[_codebook.Count * _clusterNum];
+            double[] vlad = new double[clusterNum * codebookDimensions];
 
             if (descriptors.Count == 0)
             {
@@ -70,18 +64,18 @@ namespace AutomaticImageClassification.Feature.Bovw
 
             foreach (var descriptor in descriptors)
             {
-                int index = _tree?.SearchTree(descriptor)
-                    ?? DistanceMetrics.ComputeNearestCentroidL2NotSquare(ref _codebook, descriptor);
+                int index = _clusterModel.Tree?.SearchTree(descriptor)
+                    ?? DistanceMetrics.ComputeNearestCentroidL2NotSquare(ref _clusterModel.Means, descriptor);
 
-                for (int i = 0; i < _clusterNum; i++)
+                for (int i = 0; i < codebookDimensions; i++)
                 {
-                    vlad[index * _clusterNum + i] += descriptor[i] - _codebook[index][i];
+                    vlad[index * codebookDimensions + i] += descriptor[i] - _clusterModel.Means[index][i];
                 }
             }
             return vlad;
         }
 
-        public List<double[]> ExtractDescriptors(string input)
+        public List<double[]> ExtractDescriptors(LocalBitmap input)
         {
             return _featureExtractor.ExtractDescriptors(input);
         }

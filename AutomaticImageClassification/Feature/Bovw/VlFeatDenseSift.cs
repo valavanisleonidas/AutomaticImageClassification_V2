@@ -27,47 +27,39 @@ namespace AutomaticImageClassification.Feature.Bovw
             _useCombinedQuantization = true;
         }
 
-        public VlFeatDenseSift(int step, bool isRootSift, bool isNormalizedSift, bool useCombinedQuantization, int height, int width)
+        public VlFeatDenseSift(int step, bool isRootSift, bool isNormalizedSift, bool useCombinedQuantization)
         {
             _step = step;
             _rootSift = isRootSift;
             _normalizeSift = isNormalizedSift;
             _useCombinedQuantization = useCombinedQuantization;
-            _height = height;
-            _width = width;
         }
 
+        public VlFeatDenseSift(ClusterModel clusterModel, int step, bool isRootSift, bool isNormalizedSift, bool useCombinedQuantization)
+        {
+            _clusterModel = clusterModel;
+            _step = step;
+            _rootSift = isRootSift;
+            _normalizeSift = isNormalizedSift;
+            _useCombinedQuantization = useCombinedQuantization;
+        }
 
         public VlFeatDenseSift(ClusterModel clusterModel)
         {
             _clusterModel = clusterModel;
         }
 
-        public VlFeatDenseSift(ClusterModel clusterModel, int height, int width)
+        public double[] ExtractHistogram(LocalBitmap input)
         {
-            _clusterModel = clusterModel;
-            _height = height;
-            _width = width;
-        }
+            _width = input.ImageWidth;
+            _height = input.ImageHeight;
 
-        public double[] ExtractHistogram(string input)
-        {
             double[] imgVocVector = new double[_clusterModel.ClusterNum];//num of clusters
-
-            //if not right width height then error so  BE CAREFUL
-            //get image width and height
-            //Bitmap image = new Bitmap(input);
-            //if (image.Height > 480)
-            //{
-            //    image = ImageProcessing.ResizeImage(image, 480);
-            //}
-            //_width = image.Width;
-            //_height = image.Height;
 
             if (!_useCombinedQuantization)
             {
                 List<double[]> features;
-                ExtractDenseSift(input, out features);
+                ExtractDenseSift(input.Path, out features);
 
                 //for each centroid find min position in tree and increase corresponding index
                 List<int> indexes = _clusterModel.Tree.SearchTree(features);
@@ -80,7 +72,7 @@ namespace AutomaticImageClassification.Feature.Bovw
             {
                 List<double[]> features;
                 List<double[]> frames;
-                ExtractDenseSift(input, out features, out frames);
+                ExtractDenseSift(input.Path, out features, out frames);
                 List<int> indexes = _clusterModel.Tree.SearchTree(features);
 
                 imgVocVector = Quantization.CombineQuantizations(frames, indexes, _width, _height, _clusterModel.ClusterNum, _numSpatialX, _numSpatialY);
@@ -89,20 +81,13 @@ namespace AutomaticImageClassification.Feature.Bovw
             return imgVocVector;
         }
 
-        public List<double[]> ExtractDescriptors(string input)
+        public List<double[]> ExtractDescriptors(LocalBitmap input)
         {
-            //if not right width height then error so  BE CAREFUL
-            //get image width and height
-            //Bitmap image = new Bitmap(input);
-            //if (image.Height > 480)
-            //{
-            //    image = ImageProcessing.ResizeImage(image, 480);
-            //}
-            //_width = image.Width;
-            //_height = image.Height;
+            _width = input.ImageWidth;
+            _height = input.ImageHeight;
 
             List<double[]> descriptors;
-            ExtractDenseSift(input, out descriptors);
+            ExtractDenseSift(input.Path, out descriptors);
             return descriptors;
         }
 

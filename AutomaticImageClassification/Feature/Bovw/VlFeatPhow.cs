@@ -17,8 +17,8 @@ namespace AutomaticImageClassification.Feature.Bovw
         private string _quantizer = "kdtree";
         private int[,] _numSpatialX = { { 1, 2, 4 } };
         private readonly int[,] _numSpatialY = { { 1, 2, 4 } };
-        private readonly int _width;
-        private readonly int _height;
+        private int _width;
+        private int _height;
         private readonly bool _isFastPhow;
         private readonly ClusterModel _clusterModel;
 
@@ -58,30 +58,23 @@ namespace AutomaticImageClassification.Feature.Bovw
             _isFastPhow = isFastPhow;
         }
 
-        public double[] ExtractHistogram(string input)
+        public double[] ExtractHistogram(LocalBitmap input)
         {
+            _width = input.ImageWidth;
+            _height = input.ImageHeight;
+
             try
             {
-                //if not right width height then error so  BE CAREFUL
-                //get image width and height
-                //Bitmap image = new Bitmap(input);
-                //if (image.Height > 480)
-                //{
-                //    image = ImageProcessing.ResizeImage(image, 480);
-                //}
-                //_width = image.Width;
-                //_height = image.Height;
-
                 double[] imgVocVector;
                 if (_isFastPhow)
                 {
-                    imgVocVector = ExtractFastPhow(input);
+                    imgVocVector = ExtractFastPhow(input.Path);
                 }
                 else
                 {
                     List<double[]> features;
                     List<double[]> frames;
-                    ExtractPhow(input, out features, out frames);
+                    ExtractPhow(input.Path, out features, out frames);
                     List<int> indexes = _clusterModel.Tree.SearchTree(features);
                     imgVocVector = Quantization.CombineQuantizations(frames, indexes, _width, _height, _clusterModel.ClusterNum, _numSpatialX, _numSpatialY);
                 }
@@ -93,20 +86,13 @@ namespace AutomaticImageClassification.Feature.Bovw
             }
         }
 
-        public List<double[]> ExtractDescriptors(string input)
+        public List<double[]> ExtractDescriptors(LocalBitmap input)
         {
-            //if not right width height then error so  BE CAREFUL
-            //get image width and height
-            //Bitmap image = new Bitmap(input);
-            //if (image.Height > 480)
-            //{
-            //    image = ImageProcessing.ResizeImage(image, 480);
-            //}
-            //_width = image.Width;
-            //_height = image.Height;
+            _width = input.ImageWidth;
+            _height = input.ImageHeight;
 
             List<double[]> features;
-            ExtractPhow(input, out features);
+            ExtractPhow(input.Path, out features);
             return features;
         }
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using AutomaticImageClassification.Cluster.ClusterModels;
 using AutomaticImageClassification.KDTree;
 using AutomaticImageClassification.Utilities;
@@ -37,18 +38,25 @@ namespace AutomaticImageClassification.Feature.Boc
             _lbocClusterModel = lbocClusterModel;
         }
 
-
-
-
-        public double[] ExtractHistogram(string input)
+        public List<double[]> ExtractDescriptors(LocalBitmap input)
         {
-            var bimg = new BufferedImage(new Bitmap(input));
-            return ExtractHistogram(bimg);
+            var img = new BufferedImage(input.Bitmap);
+            //img = ImageProcessor.resizeImage(img, _resize, _resize, false);
+            BufferedImage[] blocks = ImageProcessor.splitImage(img, _patches, _patches);
+
+            var boc = new Boc(_resize, _cs, _bocClusterModel);
+            return blocks.Select(b => boc.ExtractHistogram(b)).ToList();
         }
 
+        public double[] ExtractHistogram(LocalBitmap input)
+        {
+            var bimg = new BufferedImage(input.Bitmap);
+            return ExtractHistogram(bimg);
+        }
+        
         public double[] ExtractHistogram(BufferedImage input)
         {
-            input = ImageProcessor.resizeImage(input, _resize, _resize, false);
+            //input = ImageProcessor.resizeImage(input, _resize, _resize, false);
             var vector = new double[_lbocClusterModel.Means.Count];
             BufferedImage[] blocks = ImageProcessor.splitImage(input, _patches, _patches);
 
@@ -65,27 +73,13 @@ namespace AutomaticImageClassification.Feature.Boc
             return vector;
 
         }
-
-        public List<double[]> ExtractDescriptors(string input)
-        {
-            List<double[]> colors = new List<double[]>();
-            var img = new BufferedImage(new Bitmap(input));
-            img = ImageProcessor.resizeImage(img, _resize, _resize, false);
-            BufferedImage[] blocks = ImageProcessor.splitImage(img, _patches, _patches);
-
-            var boc = new Boc(_resize, _cs, _bocClusterModel);
-            foreach (var b in blocks)
-            {
-                colors.Add(boc.ExtractHistogram(b));
-            }
-            return colors;
-        }
-
+        
         public override string ToString()
         {
             return "LBoc" + (_lbocClusterModel.Tree?.ToString() ?? "L2") + "_" + _bocClusterModel.Means.Count
                 + "_Palette" + _lbocClusterModel.Means.Count + "VWords_" + _cs.toString();
         }
 
+        
     }
 }

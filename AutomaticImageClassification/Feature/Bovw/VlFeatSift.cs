@@ -12,40 +12,68 @@ namespace AutomaticImageClassification.Feature.Bovw
 {
     public class VlFeatSift : IFeatures
     {
-        private readonly int _width;
-        private readonly int _height;
+        private int _width;
+        private int _height;
+        private readonly bool _useCombinedQuantization;
+        private readonly int[,] _numSpatialX = { { 1, 2, 4 } };
+        private readonly int[,] _numSpatialY = { { 1, 2, 4 } };
         private readonly ClusterModel _clusterModel;
 
-        public VlFeatSift(int width, int height)
+        public VlFeatSift(bool useCombinedQuantization)
         {
-            _width = width;
-            _height = height;
+            _useCombinedQuantization = useCombinedQuantization;
         }
 
         public VlFeatSift(ClusterModel clusterModel)
         {
             _clusterModel = clusterModel;
+            _useCombinedQuantization = true;
         }
 
-        public double[] ExtractHistogram(string input)
+        public VlFeatSift(ClusterModel clusterModel, bool useCombinedQuantization)
         {
-            List<double[]> features = ExtractDescriptors(input);
+            _clusterModel = clusterModel;
+            _useCombinedQuantization = useCombinedQuantization;
+        }
+
+        public double[] ExtractHistogram(LocalBitmap input)
+        {
+            _width = input.ImageWidth;
+            _height = input.ImageHeight;
+
             double[] imgVocVector = new double[_clusterModel.ClusterNum];//num of clusters
 
-            //for each centroid find min position in tree and increase corresponding index
-            List<int> indexes = _clusterModel.Tree.SearchTree(features);
-            foreach (var index in indexes)
+            if (!_useCombinedQuantization)
             {
-                imgVocVector[index]++;
-            }
+                List<double[]> features;
+                ExtractSift(input.Path, out features);
 
-            return imgVocVector;
+                //for each centroid find min position in tree and increase corresponding index
+                List<int> indexes = _clusterModel.Tree.SearchTree(features);
+                foreach (var index in indexes)
+                {
+                    imgVocVector[index]++;
+                }
+            }
+            else
+            {
+                List<double[]> features;
+                List<double[]> frames;
+                ExtractSift(input.Path, out features, out frames);
+                List<int> indexes = _clusterModel.Tree.SearchTree(features);
+
+                imgVocVector = Quantization.CombineQuantizations(frames, indexes, _width, _height, _clusterModel.ClusterNum, _numSpatialX, _numSpatialY);
+            }
+            return imgVocVector;            
         }
 
-        public List<double[]> ExtractDescriptors(string input)
+        public List<double[]> ExtractDescriptors(LocalBitmap input)
         {
+            _width = input.ImageWidth;
+            _height = input.ImageHeight;
+
             List<double[]> descriptors;
-            ExtractSift(input, out descriptors);
+            ExtractSift(input.Path, out descriptors);
             return descriptors;
         }
 

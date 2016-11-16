@@ -41,13 +41,23 @@ namespace AutomaticImageClassification.Feature.Boc
             _cs = cs;
         }
 
-        public double[] ExtractHistogram(string input)
+
+        public double[] ExtractHistogram(LocalBitmap input)
         {
-            var img = new BufferedImage(new Bitmap(input));
-            img = ImageProcessor.resizeImage(img, _resize, _resize, false);
+            var img = new BufferedImage(input.Bitmap);
+            //img = ImageProcessor.resizeImage(img, _resize, _resize, false);
             return ExtractHistogram(img);
         }
 
+        public List<double[]> ExtractDescriptors(LocalBitmap input)
+        {
+            var img = new BufferedImage(input.Bitmap);
+            //img = ImageProcessor.resizeImage(img, _resize, _resize, false);
+            int[][] domColors = ImageProcessor.getDominantColors(img, _patches, _patches, _cs);
+            return domColors.Select(domColor => new double[] { domColor[0], domColor[1], domColor[2] }).ToList();
+        }
+
+    
         public double[] ExtractHistogram(BufferedImage img)
         {
             var vector = new double[_clusterModel.ClusterNum];
@@ -67,20 +77,12 @@ namespace AutomaticImageClassification.Feature.Boc
             return vector;
         }
 
-        public List<double[]> ExtractDescriptors(string input)
-        {
-            var img = new BufferedImage(new Bitmap(input));
-            img = ImageProcessor.resizeImage(img, _resize, _resize, false);
-            int[][] domColors = ImageProcessor.getDominantColors(img, _patches, _patches, _cs);
-            return domColors.Select(domColor => new double[] { domColor[0], domColor[1], domColor[2] }).ToList();
-        }
-
         public override string ToString()
         {
             return "Boc_" + (_clusterModel.Tree?.ToString() ?? "L2") + "_" + _clusterModel.ClusterNum + "_" + _cs.toString();
         }
 
 
-
+        
     }
 }

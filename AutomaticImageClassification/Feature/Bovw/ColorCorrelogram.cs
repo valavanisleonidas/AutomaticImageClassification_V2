@@ -4,6 +4,7 @@ using net.semanticmetadata.lire.imageanalysis.correlogram;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using AutomaticImageClassification.Utilities;
 using java.awt;
 
 namespace AutomaticImageClassification.Feature.Bovw
@@ -39,29 +40,23 @@ namespace AutomaticImageClassification.Feature.Bovw
 
         }
 
-        public double[] ExtractHistogram(string input)
+        public double[] ExtractHistogram(LocalBitmap input)
         {
-            var bimage = new BufferedImage(new Bitmap(input));
-
-            //BufferedImage newImage = new BufferedImage(bimage.getWidth(), bimage.getHeight(), 5);
-
-            //Graphics2D g = newImage.createGraphics();
-            //g.drawImage(bimage, 0, 0, null);
-            //g.dispose();
+            var bimage = new BufferedImage(input.Bitmap);
             
             AutoColorCorrelogram color = new AutoColorCorrelogram(_extractionAlgorithm);
             Raster r = bimage.getRaster();
-            int[][][] hsvImage = ColorCorrelogram.HsvImage(r);
+            int[][][] hsvImage = HsvImage(r);
             color.extract(hsvImage);
-         
+
             return color.getDoubleHistogram();
         }
 
-        public List<double[]> ExtractDescriptors(string input)
+        public List<double[]> ExtractDescriptors(LocalBitmap input)
         {
             throw new NotImplementedException("Auto color correlogram returns the final histogram and not descriptors of an image!");
         }
-
+ 
         public enum ColorCorrelogramExtractionMethod
         {
             LireAlgorithm,
@@ -155,5 +150,7 @@ namespace AutomaticImageClassification.Feature.Bovw
         {
             return "ColorCorrelogram" + _colorCorrelogramExtractionMethod;
         }
+
+        
     }
 }

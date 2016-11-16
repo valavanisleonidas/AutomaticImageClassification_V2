@@ -23,7 +23,7 @@ namespace AutomaticImageClassification.Feature.Bovw
 
         public OpenCvSift() { }
 
-        public double[] ExtractHistogram(string input)
+        public double[] ExtractHistogram(LocalBitmap input)
         {
             List<double[]> features = ExtractDescriptors(input);
             double[] imgVocVector = new double[_clusterModel.ClusterNum];//num of clusters
@@ -37,10 +37,12 @@ namespace AutomaticImageClassification.Feature.Bovw
 
             return imgVocVector;
         }
-
-        public List<double[]> ExtractDescriptors(string input)
+        
+        public List<double[]> ExtractDescriptors(LocalBitmap input)
         {
-            Mat src = new Mat(input);
+
+            Mat src = new Mat(input.Path);
+            
             KeyPoint[] keuPoints;
             MatOfFloat descriptors = new MatOfFloat();
 

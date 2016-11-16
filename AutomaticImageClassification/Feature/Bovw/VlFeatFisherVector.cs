@@ -11,8 +11,8 @@ namespace AutomaticImageClassification.Feature.Bovw
 {
     public class VlFeatFisherVector : IFeatures
     {
-        private IFeatures _featureExtractor;
-        private ClusterModel _model;
+        private readonly IFeatures _featureExtractor;
+        private readonly ClusterModel _model;
         public VlFeatFisherVector()
         {
             _featureExtractor = new MkLabSurf();
@@ -35,7 +35,7 @@ namespace AutomaticImageClassification.Feature.Bovw
             _model = model;
         }
 
-        public double[] ExtractHistogram(string input)
+        public double[] ExtractHistogram(LocalBitmap input)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace AutomaticImageClassification.Feature.Bovw
             }
         }
 
-        public List<double[]> ExtractDescriptors(string input)
+        public List<double[]> ExtractDescriptors(LocalBitmap input)
         {
             return _featureExtractor.ExtractDescriptors(input);
         }

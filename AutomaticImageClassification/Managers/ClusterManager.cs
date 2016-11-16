@@ -15,7 +15,7 @@ namespace AutomaticImageClassification.Managers
 {
     public class ClusterManager
     {
-        private ClusterParameters _clusterParameters;
+        private readonly ClusterParameters _clusterParameters;
 
 
         public ClusterManager(ClusterParameters clusterParameters)
@@ -57,7 +57,8 @@ namespace AutomaticImageClassification.Managers
             var descriptors = new List<double[]>();
             foreach (var image in sampleImgs)
             {
-                descriptors.AddRange(_clusterParameters.Feature.ExtractDescriptors(image));
+                LocalBitmap bitmap = new LocalBitmap(image, ImageProcessing.ResizeImage(image, _clusterParameters.Height));
+                descriptors.AddRange(_clusterParameters.Feature.ExtractDescriptors(bitmap));
             }
             return _clusterParameters.Cluster.CreateClusters(descriptors, _clusterParameters.ClusterNum);
             
@@ -70,6 +71,7 @@ namespace AutomaticImageClassification.Managers
         public ICluster Cluster;
         public IFeatures Feature;
         public int SampleImages, ClusterNum, NumberOfFeatures = int.MaxValue;
+        public int Height;
         public bool IsRandomInit = false;
         public string BaseFolder;
     }

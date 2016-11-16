@@ -10,8 +10,8 @@ namespace AutomaticImageClassification.Feature.Textual
 {
     public class TfIdf : IFeatures
     {
-        private TfidfApproach _tfidf;
-        private Dictionary<string, double> _wordIdf = new Dictionary<string, double>();
+        private readonly TfidfApproach _tfidf;
+        private readonly Dictionary<string, double> _wordIdf = new Dictionary<string, double>();
 
         public TfIdf() { }
 
@@ -20,12 +20,12 @@ namespace AutomaticImageClassification.Feature.Textual
             _tfidf = tfidfApproach;
         }
 
-        public double[] ExtractHistogram(string input)
+        public double[] ExtractHistogram(LocalBitmap input)
         {
             var tfidfvector = new double[_tfidf.AllTerms.Count];
 
             //get terms of sentence
-            var tokenizedSentence = Regex.Split(input.Replace(@"[\W&&[^\s]]", ""), @"\W+");
+            var tokenizedSentence = Regex.Split(input.Path.Replace(@"[\W&&[^\s]]", ""), @"\W+");
 
             //for each term
             foreach (var term in tokenizedSentence)
@@ -66,7 +66,7 @@ namespace AutomaticImageClassification.Feature.Textual
             return tfidfvector;
         }
 
-        public List<double[]> ExtractDescriptors(string input)
+        public List<double[]> ExtractDescriptors(LocalBitmap input)
         {
             throw new NotImplementedException();
         }

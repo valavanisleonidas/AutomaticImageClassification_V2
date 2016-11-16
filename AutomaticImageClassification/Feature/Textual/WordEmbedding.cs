@@ -12,13 +12,13 @@ namespace AutomaticImageClassification.Feature.Textual
         //stopwords to be removed
         private List<string> _stopwords = new List<string>();
 
-        private bool _removeStopwords;
-        private bool _addZeroIfTermDoesNotExist;
-        private bool _useTfidf;
-        private Dictionary<string, double[]> _wordEmbeddings = new Dictionary<string, double[]>();
-        private Dictionary<string, double> _wordIdf = new Dictionary<string, double>();
-        private List<string[]> _alltermDocsArray = new List<string[]>();
-        private int _embeddingsLength;
+        private readonly bool _removeStopwords;
+        private readonly bool _addZeroIfTermDoesNotExist;
+        private readonly bool _useTfidf;
+        private readonly Dictionary<string, double[]> _wordEmbeddings = new Dictionary<string, double[]>();
+        private readonly Dictionary<string, double> _wordIdf = new Dictionary<string, double>();
+        private readonly List<string[]> _alltermDocsArray = new List<string[]>();
+        private readonly int _embeddingsLength;
 
         public WordEmbedding()
         {
@@ -42,13 +42,13 @@ namespace AutomaticImageClassification.Feature.Textual
         }
 
 
-        public double[] ExtractHistogram(string input)
+        public double[] ExtractHistogram(LocalBitmap input)
         {
             var featureVector = new double[_embeddingsLength];
             var docWordEmbeddings = new Dictionary<string, double[]>();
 
             //get terms of sentence
-            var docTerms = Regex.Split(input.Replace(@"[\W&&[^\s]]", ""), @"\W+");
+            var docTerms = Regex.Split(input.Path.Replace(@"[\W&&[^\s]]", ""), @"\W+");
             
             foreach (var term in docTerms)
             {
@@ -108,11 +108,10 @@ namespace AutomaticImageClassification.Feature.Textual
             return featureVector;
         }
 
-        public List<double[]> ExtractDescriptors(string input)
+        public List<double[]> ExtractDescriptors(LocalBitmap input)
         {
             throw new NotImplementedException();
         }
-
 
         //get sum of each column and divide by columns size
         private static double[] GetCentroid(IReadOnlyList<double[]> docEmbeddings)

@@ -63,8 +63,8 @@ namespace AutomaticImageClassification.Managers
                     _feature = new OpenCvSurf();
                     break;
                 case ImageRepresentationMethod.VlFeatDenseSift:
-                    _feature = new VlFeatDenseSift(_params.Step, _params.IsRootSift, _params.IsNormalizedSift,
-                        _params.UseCombinedQuantization, _params.ImageHeight, _params.ImageWidth);
+                    _feature = new VlFeatDenseSift(_params.ClusterModel, _params.Step, _params.IsRootSift, _params.IsNormalizedSift,
+                        _params.UseCombinedQuantization);
                     break;
                 case ImageRepresentationMethod.VlFeatFisherVector:
                     _feature = new VlFeatFisherVector(_params.VlFeatFisherVectorFeatureExtractor);
@@ -73,7 +73,7 @@ namespace AutomaticImageClassification.Managers
                     _feature = new VlFeatPhow();
                     break;
                 case ImageRepresentationMethod.VlFeatSift:
-                    _feature = new VlFeatSift(_params.ImageWidth, _params.ImageHeight);
+                    _feature = new VlFeatSift(_params.UseCombinedQuantization);
                     break;
                 case ImageRepresentationMethod.TfIdf:
                     _feature = new TfIdf();
@@ -93,10 +93,10 @@ namespace AutomaticImageClassification.Managers
             switch (_params.ImageRepresentationMethod)
             {
                 case ImageRepresentationMethod.Boc:
-                    _feature = new Boc(_params.ColorSpace,_params.ClusterModel);
+                    _feature = new Boc(_params.ColorSpace, _params.ClusterModel);
                     break;
                 case ImageRepresentationMethod.Lboc:
-                    _feature = new Lboc(_params.ColorSpace, _params.BocClusterModel,_params.LbocClusterModel);
+                    _feature = new Lboc(_params.ColorSpace, _params.BocClusterModel, _params.LbocClusterModel);
                     break;
                 case ImageRepresentationMethod.AccordSurf:
                     _feature = new AccordSurf(_params.ClusterModel);
@@ -127,7 +127,7 @@ namespace AutomaticImageClassification.Managers
                     break;
                 case ImageRepresentationMethod.VlFeatDenseSift:
                     _feature = new VlFeatDenseSift(_params.Step, _params.IsRootSift, _params.IsNormalizedSift,
-                        _params.UseCombinedQuantization, _params.ImageHeight, _params.ImageWidth);
+                        _params.UseCombinedQuantization);
                     break;
                 case ImageRepresentationMethod.VlFeatFisherVector:
                     _feature = new VlFeatFisherVector(_params.VlFeatFisherVectorFeatureExtractor);
@@ -136,7 +136,7 @@ namespace AutomaticImageClassification.Managers
                     _feature = new VlFeatPhow();
                     break;
                 case ImageRepresentationMethod.VlFeatSift:
-                    _feature = new VlFeatSift(_params.ImageWidth, _params.ImageHeight);
+                    _feature = new VlFeatSift(_params.ClusterModel, _params.UseCombinedQuantization);
                     break;
                 case ImageRepresentationMethod.TfIdf:
                     _feature = new TfIdf(_params.TfidfApproach);

@@ -23,7 +23,7 @@ namespace AutomaticImageClassification.Feature.Bovw
 
         public OpenCvSurf() { }
 
-        public double[] ExtractHistogram(string input)
+        public double[] ExtractHistogram(LocalBitmap input)
         {
             List<double[]> features = ExtractDescriptors(input);
             double[] imgVocVector = new double[_clusterModel.ClusterNum];//num of clusters
@@ -37,12 +37,11 @@ namespace AutomaticImageClassification.Feature.Bovw
 
             return imgVocVector;
         }
-
-
-        public List<double[]> ExtractDescriptors(string input)
+        
+        public List<double[]> ExtractDescriptors(LocalBitmap input)
         {
+            Mat src1 = new Mat(input.Path);
 
-            Mat src1 = new Mat(input);
             KeyPoint[] keypoints1;
             MatOfFloat descriptors1 = new MatOfFloat();
 
@@ -50,8 +49,7 @@ namespace AutomaticImageClassification.Feature.Bovw
 
             float[,] arr = descriptors1.ToRectangularArray();
             //convert to list<double[]>
-            return Arrays.ToJaggedArray(ref arr)
-                    .ToList()
+            return Arrays.ToJaggedArray(ref arr).ToList()
                     .ConvertAll(
                             des => Array.ConvertAll(des, x => (double)x));
         }

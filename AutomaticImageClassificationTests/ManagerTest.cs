@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using AutomaticImageClassification.Cluster;
 using AutomaticImageClassification.Cluster.ClusterModels;
@@ -34,7 +35,7 @@ namespace AutomaticImageClassificationTests
         private readonly string _trainPath = Path.Combine(BaseFolder, "Train");
         private readonly string _testPath = Path.Combine(BaseFolder, "Test");
 
-
+        private const int ImageHeight = 480;
         private const int ClusterNum = 10;
         private const int SampleImages = 1;
         private ClusterMethod _clusterMethod = ClusterMethod.LireKmeans;
@@ -65,7 +66,8 @@ namespace AutomaticImageClassificationTests
                 ClusterMethod = _clusterMethod,
                 Feature = _imageRepresentationManager.InitBeforeCluster(),
                 NumberOfFeatures = int.MaxValue,
-                IsRandomInit = false
+                IsRandomInit = false,
+                Height = ImageHeight
             };
 
             #endregion
@@ -164,11 +166,13 @@ namespace AutomaticImageClassificationTests
 
             _feature = _imageRepresentationManager.InitAfterCluster();
             var mapping = Files.MapCategoriesToNumbers(_trainPath);
-
+            
             var trainLabels = new List<double>();
             foreach (var train in Files.GetFilesFrom(_trainPath))
             {
-                var vec = _feature.ExtractHistogram(train);
+                LocalBitmap bitmap = new LocalBitmap(train,ImageProcessing.ResizeImage(train, ImageHeight));
+
+                var vec = _feature.ExtractHistogram(bitmap);
                 Files.WriteAppendFile(trainFile, vec);
 
                 int cat;
@@ -182,7 +186,9 @@ namespace AutomaticImageClassificationTests
             var testLabels = new List<double>();
             foreach (var test in Files.GetFilesFrom(_testPath))
             {
-                var vec = _feature.ExtractHistogram(test);
+                LocalBitmap bitmap = new LocalBitmap(test, ImageProcessing.ResizeImage(test, ImageHeight));
+
+                var vec = _feature.ExtractHistogram(bitmap);
                 Files.WriteAppendFile(testFile, vec);
 
                 int cat;

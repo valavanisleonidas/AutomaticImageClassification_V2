@@ -37,7 +37,8 @@ namespace AutomaticImageClassificationTests
 
             foreach (var image in sampleImgs)
             {
-                colors.AddRange(phow.ExtractDescriptors(image));
+                LocalBitmap bitmap = new LocalBitmap(image);
+                colors.AddRange(phow.ExtractDescriptors(bitmap));
             }
             ClusterModel model = cluster.CreateClusters(colors, numOfClusters);
 
@@ -48,7 +49,8 @@ namespace AutomaticImageClassificationTests
             foreach (var image in sampleImgs)
             {
                 Console.WriteLine("extracting image " + image);
-                double[] vector = phow.ExtractHistogram(image);
+                LocalBitmap bitmap = new LocalBitmap(image);
+                double[] vector = phow.ExtractHistogram(bitmap);
             }
 
         }
@@ -60,7 +62,8 @@ namespace AutomaticImageClassificationTests
             string imagePath = @"Data\einstein.jpg";
 
             IFeatures surf = new AccordSurf();
-            List<double[]> featu = surf.ExtractDescriptors(imagePath);
+            LocalBitmap bitmap = new LocalBitmap(imagePath);
+            List<double[]> featu = surf.ExtractDescriptors(bitmap);
         }
 
         //pass test
@@ -70,7 +73,8 @@ namespace AutomaticImageClassificationTests
             string imagePath = @"Data\einstein.jpg";
 
             IFeatures surf = new JOpenSurf();
-            List<double[]> featu = surf.ExtractDescriptors(imagePath);
+            LocalBitmap bitmap = new LocalBitmap(imagePath);
+            List<double[]> featu = surf.ExtractDescriptors(bitmap);
         }
 
         [TestMethod]
@@ -79,7 +83,8 @@ namespace AutomaticImageClassificationTests
             string imagePath = @"Data\einstein.jpg";
 
             IFeatures sift = new OpenCvSift();
-            List<double[]> featu = sift.ExtractDescriptors(imagePath);
+            LocalBitmap bitmap = new LocalBitmap(imagePath);
+            List<double[]> featu = sift.ExtractDescriptors(bitmap);
         }
 
         [TestMethod]
@@ -88,7 +93,8 @@ namespace AutomaticImageClassificationTests
             string imagePath = @"Data\einstein.jpg";
 
             IFeatures surf = new OpenCvSurf();
-            List<double[]> featu = surf.ExtractDescriptors(imagePath);
+            LocalBitmap bitmap = new LocalBitmap(imagePath);
+            List<double[]> featu = surf.ExtractDescriptors(bitmap);
         }
 
         [TestMethod]
@@ -97,7 +103,8 @@ namespace AutomaticImageClassificationTests
             string imagePath = @"Data\einstein.jpg";
 
             IFeatures colorCorrelo = new ColorCorrelogram();
-            double[] featu = colorCorrelo.ExtractHistogram(imagePath);
+            LocalBitmap bitmap = new LocalBitmap(imagePath);
+            double[] featu = colorCorrelo.ExtractHistogram(bitmap);
             Files.WriteFile(@"C:\Users\l.valavanis\Desktop\colorCorre.txt", new List<double[]> { featu });
         }
         
@@ -137,7 +144,8 @@ namespace AutomaticImageClassificationTests
             var colors = new List<double[]>();
             foreach (var img in sampleImgs)
             {
-                colors.AddRange(boc.ExtractDescriptors(img));
+                LocalBitmap bitmap = new LocalBitmap(img);
+                colors.AddRange(boc.ExtractDescriptors(bitmap));
             }
             if (isDistinctColors)
             {
@@ -167,7 +175,8 @@ namespace AutomaticImageClassificationTests
             Dictionary<string, int> mapping = Files.MapCategoriesToNumbers(trainPath);
             foreach (var train in Files.GetFilesFrom(trainPath))
             {
-                double[] vec = boc.ExtractHistogram(train);
+                LocalBitmap bitmap = new LocalBitmap(train);
+                double[] vec = boc.ExtractHistogram(bitmap);
 
                 int cat;
                 mapping.TryGetValue(train.Split('\\')[train.Split('\\').Length - 2], out cat);
@@ -182,7 +191,8 @@ namespace AutomaticImageClassificationTests
             var testLabels = new List<double>();
             foreach (var test in Files.GetFilesFrom(testPath))
             {
-                double[] vec = boc.ExtractHistogram(test);
+                LocalBitmap bitmap = new LocalBitmap(test);
+                double[] vec = boc.ExtractHistogram(bitmap);
 
                 int cat;
                 mapping.TryGetValue(test.Split('\\')[test.Split('\\').Length - 2], out cat);
@@ -232,7 +242,8 @@ namespace AutomaticImageClassificationTests
             List<double[]> bocColors = new List<double[]>();
             foreach (var img in sampleImgs)
             {
-                bocColors.AddRange(_boc.ExtractDescriptors(img));
+                LocalBitmap bitmap = new LocalBitmap(img);
+                bocColors.AddRange(_boc.ExtractDescriptors(bitmap));
             }
             if (isDistinctColors)
             {
@@ -260,7 +271,8 @@ namespace AutomaticImageClassificationTests
             List<double[]> lbocColors = new List<double[]>();
             foreach (var img in sampleImgs)
             {
-                lbocColors.AddRange(lboc.ExtractDescriptors(img));
+                LocalBitmap bitmap = new LocalBitmap(img);
+                lbocColors.AddRange(lboc.ExtractDescriptors(bitmap));
             }
             if (isDistinctColors)
             {
@@ -286,7 +298,8 @@ namespace AutomaticImageClassificationTests
             List<double[]> trainFeatures = new List<double[]>();
             foreach (var train in Files.GetFilesFrom(trainPath))
             {
-                double[] vec = lboc.ExtractHistogram(train);
+                LocalBitmap bitmap = new LocalBitmap(train);
+                double[] vec = lboc.ExtractHistogram(bitmap);
                 trainFeatures.Add(vec);
             }
             Files.WriteFile(trainFile, trainFeatures);
@@ -295,7 +308,8 @@ namespace AutomaticImageClassificationTests
 
             foreach (var test in Files.GetFilesFrom(testPath))
             {
-                double[] vec = lboc.ExtractHistogram(test);
+                LocalBitmap bitmap = new LocalBitmap(test);
+                double[] vec = lboc.ExtractHistogram(bitmap);
                 testFeatures.Add(vec);
             }
             Files.WriteFile(testFile, testFeatures);
@@ -330,7 +344,8 @@ namespace AutomaticImageClassificationTests
             var clusters = new List<double[]>();
             foreach (var image in sampleImgs)
             {
-                clusters.AddRange(feature.ExtractDescriptors(image));
+                LocalBitmap bitmap = new LocalBitmap(image);
+                clusters.AddRange(feature.ExtractDescriptors(bitmap));
             }
             sampleImgs = null;
             ClusterModel model = cluster.CreateClusters(clusters, clusterNum);
@@ -353,7 +368,8 @@ namespace AutomaticImageClassificationTests
             //Feature extraction bovw
             foreach (var train in Files.GetFilesFrom(trainPath))
             {
-                var vec = feature.ExtractHistogram(train);
+                LocalBitmap bitmap = new LocalBitmap(train);
+                var vec = feature.ExtractHistogram(bitmap);
                 Files.WriteAppendFile(trainFile, vec);
             }
 
@@ -361,7 +377,8 @@ namespace AutomaticImageClassificationTests
 
             foreach (var test in Files.GetFilesFrom(testPath))
             {
-                var vec = feature.ExtractHistogram(test);
+                LocalBitmap bitmap = new LocalBitmap(test);
+                var vec = feature.ExtractHistogram(bitmap);
                 Files.WriteAppendFile(testFile, vec);
             }
 
@@ -414,7 +431,8 @@ namespace AutomaticImageClassificationTests
                 var clusters = new List<double[]>();
                 foreach (var image in sampleImgs)
                 {
-                    clusters.AddRange(feature.ExtractDescriptors(image).OrderBy(x => Guid.NewGuid()).Take(clusterFeaturesPerImage));
+                    LocalBitmap bitmap = new LocalBitmap(image);
+                    clusters.AddRange(feature.ExtractDescriptors(bitmap).OrderBy(x => Guid.NewGuid()).Take(clusterFeaturesPerImage));
                 }
                 sampleImgs = null;
                 model = cluster.CreateClusters(clusters, clusterNum);
@@ -435,7 +453,8 @@ namespace AutomaticImageClassificationTests
             //Feature extraction bovw
             foreach (var train in Files.GetFilesFrom(trainPath))
             {
-                var vec = feature.ExtractHistogram(train);
+                LocalBitmap bitmap = new LocalBitmap(train);
+                var vec = feature.ExtractHistogram(bitmap);
                 Files.WriteAppendFile(trainFile, vec);
             }
 
@@ -443,7 +462,8 @@ namespace AutomaticImageClassificationTests
 
             foreach (var test in Files.GetFilesFrom(testPath))
             {
-                var vec = feature.ExtractHistogram(test);
+                LocalBitmap bitmap = new LocalBitmap(test);
+                var vec = feature.ExtractHistogram(bitmap);
                 Files.WriteAppendFile(testFile, vec);
             }
 
@@ -482,7 +502,8 @@ namespace AutomaticImageClassificationTests
             var clusters = new List<double[]>();
             foreach (var image in sampleImgs)
             {
-                clusters.AddRange(feature.ExtractDescriptors(image).OrderBy(x => Guid.NewGuid()).Take(clusterFeaturesPerImage));
+                LocalBitmap bitmap = new LocalBitmap(image);
+                clusters.AddRange(feature.ExtractDescriptors(bitmap).OrderBy(x => Guid.NewGuid()).Take(clusterFeaturesPerImage));
             }
             sampleImgs = null;
             ClusterModel model = cluster.CreateClusters(clusters, clusterNum);
@@ -503,7 +524,8 @@ namespace AutomaticImageClassificationTests
             //Feature extraction bovw
             foreach (var train in Files.GetFilesFrom(trainPath))
             {
-                var vec = feature.ExtractHistogram(train);
+                LocalBitmap bitmap = new LocalBitmap(train);
+                var vec = feature.ExtractHistogram(bitmap);
                 Files.WriteAppendFile(trainFile, vec);
             }
 
@@ -511,7 +533,8 @@ namespace AutomaticImageClassificationTests
 
             foreach (var test in Files.GetFilesFrom(testPath))
             {
-                var vec = feature.ExtractHistogram(test);
+                LocalBitmap bitmap = new LocalBitmap(test);
+                var vec = feature.ExtractHistogram(bitmap);
                 Files.WriteAppendFile(testFile, vec);
             }
 
@@ -543,7 +566,8 @@ namespace AutomaticImageClassificationTests
             List<double[]> trainFeatures = new List<double[]>();
             foreach (var train in Files.GetFilesFrom(trainPath))
             {
-                double[] vec = feature.ExtractHistogram(train);
+                LocalBitmap bitmap = new LocalBitmap(train);
+                double[] vec = feature.ExtractHistogram(bitmap);
                 trainFeatures.Add(vec);
             }
             Files.WriteFile(trainFile, trainFeatures);
@@ -552,7 +576,8 @@ namespace AutomaticImageClassificationTests
             List<double[]> testFeatures = new List<double[]>();
             foreach (var test in Files.GetFilesFrom(testPath))
             {
-                double[] vec = feature.ExtractHistogram(test);
+                LocalBitmap bitmap = new LocalBitmap(test);
+                double[] vec = feature.ExtractHistogram(bitmap);
                 testFeatures.Add(vec);
             }
             Files.WriteFile(testFile, testFeatures);
@@ -581,7 +606,8 @@ namespace AutomaticImageClassificationTests
             TfIdf tfidf = new TfIdf(trainTfidfApproach);
             foreach (var image in images.FigureList.Select(a => a.Caption))
             {
-                double[] vec = tfidf.ExtractHistogram(image);
+                LocalBitmap bitmap = new LocalBitmap(image);
+                double[] vec = tfidf.ExtractHistogram(bitmap);
             }
 
             #endregion
@@ -597,7 +623,8 @@ namespace AutomaticImageClassificationTests
             TfIdf testtTfIdf = new TfIdf(testTfidfApproach);
             foreach (var image in testImages.FigureList.Select(a => a.Caption))
             {
-                double[] vec = testtTfIdf.ExtractHistogram(image);
+                LocalBitmap bitmap = new LocalBitmap(image);
+                double[] vec = testtTfIdf.ExtractHistogram(bitmap);
             }
 
             #endregion
@@ -631,14 +658,16 @@ namespace AutomaticImageClassificationTests
                     break;
                 }
                 counter++;
-                clusters.AddRange(extractor.ExtractDescriptors(image));
+                LocalBitmap bitmap = new LocalBitmap(image);
+                clusters.AddRange(extractor.ExtractDescriptors(bitmap));
             }
             ClusterModel model = cluster.CreateClusters(clusters, numOfClusters);
 
             string imagePath = @"Data\database\einstein.jpg";
 
             IFeatures fisher = new VlFeatFisherVector(new AccordSurf(), model);
-            var histogram = fisher.ExtractHistogram(imagePath);
+            LocalBitmap bitmap1 = new LocalBitmap(imagePath);
+            var histogram = fisher.ExtractHistogram(bitmap1);
         }
 
 

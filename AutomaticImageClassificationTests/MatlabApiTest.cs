@@ -403,7 +403,8 @@ namespace AutomaticImageClassificationTests
                     break;
                 }
                 counter++;
-                clusters.AddRange(extractor.ExtractDescriptors(image));
+                LocalBitmap bitmap = new LocalBitmap(image);
+                clusters.AddRange(extractor.ExtractDescriptors(bitmap));
             }
             ClusterModel model = cluster.CreateClusters(clusters, numOfClusters);
         }

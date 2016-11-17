@@ -80,7 +80,8 @@ namespace AutomaticImageClassificationTests
                     break;
                 }
                 counter++;
-                colors.AddRange(phow.ExtractDescriptors(image));
+                LocalBitmap bitmap = new LocalBitmap(image);
+                colors.AddRange(phow.ExtractDescriptors(bitmap));
             }
             ClusterModel model = cluster.CreateClusters(colors, numOfClusters);
 
@@ -108,7 +109,9 @@ namespace AutomaticImageClassificationTests
                     break;
                 }
                 counter++;
-                colors.AddRange(phow.ExtractDescriptors(image));
+
+                LocalBitmap bitmap = new LocalBitmap(image);
+                colors.AddRange(phow.ExtractDescriptors(bitmap));
             }
             ClusterModel model = cluster.CreateClusters(colors, numOfClusters);
 
@@ -136,7 +139,9 @@ namespace AutomaticImageClassificationTests
                     break;
                 }
                 counter++;
-                colors.AddRange(phow.ExtractDescriptors(image));
+
+                LocalBitmap bitmap = new LocalBitmap(image);
+                colors.AddRange(phow.ExtractDescriptors(bitmap));
             }
             ClusterModel model = cluster.CreateClusters(colors, numOfClusters);
 
@@ -162,7 +167,9 @@ namespace AutomaticImageClassificationTests
                     break;
                 }
                 counter++;
-                colors.AddRange(colorFeatures.ExtractDescriptors(image));
+
+                LocalBitmap bitmap = new LocalBitmap(image);
+                colors.AddRange(colorFeatures.ExtractDescriptors(bitmap));
             }
             ClusterModel model = cluster.CreateClusters(colors, numOfClusters);
 
@@ -189,7 +196,9 @@ namespace AutomaticImageClassificationTests
                     break;
                 }
                 counter++;
-                clusters.AddRange(extractor.ExtractDescriptors(image));
+
+                LocalBitmap bitmap = new LocalBitmap(image);
+                clusters.AddRange(extractor.ExtractDescriptors(bitmap));
             }
             ClusterModel model = cluster.CreateClusters(clusters, numOfClusters);
         }
@@ -214,7 +223,9 @@ namespace AutomaticImageClassificationTests
                     break;
                 }
                 counter++;
-                clusters.AddRange(extractor.ExtractDescriptors(image));
+
+                LocalBitmap bitmap = new LocalBitmap(image);
+                clusters.AddRange(extractor.ExtractDescriptors(bitmap));
             }
             ClusterModel model = cluster.CreateClusters(clusters, numOfClusters);
 
@@ -242,7 +253,8 @@ namespace AutomaticImageClassificationTests
                     break;
                 }
                 counter++;
-                clusters.AddRange(extractor.ExtractDescriptors(image));
+                LocalBitmap bitmap = new LocalBitmap(image);
+                clusters.AddRange(extractor.ExtractDescriptors(bitmap));
             }
             ClusterModel model = cluster.CreateClusters(clusters, numOfClusters);
 
@@ -252,7 +264,8 @@ namespace AutomaticImageClassificationTests
             tree.CreateTree(model.Means);
 
             string imaging = @"Data\database\einstein.jpg";
-            var feat = extractor.ExtractDescriptors(imaging);
+            LocalBitmap bitmap_ = new LocalBitmap(imaging);
+            var feat = extractor.ExtractDescriptors(bitmap_);
 
             List<int> indexes = feat.Select(doublese => tree.SearchTree(doublese)).ToList();
 

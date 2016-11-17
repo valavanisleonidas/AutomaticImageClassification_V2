@@ -19,11 +19,16 @@ namespace AutomaticImageClassificationTests
     [TestClass]
     public class ManagerTest
     {
+        private bool TestAllIMageRepresentationMethods = true;
+        private bool TestAllClusterMethods = false;
+        private bool TestAllKdTreeMethods = false;
+
+
         private ClusterManager _clusterManager;
         private readonly ClusterParameters _clusterParameters;
         private ClusterModel _clusterModel;
 
-        private readonly ImageRepresentationManager _imageRepresentationManager;
+        private ImageRepresentationManager _imageRepresentationManager;
         private readonly ImageRepresentationParameters _imageRepresentationParameters;
 
         private KdTreeManager _kdTreeManager;
@@ -36,7 +41,7 @@ namespace AutomaticImageClassificationTests
         private readonly string _testPath = Path.Combine(BaseFolder, "Test");
 
         private const int ImageHeight = 480;
-        private const int ClusterNum = 10;
+        private const int ClusterNum = 5;
         private const int SampleImages = 1;
         private ClusterMethod _clusterMethod = ClusterMethod.LireKmeans;
         private ImageRepresentationMethod _imageRepresentationMethod = ImageRepresentationMethod.JOpenSurf;
@@ -126,11 +131,27 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void ManageAllTest()
         {
+            if (TestAllIMageRepresentationMethods)
+            {
+                foreach (ImageRepresentationMethod method in Enum.GetValues(typeof(ImageRepresentationMethod)))
+                {
+                    _imageRepresentationParameters.ImageRepresentationMethod = method;
+                    _imageRepresentationManager = new ImageRepresentationManager(_imageRepresentationParameters);
+                    CompleteManagerTest();
+                }
+            }
+            else
+            {
+                CompleteManagerTest();
+            }            
+        }
+
+        public void CompleteManagerTest()
+        {
             ClusterManagerTest();
             KdTreeManagerTest();
             ImageRepresentationManagerTest();
         }
-
 
         public void ClusterManagerTest()
         {
@@ -187,7 +208,7 @@ namespace AutomaticImageClassificationTests
             foreach (var test in Files.GetFilesFrom(_testPath))
             {
                 LocalBitmap bitmap = new LocalBitmap(test, ImageProcessing.ResizeImage(test, ImageHeight));
-
+                
                 var vec = _feature.ExtractHistogram(bitmap);
                 Files.WriteAppendFile(testFile, vec);
 

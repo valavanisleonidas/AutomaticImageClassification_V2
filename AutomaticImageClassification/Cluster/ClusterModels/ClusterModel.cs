@@ -4,9 +4,10 @@ using AutomaticImageClassification.KDTree;
 
 namespace AutomaticImageClassification.Cluster.ClusterModels
 {
+    public enum ClusterModelTypes { Kmeans, Gmm }
+
     public abstract class ClusterModel
     {
-        public enum ClusterModelTypes { Kmeans , Gmm }
 
         public List<double[]> Means;
         public List<double[]> Covariances;

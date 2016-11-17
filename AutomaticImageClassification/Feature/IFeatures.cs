@@ -7,14 +7,23 @@ namespace AutomaticImageClassification.Feature
 {
     public interface IFeatures
     {
+        bool CanCluster { get; }
         double[] ExtractHistogram(LocalBitmap input);
         List<double[]> ExtractDescriptors(LocalBitmap input);   
     }
 
     public enum ImageRepresentationMethod
     {
+
+        //boc model
         Boc,
         Lboc,
+
+        //bovw model
+        VlFeatSift,
+        VlFeatDenseSift,
+        VlFeatPhow,
+        VlFeatFisherVector,
         AccordSurf,
         ColorCorrelogram,
         JOpenSurf,
@@ -23,11 +32,13 @@ namespace AutomaticImageClassification.Feature
         MkLabVlad,
         OpenCvSift,
         OpenCvSurf,
-        VlFeatDenseSift,
-        VlFeatFisherVector,
-        VlFeatPhow,
-        VlFeatSift,
+        
+
+
+        
+        //textual model
         TfIdf,
-        WordEmbeddings
+        WordEmbeddings,
+        
     }
 }

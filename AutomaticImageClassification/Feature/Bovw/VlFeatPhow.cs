@@ -22,6 +22,10 @@ namespace AutomaticImageClassification.Feature.Bovw
         private readonly bool _isFastPhow;
         private readonly ClusterModel _clusterModel;
 
+        public bool CanCluster
+        {
+            get { return true; }
+        }
 
         public VlFeatPhow() { }
 

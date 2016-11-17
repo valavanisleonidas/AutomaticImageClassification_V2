@@ -16,6 +16,11 @@ namespace AutomaticImageClassification.Feature.Bovw
         private readonly SIFT _sift = new SIFT();
         private readonly ClusterModel _clusterModel;
 
+        public bool CanCluster
+        {
+            get { return true; }
+        }
+
         public OpenCvSift(ClusterModel clusterModel)
         {
             _clusterModel = clusterModel;

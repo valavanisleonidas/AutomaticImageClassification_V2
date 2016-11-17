@@ -35,5 +35,30 @@ namespace AutomaticImageClassification.Utilities
             ImageWidth = Bitmap.Width;
         }
 
+        public LocalBitmap(string path, Bitmap bitmap,int height, int width)
+        {
+            Path = path;
+            Bitmap = ImageProcessing.ResizeImage(bitmap,height,width);
+            ImageHeight = height;
+            ImageWidth = width;
+        }
+
+        public LocalBitmap(string path, int height, int width)
+        {
+            Path = path;
+            Bitmap = ImageProcessing.ResizeImage(new Bitmap(path), height, width);
+            ImageHeight = height;
+            ImageWidth = width;
+        }
+
+        public LocalBitmap(string path, Bitmap bitmap, int height)
+        {
+            Path = path;
+            Bitmap = ImageProcessing.ResizeImage(bitmap, height);
+            ImageHeight = Bitmap.Height;
+            ImageWidth = Bitmap.Width;
+        }
+
+
     }
 }

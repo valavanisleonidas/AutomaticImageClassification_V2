@@ -19,6 +19,11 @@ namespace AutomaticImageClassification.Feature.Bovw
         private readonly int[,] _numSpatialY = { { 1, 2, 4 } };
         private readonly ClusterModel _clusterModel;
 
+        public bool CanCluster
+        {
+            get { return true; }
+        }
+
         public VlFeatSift(bool useCombinedQuantization)
         {
             _useCombinedQuantization = useCombinedQuantization;
@@ -81,17 +86,17 @@ namespace AutomaticImageClassification.Feature.Bovw
         {
             try
             {
-                var phow = new MatlabAPI.Phow();
+                var sift = new MatlabAPI.Sift();
 
                 //return frames descriptors( features )
-                MWArray[] result = phow.GetPhow(2,
+                MWArray[] result = sift.GetSift(2,
                     new MWCharArray(input),
                     new MWNumericArray(_height),
                     new MWNumericArray(_width));
 
                 var _descriptors = (double[,])result[1].ToArray();
 
-                phow.Dispose();
+                sift.Dispose();
 
                 descriptors = Arrays.ToJaggedArray(ref _descriptors).ToList();
             }
@@ -105,10 +110,10 @@ namespace AutomaticImageClassification.Feature.Bovw
         {
             try
             {
-                var phow = new MatlabAPI.Phow();
+                var sift = new MatlabAPI.Sift();
 
                 //return frames descriptors( features )
-                MWArray[] result = phow.GetPhow(2,
+                MWArray[] result = sift.GetSift(2,
                     new MWCharArray(input),
                     new MWNumericArray(_height),
                     new MWNumericArray(_width));
@@ -116,7 +121,7 @@ namespace AutomaticImageClassification.Feature.Bovw
                 var _frames = (double[,])result[0].ToArray();
                 var _descriptors = (double[,])result[1].ToArray();
 
-                phow.Dispose();
+                sift.Dispose();
 
                 descriptors = Arrays.ToJaggedArray(ref _descriptors).ToList();
                 frames = Arrays.ToJaggedArray(ref _frames).ToList();
@@ -127,7 +132,10 @@ namespace AutomaticImageClassification.Feature.Bovw
             }
         }
 
-
+        public override string ToString()
+        {
+            return "VlFeatSift";
+        }
 
     }
 }

@@ -176,6 +176,7 @@
     <Compile Include="Feature\Bovw\VlFeatDenseSift.cs" />
     <Compile Include="Feature\Bovw\VlFeatFisherVector.cs" />
     <Compile Include="Feature\Bovw\VlFeatSift.cs" />
+    <Compile Include="Feature\IFeatures.cs" />
     <Compile Include="KDTree\IKdTree.cs" />
     <Compile Include="KDTree\AccordKdTree.cs" />
     <Compile Include="Cluster\Kmeans\LireKmeans.cs" />
@@ -189,7 +190,6 @@
     <Compile Include="Feature\Bovw\MKLabSurf.cs" />
     <Compile Include="Feature\Bovw\MkLabVlad.cs" />
     <Compile Include="Feature\Bovw\OpenCvSift.cs" />
-    <Compile Include="Feature\IFeatures.cs" />
     <Compile Include="Feature\Bovw\JOpenSurf.cs" />
     <Compile Include="Feature\Bovw\OpenCvSurf.cs" />
     <Compile Include="Feature\Bovw\VlFeatPhow.cs" />

@@ -8,28 +8,13 @@ namespace AutomaticImageClassification.Cluster.Kmeans
 {
     public class LireKmeans : ICluster
     {
-        private int _numberOfFeatures;
-
-        public LireKmeans()
-        {
-            _numberOfFeatures = int.MaxValue;
-        }
-
-        public LireKmeans(int numberOfFeatures)
-        {
-            _numberOfFeatures = numberOfFeatures;
-        }
 
         public ClusterModel CreateClusters(List<double[]> descriptorFeatures, int clustersNum)
         {
-            if (descriptorFeatures.Count > _numberOfFeatures)
-            {
-                Arrays.GetSubsetOfFeatures(ref descriptorFeatures, _numberOfFeatures);
-            }
-
+     
             //cluster
             KMeans mean = new KMeans(
-                Arrays.ConvertGenericListToArrayList(ref descriptorFeatures), 
+                Arrays.ConvertGenericListToArrayList(ref descriptorFeatures),
                 clustersNum);
 
             descriptorFeatures.Clear();
@@ -37,7 +22,7 @@ namespace AutomaticImageClassification.Cluster.Kmeans
             //get centers 
             List javaCenters = mean.getMeans();
             //convert to generics list
-            return new KmeansModel(Arrays.ConvertArrayListToGenericList<double>(ref javaCenters));      
+            return new KmeansModel(Arrays.ConvertArrayListToGenericList<double>(ref javaCenters));
         }
 
         public override string ToString()

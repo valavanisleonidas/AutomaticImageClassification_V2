@@ -14,24 +14,43 @@ namespace AutomaticImageClassification.Feature.Bovw
 {
     public class MkLabSurf : IFeatures
     {
-        private readonly AbstractFeatureExtractor _surf;
+        private AbstractFeatureExtractor _surf;
         private readonly MkLabSurfExtractionMethod _mkLabSurfExtractionMethod;
         private readonly ClusterModel _clusterModel;
+
+        public bool CanCluster
+        {
+            get { return true; }
+        }
 
         public MkLabSurf(ClusterModel clusterModel)
         {
             _clusterModel = clusterModel;
+            _mkLabSurfExtractionMethod = MkLabSurfExtractionMethod.ColorSurf;
+            GetType();
+        }
+
+        public MkLabSurf(ClusterModel clusterModel, MkLabSurfExtractionMethod mkLabSurfExtractionMethod)
+        {
+            _clusterModel = clusterModel;
+            _mkLabSurfExtractionMethod = mkLabSurfExtractionMethod;
+            GetType();
         }
 
         public MkLabSurf()
         {
             _mkLabSurfExtractionMethod = MkLabSurfExtractionMethod.ColorSurf;
-            _surf = new ColorSURFExtractor();
+            GetType();
         }
 
         public MkLabSurf(MkLabSurfExtractionMethod mkLabSurfExtractionMethod)
         {
             _mkLabSurfExtractionMethod = mkLabSurfExtractionMethod;
+            GetType();
+        }
+
+        public new void GetType()
+        {
             switch (_mkLabSurfExtractionMethod)
             {
                 case MkLabSurfExtractionMethod.Surf:
@@ -45,6 +64,7 @@ namespace AutomaticImageClassification.Feature.Bovw
                     break;
             }
         }
+
 
         public List<double[]> ExtractDescriptors(LocalBitmap input)
         {
@@ -75,7 +95,7 @@ namespace AutomaticImageClassification.Feature.Bovw
 
         public override string ToString()
         {
-            return _mkLabSurfExtractionMethod.ToString();
+            return "MkLab" + _mkLabSurfExtractionMethod;
         }
     }
 }

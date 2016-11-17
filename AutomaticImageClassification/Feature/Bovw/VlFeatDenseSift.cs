@@ -13,18 +13,28 @@ namespace AutomaticImageClassification.Feature.Bovw
 {
     public class VlFeatDenseSift : IFeatures
     {
-        private static int _step, _width, _height;
+        private int _width, _height;
+        private readonly int _step = 4;
         private readonly int[,] _numSpatialX = { { 1, 2, 4 } };
         private readonly int[,] _numSpatialY = { { 1, 2, 4 } };
-        private static bool _rootSift, _normalizeSift, _useCombinedQuantization;
+        private readonly bool _rootSift = true;
+        private readonly bool _normalizeSift = true;
+        private readonly bool _useCombinedQuantization;
         private readonly ClusterModel _clusterModel;
+
+        public bool CanCluster
+        {
+            get { return true; }
+        }
 
         public VlFeatDenseSift()
         {
-            _step = 4;
-            _rootSift = false;
-            _normalizeSift = true;
             _useCombinedQuantization = true;
+        }
+
+        public VlFeatDenseSift(bool useCombinedQuantization)
+        {
+            _useCombinedQuantization = useCombinedQuantization;
         }
 
         public VlFeatDenseSift(int step, bool isRootSift, bool isNormalizedSift, bool useCombinedQuantization)
@@ -41,6 +51,15 @@ namespace AutomaticImageClassification.Feature.Bovw
             _step = step;
             _rootSift = isRootSift;
             _normalizeSift = isNormalizedSift;
+            _useCombinedQuantization = useCombinedQuantization;
+        }
+
+        public VlFeatDenseSift(ClusterModel clusterModel, bool useCombinedQuantization)
+        {
+            _clusterModel = clusterModel;
+            _step = 4;
+            _rootSift = true;
+            _normalizeSift = true;
             _useCombinedQuantization = useCombinedQuantization;
         }
 

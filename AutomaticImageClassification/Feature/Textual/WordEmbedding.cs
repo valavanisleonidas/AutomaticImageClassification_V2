@@ -10,7 +10,7 @@ namespace AutomaticImageClassification.Feature.Textual
     {
 
         //stopwords to be removed
-        private List<string> _stopwords = new List<string>();
+        private readonly List<string> _stopwords = new List<string>();
 
         private readonly bool _removeStopwords;
         private readonly bool _addZeroIfTermDoesNotExist;
@@ -19,6 +19,11 @@ namespace AutomaticImageClassification.Feature.Textual
         private readonly Dictionary<string, double> _wordIdf = new Dictionary<string, double>();
         private readonly List<string[]> _alltermDocsArray = new List<string[]>();
         private readonly int _embeddingsLength;
+
+        public bool CanCluster
+        {
+            get { return false; }
+        }
 
         public WordEmbedding()
         {

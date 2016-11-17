@@ -15,8 +15,13 @@ namespace AutomaticImageClassification.Feature.Bovw
     public class MkLabSift : IFeatures
     {
         private AbstractFeatureExtractor _sift;
-        private MkLabSiftExtractionMethod _mkLabSiftExtractionMethod;
+        private readonly MkLabSiftExtractionMethod _mkLabSiftExtractionMethod;
         private readonly ClusterModel _clusterModel;
+
+        public bool CanCluster
+        {
+            get { return true; }
+        }
 
         public MkLabSift(ClusterModel clusterModel)
         {
@@ -26,12 +31,24 @@ namespace AutomaticImageClassification.Feature.Bovw
         public MkLabSift()
         {
             _mkLabSiftExtractionMethod = MkLabSiftExtractionMethod.RootSift;
-            _sift = new RootSIFTExtractor();
+            GetType();
+        }
+
+        public MkLabSift(ClusterModel clusterModel, MkLabSiftExtractionMethod mkLabSiftExtractionMethod)
+        {
+            _clusterModel = clusterModel;
+            _mkLabSiftExtractionMethod = mkLabSiftExtractionMethod;
+            GetType();
         }
 
         public MkLabSift(MkLabSiftExtractionMethod mkLabSiftExtractionMethod)
         {
             _mkLabSiftExtractionMethod = mkLabSiftExtractionMethod;
+            GetType();
+        }
+
+        public new void GetType()
+        {
             switch (_mkLabSiftExtractionMethod)
             {
                 case MkLabSiftExtractionMethod.Sift:
@@ -75,7 +92,7 @@ namespace AutomaticImageClassification.Feature.Bovw
 
         public override string ToString()
         {
-            return _mkLabSiftExtractionMethod.ToString();
+            return "MkLab" + _mkLabSiftExtractionMethod;
         }
 
     }

@@ -11,16 +11,18 @@ namespace AutomaticImageClassification.Feature.Boc
 {
     public class Boc : IFeatures
     {
-        private readonly int _resize = 256;
         private readonly int _patches = 64;
         private readonly ColorConversion.ColorSpace _cs;
         private readonly ClusterModel _clusterModel;
 
-        public Boc(int resize, ColorConversion.ColorSpace cs, ClusterModel clusterModel)
+        public bool CanCluster
         {
-            _resize = resize;
+            get { return true; }
+        }
+
+        public Boc(ColorConversion.ColorSpace cs)
+        {
             _cs = cs;
-            _clusterModel = clusterModel;
         }
 
         public Boc(ColorConversion.ColorSpace cs, ClusterModel clusterModel)
@@ -29,18 +31,14 @@ namespace AutomaticImageClassification.Feature.Boc
             _clusterModel = clusterModel;
         }
 
-        public Boc(ColorConversion.ColorSpace cs)
-        {
-            _cs = cs;
-        }
-
-        public Boc(int resize, int patches, ColorConversion.ColorSpace cs)
+        public Boc(int patches, ColorConversion.ColorSpace cs)
         {
             _patches = patches;
-            _resize = resize;
             _cs = cs;
         }
 
+
+        
 
         public double[] ExtractHistogram(LocalBitmap input)
         {
@@ -57,7 +55,7 @@ namespace AutomaticImageClassification.Feature.Boc
             return domColors.Select(domColor => new double[] { domColor[0], domColor[1], domColor[2] }).ToList();
         }
 
-    
+
         public double[] ExtractHistogram(BufferedImage img)
         {
             var vector = new double[_clusterModel.ClusterNum];
@@ -79,10 +77,9 @@ namespace AutomaticImageClassification.Feature.Boc
 
         public override string ToString()
         {
-            return "Boc_" + (_clusterModel.Tree?.ToString() ?? "L2") + "_" + _clusterModel.ClusterNum + "_" + _cs.toString();
+            //return "Boc_" + (_clusterModel.Tree?.ToString() ?? "L2") + "_" + _clusterModel.ClusterNum + "_" + _cs.toString();
+            return "Boc" + "_" + _cs.toString();
         }
 
-
-        
     }
 }

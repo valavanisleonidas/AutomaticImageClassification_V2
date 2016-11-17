@@ -11,18 +11,14 @@ namespace AutomaticImageClassification.Feature.Boc
     public class Lboc : IFeatures
     {
 
-        private readonly int _resize = 256;
         private readonly int _patches = 64;
         private readonly ColorConversion.ColorSpace _cs;
         private readonly ClusterModel _lbocClusterModel;
         private readonly ClusterModel _bocClusterModel;
 
-        public Lboc(int resize, int patches, ColorConversion.ColorSpace cs)
+        public bool CanCluster
         {
-            _resize = resize;
-            _cs = cs;
-            _patches = patches;
-
+            get { return true; }
         }
 
         public Lboc(ColorConversion.ColorSpace cs, ClusterModel bocClusterModel)
@@ -44,7 +40,7 @@ namespace AutomaticImageClassification.Feature.Boc
             //img = ImageProcessor.resizeImage(img, _resize, _resize, false);
             BufferedImage[] blocks = ImageProcessor.splitImage(img, _patches, _patches);
 
-            var boc = new Boc(_resize, _cs, _bocClusterModel);
+            var boc = new Boc(_cs, _bocClusterModel);
             return blocks.Select(b => boc.ExtractHistogram(b)).ToList();
         }
 
@@ -60,7 +56,7 @@ namespace AutomaticImageClassification.Feature.Boc
             var vector = new double[_lbocClusterModel.Means.Count];
             BufferedImage[] blocks = ImageProcessor.splitImage(input, _patches, _patches);
 
-            var boc = new Boc(_resize, _cs, _bocClusterModel);
+            var boc = new Boc(_cs, _bocClusterModel);
             foreach (var b in blocks)
             {
                 double[] _boc = boc.ExtractHistogram(b);

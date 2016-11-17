@@ -10,28 +10,13 @@ namespace AutomaticImageClassification.Cluster.Kmeans
 {
     public class VlFeatKmeans : ICluster
     {
-        private int _numberOfFeatures;
-
-        public VlFeatKmeans()
-        {
-            _numberOfFeatures = int.MaxValue;
-        }
-
-        public VlFeatKmeans(int numberOfFeatures)
-        {
-            _numberOfFeatures = numberOfFeatures;
-        }
-
+       
         public ClusterModel CreateClusters(List<double[]> descriptorFeatures, int clustersNum)
         {
             try
             {
                 var cluster = new MatlabAPI.Cluster();
-                if (descriptorFeatures.Count > _numberOfFeatures)
-                {
-                    Arrays.GetSubsetOfFeatures(ref descriptorFeatures, _numberOfFeatures);
-                }
-
+            
                 MWArray result = cluster.Kmeans(new MWNumericArray(descriptorFeatures.ToArray()),
                         new MWNumericArray(clustersNum));
 

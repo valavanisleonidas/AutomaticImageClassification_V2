@@ -16,6 +16,11 @@ namespace AutomaticImageClassification.Feature.Bovw
         private readonly SURF _surf = new SURF();
         private readonly ClusterModel _clusterModel;
 
+        public bool CanCluster
+        {
+            get { return true; }
+        }
+
         public OpenCvSurf(ClusterModel clusterModel)
         {
             _clusterModel = clusterModel;
@@ -56,7 +61,7 @@ namespace AutomaticImageClassification.Feature.Bovw
 
         public override string ToString()
         {
-            return "OpenCvSurf_" + _clusterModel.Tree + "_" + _clusterModel.ClusterNum;
+            return "OpenCvSurf";
         }
 
     }

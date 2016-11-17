@@ -17,6 +17,11 @@ namespace AutomaticImageClassification.Feature.Bovw
 
         private readonly ClusterModel _clusterModel;
 
+        public bool CanCluster
+        {
+            get { return true; }
+        }
+
         public JOpenSurf() { }
 
         public JOpenSurf(ClusterModel clusterModel)

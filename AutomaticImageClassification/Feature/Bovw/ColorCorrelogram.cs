@@ -11,8 +11,13 @@ namespace AutomaticImageClassification.Feature.Bovw
 {
     public class ColorCorrelogram : IFeatures
     {
-        private ColorCorrelogramExtractionMethod _colorCorrelogramExtractionMethod;
-        private IAutoCorrelogramFeatureExtractor _extractionAlgorithm;
+        private readonly ColorCorrelogramExtractionMethod _colorCorrelogramExtractionMethod;
+        private readonly IAutoCorrelogramFeatureExtractor _extractionAlgorithm;
+
+        public bool CanCluster
+        {
+            get { return false; }
+        }
 
         public ColorCorrelogram()
         {

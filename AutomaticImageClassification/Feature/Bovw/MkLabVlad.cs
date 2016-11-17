@@ -11,10 +11,15 @@ namespace AutomaticImageClassification.Feature.Bovw
     public class MkLabVlad : IFeatures
     {
         private readonly IFeatures _featureExtractor;
-        private ClusterModel _clusterModel;
+        private readonly ClusterModel _clusterModel;
         /*
                 private VladAggregator _vlad;
         */
+
+        public bool CanCluster
+        {
+            get { return true; }
+        }
 
         public MkLabVlad()
         {

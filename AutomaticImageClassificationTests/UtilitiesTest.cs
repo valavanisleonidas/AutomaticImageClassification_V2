@@ -557,7 +557,37 @@ namespace AutomaticImageClassificationTests
 
         }
 
+        [TestMethod]
+        public void CanSplitImage()
+        {
+            int blokX = 1;
+            int blokY = 1;
+            string imagePath = @"Data\database\einstein.jpg";
+            Bitmap img = new Bitmap(imagePath);
+            img = ImageProcessing.ResizeImage(img, 256, 256);
 
+            List<Image> res = new List<Image>();
+            int pembagiLebar = (int)Math.Ceiling((float)img.Width / (float)blokX);
+            int pembagiTinggi = (int)Math.Ceiling((float)img.Height / (float)blokY);
+
+
+            for (int i = 0; i < pembagiLebar; i++)//baris
+            {
+                for (int j = 0; j < pembagiTinggi; j++)//kolom
+                {
+                    Bitmap bmp = new Bitmap(blokX, blokY);
+
+                    using (Graphics grp = Graphics.FromImage(bmp))
+                    {
+                        grp.DrawImage(img, 0, 0, new Rectangle(i * blokX, j * blokY, blokX, blokY), GraphicsUnit.Pixel);
+                    }
+
+                    res.Add(bmp);
+                }
+            }
+            
+            
+        }
 
 
 

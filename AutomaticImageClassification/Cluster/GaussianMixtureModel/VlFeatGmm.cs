@@ -11,28 +11,13 @@ namespace AutomaticImageClassification.Cluster.GaussianMixtureModel
 {
     public class VlFeatGmm : ICluster
     {
-        private int _numberOfFeatures;
-
-        public VlFeatGmm()
-        {
-            _numberOfFeatures = int.MaxValue;
-        }
-
-        public VlFeatGmm(int numberOfFeatures)
-        {
-            _numberOfFeatures = numberOfFeatures;
-        }
-
+      
         public ClusterModel CreateClusters(List<double[]> descriptorFeatures, int clustersNum)
         {
             try
             {
                 var cluster = new MatlabAPI.Cluster();
-                if (descriptorFeatures.Count > _numberOfFeatures)
-                {
-                    Arrays.GetSubsetOfFeatures(ref descriptorFeatures, _numberOfFeatures);
-                }
-
+              
                 MWArray[] result = cluster.Gmm(3,
                     new MWNumericArray(descriptorFeatures.ToArray()),
                     new MWNumericArray(clustersNum));

@@ -70,7 +70,7 @@ namespace AutomaticImageClassificationTests
             var sampleImgs = Files.GetFilesFrom(baseFolder);
 
             IFeatures phow = new VlFeatPhow();
-            ICluster cluster = new AccordKmeans(10000);
+            ICluster cluster = new AccordKmeans();
             List<double[]> colors = new List<double[]>();
             int counter = 0;
             foreach (var image in sampleImgs)
@@ -99,7 +99,7 @@ namespace AutomaticImageClassificationTests
             var sampleImgs = Files.GetFilesFrom(baseFolder);
 
             IFeatures phow = new VlFeatPhow();
-            ICluster cluster = new VlFeatKmeans(10000);
+            ICluster cluster = new VlFeatKmeans();
             List<double[]> colors = new List<double[]>();
             int counter = 0;
             foreach (var image in sampleImgs)
@@ -129,7 +129,7 @@ namespace AutomaticImageClassificationTests
             var sampleImgs = Files.GetFilesFrom(baseFolder);
 
             IFeatures phow = new VlFeatPhow();
-            ICluster cluster = new VlFeatEm(10000);
+            ICluster cluster = new VlFeatEm();
             List<double[]> colors = new List<double[]>();
             int counter = 0;
             foreach (var image in sampleImgs)

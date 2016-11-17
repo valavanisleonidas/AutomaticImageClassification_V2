@@ -13,6 +13,11 @@ namespace AutomaticImageClassification.Feature.Textual
         private readonly TfidfApproach _tfidf;
         private readonly Dictionary<string, double> _wordIdf = new Dictionary<string, double>();
 
+        public bool CanCluster
+        {
+            get { return false; }
+        }
+
         public TfIdf() { }
 
         public TfIdf(TfidfApproach tfidfApproach)

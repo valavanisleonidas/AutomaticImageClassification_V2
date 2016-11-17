@@ -13,6 +13,12 @@ namespace AutomaticImageClassification.Feature.Bovw
     {
         private readonly IFeatures _featureExtractor;
         private readonly ClusterModel _model;
+
+        public bool CanCluster
+        {
+            get { return true; }
+        }
+
         public VlFeatFisherVector()
         {
             _featureExtractor = new MkLabSurf();
@@ -29,7 +35,7 @@ namespace AutomaticImageClassification.Feature.Bovw
             _model = model;
         }
 
-        public VlFeatFisherVector(IFeatures extractor, ClusterModel model)
+        public VlFeatFisherVector(ClusterModel model,IFeatures extractor)
         {
             _featureExtractor = extractor;
             _model = model;

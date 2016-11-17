@@ -9,30 +9,16 @@ namespace AutomaticImageClassification.Cluster.Kmeans
 {
     public class AccordKmeans : ICluster
     {
-        private int _numberOfFeatures;
-
-        public AccordKmeans()
-        {
-            _numberOfFeatures = int.MaxValue;
-        }
-
-        public AccordKmeans(int numberOfFeatures)
-        {
-            _numberOfFeatures = numberOfFeatures;
-        }
-
+        
         public ClusterModel CreateClusters(List<double[]> descriptorFeatures, int clustersNum)
         {
             // Create a new K-Means algorithm with 3 clusters 
             KMeans kmeans = new KMeans(clustersNum);
-            if (descriptorFeatures.Count > _numberOfFeatures)
-            {
-                Arrays.GetSubsetOfFeatures(ref descriptorFeatures, _numberOfFeatures);
-            }
+            
             // Compute the algorithm, retrieving an integer array
             //  containing the labels for each of the observations
             kmeans.Learn(descriptorFeatures.ToArray());
-            
+
             return new KmeansModel(kmeans.Clusters.Centroids.ToList());
         }
 

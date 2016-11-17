@@ -14,6 +14,11 @@ namespace AutomaticImageClassification.Feature.Bovw
         private readonly SpeededUpRobustFeaturesDetector _surf = new SpeededUpRobustFeaturesDetector();
         private readonly ClusterModel _clusterModel;
 
+        public bool CanCluster
+        {
+            get { return true; }
+        }
+
         public AccordSurf() { }
 
         public AccordSurf(ClusterModel clusterModel)
@@ -75,7 +80,7 @@ namespace AutomaticImageClassification.Feature.Bovw
 
         public override string ToString()
         {
-            return "AccordSurf_" + _clusterModel.Tree;
+            return "AccordSurf";
         }
     }
 }

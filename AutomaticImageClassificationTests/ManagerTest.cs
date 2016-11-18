@@ -68,7 +68,7 @@ namespace AutomaticImageClassificationTests
 
             #region image representation parameters , manager
 
-            _imageRepresentationParameters = new ImageRepresentationParameters
+            _imageRepresentationParameters = new ImageRepresentationParameters(null,ImageHeight,ImageWidth)
             {
                 ImageRepresentationMethod = _imageRepresentationMethod,
 
@@ -83,12 +83,14 @@ namespace AutomaticImageClassificationTests
 
             _imageRepresentationManager = new ImageRepresentationManager(_imageRepresentationParameters);
             _feature = _imageRepresentationManager.InitBeforeCluster();
+            _imageRepresentationParameters.SetExtractionFeature(_feature);
+
 
             #endregion
 
             #region Cluster parameters
 
-            _clusterParameters = new ClusterParameters
+            _clusterParameters = new ClusterParameters(_feature, ImageHeight, ImageWidth)
             {
                 BaseFolder = _trainPath,
                 SampleImages = _sampleImages,
@@ -98,6 +100,7 @@ namespace AutomaticImageClassificationTests
                 IsDistinctDescriptors = false,
                 OrderByDescending = false
             };
+
 
             #endregion
 

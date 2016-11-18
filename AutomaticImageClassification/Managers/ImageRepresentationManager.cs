@@ -179,6 +179,9 @@ namespace AutomaticImageClassification.Managers
         public ImageRepresentationParameters(IFeatures extractionFeature, int imageHeight, int imageWidth)
             : base(extractionFeature, imageHeight, imageWidth) { }
 
+        public ImageRepresentationParameters(int imageHeight, int imageWidth)
+            : base(imageHeight, imageWidth) { }
+
         public int GetWidth()
         {
             return ImageWidth;
@@ -193,6 +196,11 @@ namespace AutomaticImageClassification.Managers
         {
             return ExtractionFeature;
         }
+        public void SetExtractionFeature(IFeatures feature)
+        {
+            ExtractionFeature = feature;
+        }
+
 
     }
 
@@ -205,6 +213,11 @@ namespace AutomaticImageClassification.Managers
         protected BaseParameters(IFeatures extractionFeature, int imageHeight, int imageWidth)
         {
             ExtractionFeature = extractionFeature;
+            ImageHeight = imageHeight;
+            ImageWidth = imageWidth;
+        }
+        protected BaseParameters(  int imageHeight, int imageWidth)
+        {
             ImageHeight = imageHeight;
             ImageWidth = imageWidth;
         }

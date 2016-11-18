@@ -71,7 +71,7 @@ namespace AutomaticImageClassificationTests
             _imageRepresentationParameters = new ImageRepresentationParameters
             {
                 ImageRepresentationMethod = _imageRepresentationMethod,
-                
+
                 ColorCorrelogramExtractionMethod = ColorCorrelogram.ColorCorrelogramExtractionMethod.LireAlgorithm,
                 MkLabSiftExtractionMethod = MkLabSift.MkLabSiftExtractionMethod.RootSift,
                 MkLabSurfExtractionMethod = MkLabSurf.MkLabSurfExtractionMethod.ColorSurf,
@@ -82,6 +82,7 @@ namespace AutomaticImageClassificationTests
             };
 
             _imageRepresentationManager = new ImageRepresentationManager(_imageRepresentationParameters);
+            _feature = _imageRepresentationManager.InitBeforeCluster();
 
             #endregion
 
@@ -94,8 +95,6 @@ namespace AutomaticImageClassificationTests
                 ClusterNum = _clusterNum,
                 ClusterMethod = _clusterMethod,
                 MaxNumberClusterFeatures = _maxNumberClusterFeatures,
-                Height = ImageHeight,
-                Width = ImageWidth,
                 IsDistinctDescriptors = false,
                 OrderByDescending = false
             };
@@ -106,7 +105,7 @@ namespace AutomaticImageClassificationTests
 
             _kdTreeParameters = new KdTreeParameters
             {
-                Kdtree = KdTreeMethod.AccordKdTree
+                Kdtree = KdTreeMethod.JavaMlKdTree
             };
 
             #endregion
@@ -160,11 +159,12 @@ namespace AutomaticImageClassificationTests
             {
                 foreach (ImageRepresentationMethod method in Enum.GetValues(typeof(ImageRepresentationMethod)))
                 {
-                    _clusterParameters.ClusterMethod = method == ImageRepresentationMethod.VlFeatFisherVector 
-                        ? ClusterMethod.VlFeatGmm 
+                    _clusterParameters.ClusterMethod = method == ImageRepresentationMethod.VlFeatFisherVector
+                        ? ClusterMethod.VlFeatGmm
                         : _clusterMethod;
-                    
+
                     _imageRepresentationManager.IrmParameters.ImageRepresentationMethod = method;
+                    _feature = _imageRepresentationManager.InitBeforeCluster();
 
                     CompleteManagerTest();
                 }
@@ -184,12 +184,13 @@ namespace AutomaticImageClassificationTests
 
         public void ClusterManagerTest()
         {
-            if (!_imageRepresentationManager.Feature.CanCluster)
+            if (!_feature.CanCluster)
                 return;
 
             _clusterManager = new ClusterManager(_clusterParameters);
             _imageRepresentationManager.IrmParameters.ClusterManager = _clusterManager;
-            _clusterModel = _clusterManager.Cluster(_imageRepresentationManager);
+            _clusterModel = _clusterManager.Cluster();
+            _imageRepresentationManager.IrmParameters.ClusterModel = _clusterModel;
 
             var clustersFile = @"Data\Palettes\" + _imageRepresentationManager.Feature + "_" + _clusterNum + "_clusters.txt";
             Files.WriteFile(clustersFile, _clusterModel.Means);
@@ -197,7 +198,7 @@ namespace AutomaticImageClassificationTests
 
         public void KdTreeManagerTest()
         {
-            if (!_imageRepresentationManager.Feature.CanCluster)
+            if (!_feature.CanCluster)
                 return;
 
             _kdTreeParameters.Model = _clusterModel;
@@ -208,8 +209,8 @@ namespace AutomaticImageClassificationTests
 
         public void ImageRepresentationManagerTest()
         {
-            var trainFile = @"Data\Features\" + _imageRepresentationManager.Feature + "_" + _clusterManager.ClusterInstance + "_" + _clusterParameters.ClusterNum + "_train.txt";
-            var testFile = @"Data\Features\" + _imageRepresentationManager.Feature + "_" + _clusterManager.ClusterInstance + "_" + _clusterParameters.ClusterNum + "_test.txt";
+            var trainFile = @"Data\Features\" + _feature + "_" + _clusterModel + "_" + _clusterParameters.ClusterNum + "_train.txt";
+            var testFile = @"Data\Features\" + _feature + "_" + _clusterModel + "_" + _clusterParameters.ClusterNum + "_test.txt";
             var _trainLabelsFile = @"Data\Features\labels_train.txt";
             var _testLabelsFile = @"Data\Features\labels_test.txt";
 
@@ -235,7 +236,7 @@ namespace AutomaticImageClassificationTests
                     break;
                 }
                 counter++;
-                LocalBitmap bitmap = new LocalBitmap(train, new Bitmap(train), ImageHeight);
+                LocalBitmap bitmap = new LocalBitmap(train, ImageHeight, ImageWidth);
 
                 var vec = _feature.ExtractHistogram(bitmap);
                 Files.WriteAppendFile(trainFile, vec);

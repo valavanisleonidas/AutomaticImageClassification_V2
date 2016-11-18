@@ -12,7 +12,7 @@ namespace AutomaticImageClassification.Managers
     {
         public IFeatures Feature;
         public readonly ImageRepresentationParameters IrmParameters;
-        
+
         public ImageRepresentationManager(ImageRepresentationParameters imageRepresentationParameters)
         {
             IrmParameters = imageRepresentationParameters;
@@ -121,7 +121,7 @@ namespace AutomaticImageClassification.Managers
                     Feature = new OpenCvSurf(IrmParameters.ClusterModel);
                     break;
                 case ImageRepresentationMethod.VlFeatDenseSift:
-                    Feature = new VlFeatDenseSift(IrmParameters.ClusterModel,IrmParameters.UseCombinedQuantization);
+                    Feature = new VlFeatDenseSift(IrmParameters.ClusterModel, IrmParameters.UseCombinedQuantization);
                     break;
                 case ImageRepresentationMethod.VlFeatFisherVector:
                     Feature = new VlFeatFisherVector(IrmParameters.ClusterModel, IrmParameters.Feature);
@@ -146,7 +146,7 @@ namespace AutomaticImageClassification.Managers
         }
     }
 
-    public class ImageRepresentationParameters
+    public class ImageRepresentationParameters : BaseParameters
     {
         //todo lusimo thematos mkvlad , fisher
         //todo lusimo thematos lboc model me 2 cluster models
@@ -159,10 +159,10 @@ namespace AutomaticImageClassification.Managers
         public MkLabSurf.MkLabSurfExtractionMethod MkLabSurfExtractionMethod;
 
         //some extraction methods need another feature to extract features
-        public IFeatures Feature;
+        public IFeatures Feature { get; set; }
 
         public ClusterModel ClusterModel;
-       
+
         public bool UseCombinedQuantization = true;
         public ColorConversion.ColorSpace ColorSpace = ColorConversion.ColorSpace.RGB;
 
@@ -176,8 +176,47 @@ namespace AutomaticImageClassification.Managers
         public ClusterModel LbocClusterModel;
 
 
+        public ImageRepresentationParameters(IFeatures extractionFeature, int imageHeight, int imageWidth)
+            : base(extractionFeature, imageHeight, imageWidth) { }
+
+        public int GetWidth()
+        {
+            return ImageWidth;
+        }
+
+        public int GetHeight()
+        {
+            return ImageHeight;
+        }
+
+        public IFeatures GetExtractionFeature()
+        {
+            return ExtractionFeature;
+        }
+
+    }
+
+
+    public abstract class BaseParameters
+    {
+        protected IFeatures ExtractionFeature { get; set; }
+        protected int ImageHeight, ImageWidth;
+
+        protected BaseParameters(IFeatures extractionFeature, int imageHeight, int imageWidth)
+        {
+            ExtractionFeature = extractionFeature;
+            ImageHeight = imageHeight;
+            ImageWidth = imageWidth;
+        }
+        protected BaseParameters(IFeatures extractionFeature)
+        {
+            ExtractionFeature = extractionFeature;
+        }
+
 
 
     }
+
+
 
 }

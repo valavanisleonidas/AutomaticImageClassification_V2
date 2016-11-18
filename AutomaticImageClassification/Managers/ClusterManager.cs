@@ -47,19 +47,18 @@ namespace AutomaticImageClassification.Managers
             }
         }
 
-        public ClusterModel Cluster(ImageRepresentationManager manager)
+        public ClusterModel Cluster()
         {
             var sampleImgs = Files.GetFilesFrom(_clusterParameters.BaseFolder, _clusterParameters.SampleImages);
             var descriptors = new List<double[]>();
             var featuresPerImage = _clusterParameters.MaxNumberClusterFeatures / sampleImgs.Length;
 
-            var feature = manager.InitBeforeCluster();
             foreach (var image in sampleImgs)
             {
-                var bitmap = new LocalBitmap(image, _clusterParameters.Height, _clusterParameters.Width);
+                var bitmap = new LocalBitmap(image, _clusterParameters.GetHeight(), _clusterParameters.GetWidth());
 
                 descriptors.AddRange(
-                    feature.ExtractDescriptors(bitmap)
+                    _clusterParameters.GetExtractionFeature().ExtractDescriptors(bitmap)
                     .OrderBy(x => Guid.NewGuid())
                     .Take(featuresPerImage));
             }
@@ -77,13 +76,37 @@ namespace AutomaticImageClassification.Managers
         }
     }
 
-    public class ClusterParameters
+    public class ClusterParameters : BaseParameters
     {
         public ClusterMethod ClusterMethod;
 
-        public int SampleImages, ClusterNum, Height, Width, MaxNumberClusterFeatures;
+        public int SampleImages, ClusterNum, MaxNumberClusterFeatures;
         public bool IsRandomInit = false, IsDistinctDescriptors = false, OrderByDescending = false;
         public string BaseFolder;
+
+        public ClusterParameters(IFeatures extractionFeature, int imageHeight, int imageWidth)
+            : base(extractionFeature, imageHeight, imageWidth) { }
+        
+        public int GetWidth()
+        {
+            return ImageWidth;
+        }
+
+        public int GetHeight()
+        {
+            return ImageHeight;
+        }
+
+        public IFeatures GetExtractionFeature()
+        {
+            return ExtractionFeature;
+        }
+
+        public void SetExtractionFeature(IFeatures feature)
+        {
+             ExtractionFeature = feature;
+        }
+
     }
 
 }

@@ -6,7 +6,7 @@ namespace AutomaticImageClassification.KDTree
     public class AccordKdTree : IKdTree
     {
         private static Accord.Collections.KDTree<double[]> _kdtree;
-        private List<double[]> _centers;
+        private readonly List<double[]> _centers;
 
         public AccordKdTree(List<double[]> centers)
         {

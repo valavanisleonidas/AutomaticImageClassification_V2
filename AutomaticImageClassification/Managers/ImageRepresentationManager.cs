@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using AutomaticImageClassification.Cluster.ClusterModels;
 using AutomaticImageClassification.Feature;
 using AutomaticImageClassification.Feature.Boc;
@@ -10,218 +11,206 @@ namespace AutomaticImageClassification.Managers
 {
     public class ImageRepresentationManager
     {
-        public IFeatures Feature;
-        public readonly ImageRepresentationParameters IrmParameters;
+        private IFeatures _feature;
+        public BaseParameters BaseParameters;
+        private readonly ImageRepresentationParameters _irmParameters;
 
-        public ImageRepresentationManager(ImageRepresentationParameters imageRepresentationParameters)
+        public ImageRepresentationManager(BaseParameters baseParameters)
         {
-            IrmParameters = imageRepresentationParameters;
+            BaseParameters = baseParameters;
+            _irmParameters = baseParameters.IrmParameters;
         }
 
         public IFeatures InitBeforeCluster()
         {
-            switch (IrmParameters.ImageRepresentationMethod)
+            switch (_irmParameters.ImageRepresentationMethod)
             {
                 case ImageRepresentationMethod.Boc:
-                    Feature = new Boc(IrmParameters.ColorSpace);
+                    _feature = new Boc(_irmParameters.ColorSpace);
                     break;
                 case ImageRepresentationMethod.Lboc:
-                    //ClusterModel bocClusterModel = IrmParameters.ClusterManager.Cluster();
-                    Feature = new Lboc(IrmParameters.ColorSpace, IrmParameters.ClusterModel);
+                    var lbocClusters = BaseParameters.ClusterParameters.ClusterNum;
+                    BaseParameters.ClusterParameters.ClusterNum = BaseParameters.ClusterParameters.PaletteSize;
+                    ClusterManager manager = new ClusterManager(BaseParameters);
+                    BaseParameters.ClusterParameters.ClusterNum = lbocClusters;
+
+                    _irmParameters.BocClusterModel = manager.Cluster();
+
+                    BaseParameters.KdTreeParameters.Model = _irmParameters.BocClusterModel;
+                    var kdTreeManager = new KdTreeManager(BaseParameters.KdTreeParameters);
+                    BaseParameters.IrmParameters.BocClusterModel.Tree = kdTreeManager.CreateTree();
+
+
+                    _feature = new Lboc(_irmParameters.ColorSpace, _irmParameters.BocClusterModel);
                     break;
                 case ImageRepresentationMethod.AccordSurf:
-                    Feature = new AccordSurf();
+                    _feature = new AccordSurf();
                     break;
                 case ImageRepresentationMethod.ColorCorrelogram:
                     //extraction method
                     //throw new ArgumentException("Auto color correlogram returns the final histogram and not descriptors of an image!");
-                    Feature = new ColorCorrelogram(IrmParameters.ColorCorrelogramExtractionMethod);
+                    _feature = new ColorCorrelogram(_irmParameters.ColorCorrelogramExtractionMethod);
                     break;
                 case ImageRepresentationMethod.JOpenSurf:
-                    Feature = new JOpenSurf();
+                    _feature = new JOpenSurf();
                     break;
                 case ImageRepresentationMethod.MkLabSift:
                     //extraction method
-                    Feature = new MkLabSift(IrmParameters.MkLabSiftExtractionMethod);
+                    _feature = new MkLabSift(_irmParameters.MkLabSiftExtractionMethod);
                     break;
                 case ImageRepresentationMethod.MkLabSurf:
                     //extraction method
-                    Feature = new MkLabSurf(IrmParameters.MkLabSurfExtractionMethod);
+                    _feature = new MkLabSurf(_irmParameters.MkLabSurfExtractionMethod);
                     break;
                 case ImageRepresentationMethod.MkLabVlad:
                     //ifeatures
-                    Feature = new MkLabVlad(IrmParameters.Feature);
+                    _feature = new MkLabVlad(_irmParameters.Feature);
                     break;
                 case ImageRepresentationMethod.OpenCvSift:
-                    Feature = new OpenCvSift();
+                    _feature = new OpenCvSift();
                     break;
                 case ImageRepresentationMethod.OpenCvSurf:
-                    Feature = new OpenCvSurf();
+                    _feature = new OpenCvSurf();
                     break;
                 case ImageRepresentationMethod.VlFeatDenseSift:
-                    Feature = new VlFeatDenseSift(IrmParameters.UseCombinedQuantization);
+                    _feature = new VlFeatDenseSift(_irmParameters.UseCombinedQuantization);
                     break;
                 case ImageRepresentationMethod.VlFeatFisherVector:
-                    Feature = new VlFeatFisherVector(IrmParameters.Feature);
+                    _feature = new VlFeatFisherVector(_irmParameters.Feature);
                     break;
                 case ImageRepresentationMethod.VlFeatPhow:
-                    Feature = new VlFeatPhow();
+                    _feature = new VlFeatPhow();
                     break;
                 case ImageRepresentationMethod.VlFeatSift:
-                    Feature = new VlFeatSift(IrmParameters.UseCombinedQuantization);
+                    _feature = new VlFeatSift(_irmParameters.UseCombinedQuantization);
                     break;
                 case ImageRepresentationMethod.TfIdf:
-                    Feature = new TfIdf();
+                    _feature = new TfIdf();
                     break;
                 case ImageRepresentationMethod.WordEmbeddings:
-                    Feature = new WordEmbedding();
+                    _feature = new WordEmbedding();
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(IrmParameters.ImageRepresentationMethod), IrmParameters.ImageRepresentationMethod, null);
+                    throw new ArgumentOutOfRangeException(nameof(_irmParameters.ImageRepresentationMethod), _irmParameters.ImageRepresentationMethod, null);
             }
-            IrmParameters.Feature = Feature;
-            return Feature;
+            BaseParameters.ExtractionFeature = _feature;
+            return _feature;
         }
 
         public IFeatures InitAfterCluster()
         {
-            switch (IrmParameters.ImageRepresentationMethod)
+            switch (_irmParameters.ImageRepresentationMethod)
             {
                 case ImageRepresentationMethod.Boc:
-                    Feature = new Boc(IrmParameters.ColorSpace, IrmParameters.ClusterModel);
+                    _feature = new Boc(_irmParameters.ColorSpace, _irmParameters.ClusterModel);
                     break;
                 case ImageRepresentationMethod.Lboc:
-                    Feature = new Lboc(IrmParameters.ColorSpace, IrmParameters.BocClusterModel, IrmParameters.LbocClusterModel);
+                    _feature = new Lboc(_irmParameters.ColorSpace, _irmParameters.BocClusterModel, _irmParameters.ClusterModel);
                     break;
                 case ImageRepresentationMethod.AccordSurf:
-                    Feature = new AccordSurf(IrmParameters.ClusterModel);
+                    _feature = new AccordSurf(_irmParameters.ClusterModel);
                     break;
                 case ImageRepresentationMethod.ColorCorrelogram:
-                    Feature = new ColorCorrelogram(IrmParameters.ColorCorrelogramExtractionMethod);
+                    _feature = new ColorCorrelogram(_irmParameters.ColorCorrelogramExtractionMethod);
                     break;
                 case ImageRepresentationMethod.JOpenSurf:
-                    Feature = new JOpenSurf(IrmParameters.ClusterModel);
+                    _feature = new JOpenSurf(_irmParameters.ClusterModel);
                     break;
                 case ImageRepresentationMethod.MkLabSift:
                     //extraction method
-                    Feature = new MkLabSift(IrmParameters.ClusterModel, IrmParameters.MkLabSiftExtractionMethod);
+                    _feature = new MkLabSift(_irmParameters.ClusterModel, _irmParameters.MkLabSiftExtractionMethod);
                     break;
                 case ImageRepresentationMethod.MkLabSurf:
                     //extraction method
-                    Feature = new MkLabSurf(IrmParameters.ClusterModel, IrmParameters.MkLabSurfExtractionMethod);
+                    _feature = new MkLabSurf(_irmParameters.ClusterModel, _irmParameters.MkLabSurfExtractionMethod);
                     break;
                 case ImageRepresentationMethod.MkLabVlad:
                     //ifeatures
-                    Feature = new MkLabVlad(IrmParameters.ClusterModel);
+                    _feature = new MkLabVlad(_irmParameters.ClusterModel, _irmParameters.Feature);
                     break;
                 case ImageRepresentationMethod.OpenCvSift:
-                    Feature = new OpenCvSift(IrmParameters.ClusterModel);
+                    _feature = new OpenCvSift(_irmParameters.ClusterModel);
                     break;
                 case ImageRepresentationMethod.OpenCvSurf:
-                    Feature = new OpenCvSurf(IrmParameters.ClusterModel);
+                    _feature = new OpenCvSurf(_irmParameters.ClusterModel);
                     break;
                 case ImageRepresentationMethod.VlFeatDenseSift:
-                    Feature = new VlFeatDenseSift(IrmParameters.ClusterModel, IrmParameters.UseCombinedQuantization);
+                    _feature = new VlFeatDenseSift(_irmParameters.ClusterModel, _irmParameters.UseCombinedQuantization);
                     break;
                 case ImageRepresentationMethod.VlFeatFisherVector:
-                    Feature = new VlFeatFisherVector(IrmParameters.ClusterModel, IrmParameters.Feature);
+                    _feature = new VlFeatFisherVector(_irmParameters.ClusterModel, _irmParameters.Feature);
                     break;
                 case ImageRepresentationMethod.VlFeatPhow:
-                    Feature = new VlFeatPhow(IrmParameters.ClusterModel);
+                    _feature = new VlFeatPhow(_irmParameters.ClusterModel);
                     break;
                 case ImageRepresentationMethod.VlFeatSift:
-                    Feature = new VlFeatSift(IrmParameters.ClusterModel, IrmParameters.UseCombinedQuantization);
+                    _feature = new VlFeatSift(_irmParameters.ClusterModel, _irmParameters.UseCombinedQuantization);
                     break;
                 case ImageRepresentationMethod.TfIdf:
-                    Feature = new TfIdf(IrmParameters.TfidfApproach);
+                    _feature = new TfIdf(_irmParameters.TfidfApproach);
                     break;
                 case ImageRepresentationMethod.WordEmbeddings:
-                    Feature = new WordEmbedding();
+                    _feature = new WordEmbedding();
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(IrmParameters.ImageRepresentationMethod), IrmParameters.ImageRepresentationMethod, null);
+                    throw new ArgumentOutOfRangeException(nameof(_irmParameters.ImageRepresentationMethod), _irmParameters.ImageRepresentationMethod, null);
             }
-            IrmParameters.Feature = Feature;
-            return Feature;
+            BaseParameters.ExtractionFeature = _feature;
+            return _feature;
         }
     }
 
-    public class ImageRepresentationParameters : BaseParameters
+    public class ImageRepresentationParameters
     {
         //todo lusimo thematos mkvlad , fisher
         //todo lusimo thematos lboc model me 2 cluster models
 
         public ImageRepresentationMethod ImageRepresentationMethod;
-        public ImageRepresentationMethod IrmToUseDescriptors;
 
         public ColorCorrelogram.ColorCorrelogramExtractionMethod ColorCorrelogramExtractionMethod;
         public MkLabSift.MkLabSiftExtractionMethod MkLabSiftExtractionMethod;
         public MkLabSurf.MkLabSurfExtractionMethod MkLabSurfExtractionMethod;
 
         //some extraction methods need another feature to extract features
+        public ImageRepresentationMethod IrmToUseDescriptors;
         public IFeatures Feature { get; set; }
 
         public ClusterModel ClusterModel;
+        public ClusterModel BocClusterModel;
+        public List<ClusterModel> ClusterModels = new List<ClusterModel>();
+
 
         public bool UseCombinedQuantization = true;
         public ColorConversion.ColorSpace ColorSpace = ColorConversion.ColorSpace.RGB;
 
-
         //tfidf
         public TfidfApproach TfidfApproach;
-
-
-        public ClusterManager ClusterManager;
-        public ClusterModel BocClusterModel;
-        public ClusterModel LbocClusterModel;
-
-
-        public ImageRepresentationParameters(IFeatures extractionFeature, int imageHeight, int imageWidth)
-            : base(extractionFeature, imageHeight, imageWidth) { }
-
-        public ImageRepresentationParameters(int imageHeight, int imageWidth)
-            : base(imageHeight, imageWidth) { }
-
-        public int GetWidth()
-        {
-            return ImageWidth;
-        }
-
-        public int GetHeight()
-        {
-            return ImageHeight;
-        }
-
-        public IFeatures GetExtractionFeature()
-        {
-            return ExtractionFeature;
-        }
-        public void SetExtractionFeature(IFeatures feature)
-        {
-            ExtractionFeature = feature;
-        }
-
-
+        
     }
 
 
-    public abstract class BaseParameters
+    public class BaseParameters
     {
-        protected IFeatures ExtractionFeature { get; set; }
-        protected int ImageHeight, ImageWidth;
+        public IFeatures ExtractionFeature { get; set; }
+        public int ImageHeight, ImageWidth;
 
-        protected BaseParameters(IFeatures extractionFeature, int imageHeight, int imageWidth)
+        public ImageRepresentationParameters IrmParameters;
+        public ClusterParameters ClusterParameters;
+        public KdTreeParameters KdTreeParameters;
+
+
+        public BaseParameters(IFeatures extractionFeature, int imageHeight, int imageWidth)
         {
             ExtractionFeature = extractionFeature;
             ImageHeight = imageHeight;
             ImageWidth = imageWidth;
         }
-        protected BaseParameters(  int imageHeight, int imageWidth)
+        public BaseParameters(int imageHeight, int imageWidth)
         {
             ImageHeight = imageHeight;
             ImageWidth = imageWidth;
         }
-        protected BaseParameters(IFeatures extractionFeature)
+        public BaseParameters(IFeatures extractionFeature)
         {
             ExtractionFeature = extractionFeature;
         }

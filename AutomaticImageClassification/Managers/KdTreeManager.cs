@@ -11,7 +11,7 @@ namespace AutomaticImageClassification.Managers
     public class KdTreeManager
     {
         private IKdTree _tree;
-        private KdTreeParameters _params;
+        private readonly KdTreeParameters _params;
 
         public KdTreeManager(KdTreeParameters kdTreeParameters)
         {

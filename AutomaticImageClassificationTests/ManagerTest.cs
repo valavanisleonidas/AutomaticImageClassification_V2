@@ -21,21 +21,17 @@ namespace AutomaticImageClassificationTests
     public class ManagerTest
     {
         private bool TestAllIMageRepresentationMethods = true;
-        private bool TestAllClusterMethods = false;
-        private bool TestAllKdTreeMethods = false;
+        //private bool TestAllClusterMethods = false;
+        //private bool TestAllKdTreeMethods = false;
 
 
+        private BaseParameters _baseParameters;
+        
         private ClusterManager _clusterManager;
-        private readonly ClusterParameters _clusterParameters;
-        private ClusterModel _clusterModel;
-
-        private readonly ImageRepresentationManager _imageRepresentationManager;
-        private readonly ImageRepresentationParameters _imageRepresentationParameters;
-
         private KdTreeManager _kdTreeManager;
-        private readonly KdTreeParameters _kdTreeParameters;
+        private ImageRepresentationManager _imageRepresentationManager;
 
-        private IFeatures _feature;
+
 
         private const string BaseFolder = @"C:\Users\l.valavanis\Desktop\personal\dbs\Clef2013\Compound";
         private readonly string _trainPath = Path.Combine(BaseFolder, "Train");
@@ -45,6 +41,7 @@ namespace AutomaticImageClassificationTests
         private const int ImageHeight = 256;
         private const int ImageWidth = 256;
         private readonly int _clusterNum = 512;
+        private readonly int _paletteSize = 50;
         private readonly int _sampleImages = 10;
         private readonly int _extractImage = int.MaxValue;
         private readonly int _maxNumberClusterFeatures = 200000;
@@ -56,7 +53,7 @@ namespace AutomaticImageClassificationTests
 
         public ManagerTest()
         {
-
+            //if lite then experiment for testing so values are small
             if (_lite)
             {
                 _clusterNum = 10;
@@ -65,53 +62,38 @@ namespace AutomaticImageClassificationTests
                 _maxNumberClusterFeatures = 5000;
             }
 
-
-            #region image representation parameters , manager
-
-            _imageRepresentationParameters = new ImageRepresentationParameters(null,ImageHeight,ImageWidth)
+            _baseParameters = new BaseParameters(ImageHeight, ImageWidth)
             {
-                ImageRepresentationMethod = _imageRepresentationMethod,
-
-                ColorCorrelogramExtractionMethod = ColorCorrelogram.ColorCorrelogramExtractionMethod.LireAlgorithm,
-                MkLabSiftExtractionMethod = MkLabSift.MkLabSiftExtractionMethod.RootSift,
-                MkLabSurfExtractionMethod = MkLabSurf.MkLabSurfExtractionMethod.ColorSurf,
-
-                IrmToUseDescriptors = ImageRepresentationMethod.AccordSurf,
-                ColorSpace = ColorConversion.ColorSpace.RGB,
-                UseCombinedQuantization = true
+                IrmParameters = new ImageRepresentationParameters()
+                {
+                    ImageRepresentationMethod = _imageRepresentationMethod,
+                    Feature = new AccordSurf(),
+                    ColorCorrelogramExtractionMethod = ColorCorrelogram.ColorCorrelogramExtractionMethod.LireAlgorithm,
+                    MkLabSiftExtractionMethod = MkLabSift.MkLabSiftExtractionMethod.RootSift,
+                    MkLabSurfExtractionMethod = MkLabSurf.MkLabSurfExtractionMethod.ColorSurf,
+                    //IrmToUseDescriptors = ImageRepresentationMethod.AccordSurf,
+                    ColorSpace = ColorConversion.ColorSpace.RGB,
+                    UseCombinedQuantization = true
+                },
+                ClusterParameters = new ClusterParameters()
+                {
+                    BaseFolder = _trainPath,
+                    SampleImages = _sampleImages,
+                    ClusterNum = _clusterNum,
+                    PaletteSize = _paletteSize,
+                    ClusterMethod = _clusterMethod,
+                    MaxNumberClusterFeatures = _maxNumberClusterFeatures,
+                    IsDistinctDescriptors = false,
+                    OrderByDescending = false
+                },
+                KdTreeParameters = new KdTreeParameters
+                {
+                    Kdtree = KdTreeMethod.VlFeatKdTree
+                }
             };
 
-            _imageRepresentationManager = new ImageRepresentationManager(_imageRepresentationParameters);
-            _feature = _imageRepresentationManager.InitBeforeCluster();
-            _imageRepresentationParameters.SetExtractionFeature(_feature);
-
-
-            #endregion
-
-            #region Cluster parameters
-
-            _clusterParameters = new ClusterParameters(_feature, ImageHeight, ImageWidth)
-            {
-                BaseFolder = _trainPath,
-                SampleImages = _sampleImages,
-                ClusterNum = _clusterNum,
-                ClusterMethod = _clusterMethod,
-                MaxNumberClusterFeatures = _maxNumberClusterFeatures,
-                IsDistinctDescriptors = false,
-                OrderByDescending = false
-            };
-
-
-            #endregion
-
-            #region KdTree
-
-            _kdTreeParameters = new KdTreeParameters
-            {
-                Kdtree = KdTreeMethod.JavaMlKdTree
-            };
-
-            #endregion
+            _imageRepresentationManager = new ImageRepresentationManager(_baseParameters);
+            _baseParameters.ExtractionFeature = _imageRepresentationManager.InitBeforeCluster();
 
         }
 
@@ -162,12 +144,19 @@ namespace AutomaticImageClassificationTests
             {
                 foreach (ImageRepresentationMethod method in Enum.GetValues(typeof(ImageRepresentationMethod)))
                 {
-                    _clusterParameters.ClusterMethod = method == ImageRepresentationMethod.VlFeatFisherVector
-                        ? ClusterMethod.VlFeatGmm
-                        : _clusterMethod;
+                    //initialize new parameters each time
+                    //_baseParameters = new BaseParameters(ImageHeight, ImageWidth);
 
-                    _imageRepresentationManager.IrmParameters.ImageRepresentationMethod = method;
-                    _feature = _imageRepresentationManager.InitBeforeCluster();
+                    _baseParameters.ClusterParameters.ClusterMethod = method == ImageRepresentationMethod.VlFeatFisherVector
+                                        ? ClusterMethod.VlFeatGmm
+                                        : _clusterMethod;
+
+                    _baseParameters.IrmParameters.ImageRepresentationMethod = method;
+
+
+
+                    _imageRepresentationManager = new ImageRepresentationManager(_baseParameters);
+                    _baseParameters.ExtractionFeature = _imageRepresentationManager.InitBeforeCluster();
 
                     CompleteManagerTest();
                 }
@@ -182,38 +171,37 @@ namespace AutomaticImageClassificationTests
         {
             ClusterManagerTest();
             KdTreeManagerTest();
+
+            var clustersFile = @"Data\Palettes\" + _baseParameters.ExtractionFeature + "_" + _clusterNum + "_clusters.txt";
+            Files.WriteFile(clustersFile, _baseParameters.IrmParameters.ClusterModel.Means);
+
             ImageRepresentationManagerTest();
         }
 
         public void ClusterManagerTest()
         {
-            if (!_feature.CanCluster)
+            if (!_baseParameters.ExtractionFeature.CanCluster)
                 return;
 
-            _clusterManager = new ClusterManager(_clusterParameters);
-            _imageRepresentationManager.IrmParameters.ClusterManager = _clusterManager;
-            _clusterModel = _clusterManager.Cluster();
-            _imageRepresentationManager.IrmParameters.ClusterModel = _clusterModel;
-
-            var clustersFile = @"Data\Palettes\" + _imageRepresentationManager.Feature + "_" + _clusterNum + "_clusters.txt";
-            Files.WriteFile(clustersFile, _clusterModel.Means);
+            _clusterManager = new ClusterManager(_baseParameters);
+            _baseParameters.IrmParameters.ClusterModel = _clusterManager.Cluster();
+            
         }
 
         public void KdTreeManagerTest()
         {
-            if (!_feature.CanCluster)
+            if (!_baseParameters.ExtractionFeature.CanCluster)
                 return;
 
-            _kdTreeParameters.Model = _clusterModel;
-            _kdTreeManager = new KdTreeManager(_kdTreeParameters);
-            _imageRepresentationManager.IrmParameters.ClusterModel.Tree = _kdTreeManager.CreateTree();
-
+            _baseParameters.KdTreeParameters.Model = _baseParameters.IrmParameters.ClusterModel;
+            _kdTreeManager = new KdTreeManager(_baseParameters.KdTreeParameters);
+            _baseParameters.IrmParameters.ClusterModel.Tree = _kdTreeManager.CreateTree();
         }
 
         public void ImageRepresentationManagerTest()
         {
-            var trainFile = @"Data\Features\" + _feature + "_" + _clusterModel + "_" + _clusterParameters.ClusterNum + "_train.txt";
-            var testFile = @"Data\Features\" + _feature + "_" + _clusterModel + "_" + _clusterParameters.ClusterNum + "_test.txt";
+            var trainFile = @"Data\Features\" + _baseParameters.ExtractionFeature + "_" + _baseParameters.IrmParameters.ClusterModel + "_" + _baseParameters.ClusterParameters.ClusterNum + "_train.txt";
+            var testFile = @"Data\Features\" + _baseParameters.ExtractionFeature + "_" + _baseParameters.IrmParameters.ClusterModel + "_" + _baseParameters.ClusterParameters.ClusterNum + "_test.txt";
             var _trainLabelsFile = @"Data\Features\labels_train.txt";
             var _testLabelsFile = @"Data\Features\labels_test.txt";
 
@@ -227,7 +215,8 @@ namespace AutomaticImageClassificationTests
                 File.Delete(testFile);
             }
 
-            _feature = _imageRepresentationManager.InitAfterCluster();
+            _baseParameters.ExtractionFeature = _imageRepresentationManager.InitAfterCluster();
+
             var mapping = Files.MapCategoriesToNumbers(_trainPath);
 
             int counter = 0;
@@ -241,7 +230,7 @@ namespace AutomaticImageClassificationTests
                 counter++;
                 LocalBitmap bitmap = new LocalBitmap(train, ImageHeight, ImageWidth);
 
-                var vec = _feature.ExtractHistogram(bitmap);
+                var vec = _baseParameters.ExtractionFeature.ExtractHistogram(bitmap);
                 Files.WriteAppendFile(trainFile, vec);
 
                 int cat;
@@ -261,7 +250,7 @@ namespace AutomaticImageClassificationTests
                 }
                 counter++;
                 LocalBitmap bitmap = new LocalBitmap(test, new Bitmap(test), ImageHeight);
-                var vec = _feature.ExtractHistogram(bitmap);
+                var vec = _baseParameters.ExtractionFeature.ExtractHistogram(bitmap);
                 Files.WriteAppendFile(testFile, vec);
 
                 int cat;

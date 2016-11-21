@@ -14,12 +14,14 @@ namespace AutomaticImageClassification.Managers
 {
     public class ClusterManager
     {
+        public BaseParameters BaseParameters;
         private readonly ClusterParameters _clusterParameters;
         public ICluster ClusterInstance;
 
-        public ClusterManager(ClusterParameters clusterParameters)
+        public ClusterManager(BaseParameters baseParameters)
         {
-            _clusterParameters = clusterParameters;
+            BaseParameters = baseParameters;
+            _clusterParameters = baseParameters.ClusterParameters;
             GetClusterType();
         }
 
@@ -55,10 +57,10 @@ namespace AutomaticImageClassification.Managers
 
             foreach (var image in sampleImgs)
             {
-                var bitmap = new LocalBitmap(image, _clusterParameters.GetHeight(), _clusterParameters.GetWidth());
+                var bitmap = new LocalBitmap(image, BaseParameters.ImageHeight, BaseParameters.ImageWidth);
 
                 descriptors.AddRange(
-                    _clusterParameters.GetExtractionFeature().ExtractDescriptors(bitmap)
+                    BaseParameters.ExtractionFeature.ExtractDescriptors(bitmap)
                     .OrderBy(x => Guid.NewGuid())
                     .Take(featuresPerImage));
             }
@@ -76,36 +78,14 @@ namespace AutomaticImageClassification.Managers
         }
     }
 
-    public class ClusterParameters : BaseParameters
+    public class ClusterParameters
     {
         public ClusterMethod ClusterMethod;
 
-        public int SampleImages, ClusterNum, MaxNumberClusterFeatures;
+        //if Lboc cluster num is num of visual words and palette size is number of boc palette
+        public int SampleImages, ClusterNum, PaletteSize, MaxNumberClusterFeatures;
         public bool IsRandomInit = false, IsDistinctDescriptors = false, OrderByDescending = false;
         public string BaseFolder;
-
-        public ClusterParameters(IFeatures extractionFeature, int imageHeight, int imageWidth)
-            : base(extractionFeature, imageHeight, imageWidth) { }
-        
-        public int GetWidth()
-        {
-            return ImageWidth;
-        }
-
-        public int GetHeight()
-        {
-            return ImageHeight;
-        }
-
-        public IFeatures GetExtractionFeature()
-        {
-            return ExtractionFeature;
-        }
-
-        public void SetExtractionFeature(IFeatures feature)
-        {
-             ExtractionFeature = feature;
-        }
 
     }
 

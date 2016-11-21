@@ -27,5 +27,16 @@ namespace AutomaticImageClassification.Cluster.ClusterModels
             Covariances = covariances;
             Priors = priors;
         }
+
+        public override string ToString()
+        {
+            var clusterModel = "Gmm";
+            if (Priors == null || Covariances.Count == 0)
+            {
+                clusterModel = "Kmeans";
+            }
+            clusterModel += "_" + ClusterNum;
+            return clusterModel;
+        }
     }
 }

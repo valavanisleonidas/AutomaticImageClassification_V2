@@ -15,7 +15,10 @@ namespace AutomaticImageClassification.Feature
     public enum ImageRepresentationMethod
     {
 
-        
+        //boc model
+        Boc,
+        Lboc,
+       
 
         //bovw model
         VlFeatSift,
@@ -30,12 +33,7 @@ namespace AutomaticImageClassification.Feature
         MkLabVlad,
         OpenCvSift,
         OpenCvSurf,
-        
-        //boc model
-        Boc,
-        Lboc,
-
-
+       
 
         //textual model
         TfIdf,

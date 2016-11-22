@@ -10,44 +10,40 @@ namespace AutomaticImageClassification.Managers
 {
     public class KdTreeManager
     {
-        private IKdTree _tree;
-        private readonly KdTreeParameters _params;
 
-        public KdTreeManager(KdTreeParameters kdTreeParameters)
+        private static void InitKdTree(ref BaseParameters baseParameters)
         {
-            _params = kdTreeParameters;
-            InitKdTree();
-        }
-
-        private void InitKdTree()
-        {
-            switch (_params.Kdtree)
+            var model = baseParameters.IrmParameters.ClusterModels.Last();
+            switch (baseParameters.KdTreeParameters.Kdtree)
             {
                 case KdTreeMethod.AccordKdTree:
-                    _tree = new AccordKdTree(_params.Model.Means);
+                    model.Tree = new AccordKdTree(model.Means);
                     break;
                 case KdTreeMethod.JavaMlKdTree:
-                    _tree = new JavaMlKdTree();
+                    model.Tree = new JavaMlKdTree();
                     break;
                 case KdTreeMethod.VlFeatKdTree:
-                    _tree = new VlFeatKdTree();
+                    model.Tree = new VlFeatKdTree();
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(_params.Kdtree), _params.Kdtree, null);
+                    throw new ArgumentOutOfRangeException(nameof(baseParameters.KdTreeParameters.Kdtree), baseParameters.KdTreeParameters.Kdtree, null);
             }
+            baseParameters.IrmParameters.ClusterModels.Last().Tree = model.Tree;
         }
 
-        public IKdTree CreateTree()
+        public static void CreateTree(ref BaseParameters baseParameters)
         {
-            _tree.CreateTree(_params.Model.Means);
-            return _tree;
+            InitKdTree(ref baseParameters);
+
+            var lastClusterModel = baseParameters.IrmParameters.ClusterModels.Last();
+            lastClusterModel.Tree.CreateTree(lastClusterModel.Means);
+            
         }
         
     }
 
     public class KdTreeParameters
     {
-        public ClusterModel Model;
         public KdTreeMethod Kdtree;
     }
 

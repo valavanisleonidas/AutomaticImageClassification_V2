@@ -14,23 +14,23 @@ namespace AutomaticImageClassification.Feature
 
     public enum ImageRepresentationMethod
     {
+        VlFeatFisherVector,
 
         //boc model
-        Boc,
         Lboc,
-       
+        Boc,
+
 
         //bovw model
+        MkLabVlad,
         VlFeatSift,
         VlFeatDenseSift,
         VlFeatPhow,
-        VlFeatFisherVector,
         AccordSurf,
         ColorCorrelogram,
         JOpenSurf,
         MkLabSift,
         MkLabSurf,
-        MkLabVlad,
         OpenCvSift,
         OpenCvSurf,
        

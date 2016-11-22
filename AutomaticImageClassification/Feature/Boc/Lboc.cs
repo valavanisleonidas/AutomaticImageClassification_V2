@@ -72,7 +72,7 @@ namespace AutomaticImageClassification.Feature.Boc
         
         public override string ToString()
         {
-            return "LBoc" + (_lbocClusterModel?.Tree?.ToString() ?? "L2") + "_" + _bocClusterModel.Means.Count
+            return "LBoc" + (_lbocClusterModel?.Tree?.ToString() ?? "L2") + "_" + _bocClusterModel?.Means.Count
                 + "_Palette" + _lbocClusterModel?.Means.Count + "VWords_" + _cs.toString();
         }
 

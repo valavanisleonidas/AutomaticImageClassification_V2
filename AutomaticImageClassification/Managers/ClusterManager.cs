@@ -14,76 +14,77 @@ namespace AutomaticImageClassification.Managers
 {
     public class ClusterManager
     {
-        public BaseParameters BaseParameters;
-        private readonly ClusterParameters _clusterParameters;
-        public ICluster ClusterInstance;
 
-        public ClusterManager(BaseParameters baseParameters)
-        {
-            BaseParameters = baseParameters;
-            _clusterParameters = baseParameters.ClusterParameters;
-            GetClusterType();
-        }
 
-        private void GetClusterType()
+        private static void GetClusterType(ref ClusterParameters clusterParameters)
         {
-            switch (_clusterParameters.ClusterMethod)
+            switch (clusterParameters.ClusterMethod)
             {
                 case ClusterMethod.VlFeatEm:
-                    ClusterInstance = new VlFeatEm(_clusterParameters.IsRandomInit);
+                    clusterParameters.Cluster = new VlFeatEm(clusterParameters.IsRandomInit);
                     break;
                 case ClusterMethod.VlFeatGmm:
-                    ClusterInstance = new VlFeatGmm();
+                    clusterParameters.Cluster = new VlFeatGmm();
                     break;
                 case ClusterMethod.VlFeatKmeans:
-                    ClusterInstance = new VlFeatKmeans();
+                    clusterParameters.Cluster = new VlFeatKmeans();
                     break;
                 case ClusterMethod.AccordKmeans:
-                    ClusterInstance = new AccordKmeans();
+                    clusterParameters.Cluster = new AccordKmeans();
                     break;
                 case ClusterMethod.LireKmeans:
-                    ClusterInstance = new LireKmeans();
+                    clusterParameters.Cluster = new LireKmeans();
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(_clusterParameters.ClusterMethod), _clusterParameters.ClusterMethod, null);
+                    throw new ArgumentOutOfRangeException(nameof(clusterParameters.ClusterMethod), clusterParameters.ClusterMethod, null);
             }
         }
 
-        public ClusterModel Cluster()
+        public static void Cluster(ref BaseParameters baseParameters)
         {
-            var sampleImgs = Files.GetFilesFrom(_clusterParameters.BaseFolder, _clusterParameters.SampleImages);
+            var clusterParameters = baseParameters.ClusterParameters;
+            GetClusterType(ref clusterParameters);
+
+            var sampleImgs = Files.GetFilesFrom(clusterParameters.BaseFolder, clusterParameters.SampleImages);
             var descriptors = new List<double[]>();
-            var featuresPerImage = _clusterParameters.MaxNumberClusterFeatures / sampleImgs.Length;
+            var featuresPerImage = clusterParameters.MaxNumberClusterFeatures / sampleImgs.Length;
 
             foreach (var image in sampleImgs)
             {
-                var bitmap = new LocalBitmap(image, BaseParameters.ImageHeight, BaseParameters.ImageWidth);
+                var bitmap = new LocalBitmap(image, baseParameters.ImageHeight, baseParameters.ImageWidth);
 
                 descriptors.AddRange(
-                    BaseParameters.ExtractionFeature.ExtractDescriptors(bitmap)
+                    baseParameters.ExtractionFeature.ExtractDescriptors(bitmap)
                     .OrderBy(x => Guid.NewGuid())
                     .Take(featuresPerImage));
             }
 
-            if (_clusterParameters.IsDistinctDescriptors)
+            if (clusterParameters.IsDistinctDescriptors)
             {
                 Arrays.GetDistinctObjects(ref descriptors);
             }
-            if (_clusterParameters.OrderByDescending)
+            if (clusterParameters.OrderByDescending)
             {
                 descriptors = descriptors.OrderByDescending(b => b[0]).ToList();
             }
-
-            return ClusterInstance.CreateClusters(descriptors, _clusterParameters.ClusterNum);
+            baseParameters.
+                IrmParameters.
+                ClusterModels.
+                Add(
+                        baseParameters.
+                        ClusterParameters.
+                        Cluster.
+                        CreateClusters(descriptors, clusterParameters.ClusterNum)
+                    );
         }
     }
 
     public class ClusterParameters
     {
         public ClusterMethod ClusterMethod;
-
+        public ICluster Cluster;
         //if Lboc cluster num is num of visual words and palette size is number of boc palette
-        public int SampleImages, ClusterNum, PaletteSize, MaxNumberClusterFeatures;
+        public int SampleImages, ClusterNum, PaletteSize, NumVWords, MaxNumberClusterFeatures;
         public bool IsRandomInit = false, IsDistinctDescriptors = false, OrderByDescending = false;
         public string BaseFolder;
 

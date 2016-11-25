@@ -200,6 +200,7 @@
     <Compile Include="FusionTypes\IFusion.cs" />
     <Compile Include="FusionTypes\LateFusion.cs" />
     <Compile Include="KDTree\VlFeatKdTree.cs" />
+    <Compile Include="Managers\ClassifierManager.cs" />
     <Compile Include="Managers\ClusterManager.cs" />
     <Compile Include="Managers\ImageRepresentationManager.cs" />
     <Compile Include="Managers\KdTreeManager.cs" />

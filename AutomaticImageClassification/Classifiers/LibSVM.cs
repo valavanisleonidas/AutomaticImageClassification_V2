@@ -12,10 +12,10 @@ namespace AutomaticImageClassification.Classifiers
     public class LibSvm : IClassifier
     {
 
-        private SVMParameter _parameter = new SVMParameter();
+        private readonly SVMParameter _parameter = new SVMParameter();
         private SVMModel _model;
-        private LibSvmResults _results = new LibSvmResults();
-        private string _filePath;
+        private readonly LibSvmResults _results = new LibSvmResults();
+        private readonly string _filePath;
         private const int NFold = 10;
         private double _cvAccuracy = 0;
 

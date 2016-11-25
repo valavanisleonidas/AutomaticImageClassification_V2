@@ -10,9 +10,9 @@ namespace AutomaticImageClassification.Classifiers
     public class LibLinearLib : IClassifier
     {
 
-        private LibLinearModel _libLinearModel = new LibLinearModel();
-        private LibLinearResults _results = new LibLinearResults();
-        private LibLinearParameters _params = new LibLinearParameters();
+        private readonly LibLinearModel _libLinearModel = new LibLinearModel();
+        private readonly LibLinearResults _results = new LibLinearResults();
+        private readonly LibLinearParameters _params = new LibLinearParameters();
 
         public LibLinearLib()
         {

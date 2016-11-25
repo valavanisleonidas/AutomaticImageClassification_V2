@@ -14,4 +14,12 @@ namespace AutomaticImageClassification.Classifiers
         List<double[]> GetPredictedScores();
 
     }
+
+    public enum ClassifierMethod
+    {
+        LibLinear,
+        LibSvm
+    }
+
+
 }

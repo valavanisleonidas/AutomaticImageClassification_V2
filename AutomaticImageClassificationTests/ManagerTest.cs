@@ -196,10 +196,12 @@ namespace AutomaticImageClassificationTests
 
             ImageRepresentationManager.InitAfterCluster(ref _baseParameters);
 
-
-            var clustersFile = @"Data\Palettes\" + _baseParameters.ExtractionFeature + "_" + _clusterNum + "_clusters.txt";
-            Files.WriteFile(clustersFile, _baseParameters.IrmParameters.ClusterModels[0].Means);
-
+            if (_baseParameters.ExtractionFeature.CanCluster)
+            {
+                var clustersFile = @"Data\Palettes\" + _baseParameters.ExtractionFeature + "_" + _clusterNum +
+                                                   "_clusters.txt";
+                Files.WriteFile(clustersFile, _baseParameters.IrmParameters.ClusterModels[0].Means);
+            }
             ImageRepresentationManagerTest();
         }
 
@@ -221,8 +223,12 @@ namespace AutomaticImageClassificationTests
 
         public void ImageRepresentationManagerTest()
         {
-            var trainFile = @"Data\Features\" + _baseParameters.ExtractionFeature + "_" + _baseParameters.IrmParameters.ClusterModels[0] + "_" + _baseParameters.ClusterParameters.ClusterNum + "_train.txt";
-            var testFile = @"Data\Features\" + _baseParameters.ExtractionFeature + "_" + _baseParameters.IrmParameters.ClusterModels[0] + "_" + _baseParameters.ClusterParameters.ClusterNum + "_test.txt";
+            var clusterName = _baseParameters.IrmParameters.ClusterModels.Count == 0
+                ? ""
+                : _baseParameters.IrmParameters.ClusterModels[0].ToString();
+
+            var trainFile = @"Data\Features\" + _baseParameters.ExtractionFeature + "_" + clusterName + "_" + _baseParameters.ClusterParameters.ClusterNum + "_train.txt";
+            var testFile = @"Data\Features\" + _baseParameters.ExtractionFeature + "_" + clusterName + "_" + _baseParameters.ClusterParameters.ClusterNum + "_test.txt";
             var _trainLabelsFile = @"Data\Features\labels_train.txt";
             var _testLabelsFile = @"Data\Features\labels_test.txt";
 

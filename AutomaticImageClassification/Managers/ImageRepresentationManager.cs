@@ -202,6 +202,7 @@ namespace AutomaticImageClassification.Managers
         public ImageRepresentationParameters IrmParameters;
         public ClusterParameters ClusterParameters;
         public KdTreeParameters KdTreeParameters;
+        public ClassifierParameters ClassifierParameters;
 
 
         public BaseParameters(IFeatures extractionFeature, int imageHeight, int imageWidth)

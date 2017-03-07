@@ -19,7 +19,7 @@ namespace AutomaticImageClassification.Utilities
             }
 
             if (filters == null)
-                filters = new[] {"jpg", "jpeg", "png", "gif", "tiff", "bmp"};
+                filters = new[] { "jpg", "jpeg", "png", "gif", "tiff", "bmp" };
 
             var filesFound = new List<string>();
             var searchOption = isRecursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
@@ -40,7 +40,7 @@ namespace AutomaticImageClassification.Utilities
             }
 
             if (filters == null)
-                filters = new[] {"jpg", "jpeg", "png", "gif", "tiff", "bmp"};
+                filters = new[] { "jpg", "jpeg", "png", "gif", "tiff", "bmp" };
 
             var filesInDirectory = Directory.GetDirectories(searchFolder);
             var filesFound = new List<string>();
@@ -95,17 +95,19 @@ namespace AutomaticImageClassification.Utilities
         }
 
         //write each line of List into a new line in file
-        public static void WriteFile<T>(string fileToWrite, List<T> contentList)
+        public static void WriteFile<T>(string fileToWrite, List<T> contentList, bool writeInOneLine = false)
         {
             var encoderShouldEmitUtf8Identifier = false;
             using (
                 StreamWriter sw = new StreamWriter(File.Open(fileToWrite, FileMode.Create),
                     new UTF8Encoding(encoderShouldEmitUtf8Identifier)))
             {
-                foreach (var feature in contentList)
+                var separator = Environment.NewLine;
+                if (writeInOneLine)
                 {
-                    sw.WriteLine(feature);
+                    separator = " ";
                 }
+                sw.Write(string.Join(separator, contentList.Select(p => p.ToString()).ToArray()));
             }
         }
 
@@ -147,15 +149,15 @@ namespace AutomaticImageClassification.Utilities
             return File.ReadAllLines(path)
                 .Select(
                     l =>
-                        l.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries)
-                            .Select(i => (T) Convert.ChangeType(i, typeof(T)))
+                        l.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+                            .Select(i => (T)Convert.ChangeType(i, typeof(T)))
                             .ToArray())
                 .ToArray();
         }
 
         public static T[] ReadFileTo1DArray<T>(string path)
         {
-            return File.ReadAllLines(path).Select(i => (T) Convert.ChangeType(i, typeof(T))).ToArray();
+            return File.ReadAllLines(path).Select(i => (T)Convert.ChangeType(i, typeof(T))).ToArray();
         }
 
     }

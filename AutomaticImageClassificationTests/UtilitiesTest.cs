@@ -589,7 +589,22 @@ namespace AutomaticImageClassificationTests
             
         }
 
+        [TestMethod]
+        public void CanGetFileNameWithoutExtension()
+        {
+            var name = @"C:\Users\leonidas\Downloads\test.1.2-2017.jpg";
+            name = Files.GetFileNameWithoutExtension(name);
+            Assert.Equals(name, "test.1.2-2017");
+        }
 
+        [TestMethod]
+        public void CanGetExtension()
+        {
+            var name = @"C:\Users\leonidas\Downloads\test.1.2-2017.jpg";
+            name = Files.GetFileNameWithoutExtension(name);
+            Assert.Equals(name, ".jpg");
+
+        }
 
     }
 }

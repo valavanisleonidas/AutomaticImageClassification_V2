@@ -64,6 +64,16 @@ namespace AutomaticImageClassification.Utilities
             return Directory.GetDirectories(path).Select(a => a.Remove(0, path.Length).Replace("\\", "")).ToArray();
         }
 
+        public static string GetFileNameWithoutExtension(string path)
+        {
+            return Path.GetFileNameWithoutExtension(path);
+        }
+
+        public static string GetExtension(string path)
+        {
+            return Path.GetExtension(path);
+        }
+
         public static Dictionary<string, int> MapCategoriesToNumbers(string path)
         {
             return MapCategoriesToNumbers(GetSubFolders(path));
@@ -132,7 +142,6 @@ namespace AutomaticImageClassification.Utilities
         //        sw.Write(string.Join(" ", contentArray.Select(p => p.ToString()).ToArray()) + "\r\n");
         //    }
         //}
-
 
         public static List<T[]> ReadFileToListArrayList<T>(string path)
         {

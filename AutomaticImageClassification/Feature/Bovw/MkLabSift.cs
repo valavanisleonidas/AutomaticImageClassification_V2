@@ -26,6 +26,8 @@ namespace AutomaticImageClassification.Feature.Bovw
         public MkLabSift(ClusterModel clusterModel)
         {
             _clusterModel = clusterModel;
+            _mkLabSiftExtractionMethod = MkLabSiftExtractionMethod.RootSift;
+            GetType();
         }
 
         public MkLabSift()

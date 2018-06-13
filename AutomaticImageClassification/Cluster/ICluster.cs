@@ -14,7 +14,6 @@ namespace AutomaticImageClassification.Cluster
         VlFeatEm,
         VlFeatGmm,
         VlFeatKmeans,
-        AccordKmeans,
         LireKmeans
     }
 

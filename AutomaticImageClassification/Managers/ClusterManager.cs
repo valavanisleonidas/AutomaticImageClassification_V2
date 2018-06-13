@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using AutomaticImageClassification.Cluster;
-using AutomaticImageClassification.Cluster.ClusterModels;
 using AutomaticImageClassification.Cluster.EM;
 using AutomaticImageClassification.Cluster.GaussianMixtureModel;
 using AutomaticImageClassification.Cluster.Kmeans;
-using AutomaticImageClassification.Feature;
 using AutomaticImageClassification.Utilities;
 
 namespace AutomaticImageClassification.Managers
@@ -29,9 +26,6 @@ namespace AutomaticImageClassification.Managers
                 case ClusterMethod.VlFeatKmeans:
                     clusterParameters.Cluster = new VlFeatKmeans();
                     break;
-                case ClusterMethod.AccordKmeans:
-                    clusterParameters.Cluster = new AccordKmeans();
-                    break;
                 case ClusterMethod.LireKmeans:
                     clusterParameters.Cluster = new LireKmeans();
                     break;
@@ -45,7 +39,7 @@ namespace AutomaticImageClassification.Managers
             var clusterParameters = baseParameters.ClusterParameters;
             GetClusterType(ref clusterParameters);
 
-            var sampleImgs = Files.GetFilesFrom(clusterParameters.BaseFolder, clusterParameters.SampleImages);
+            var sampleImgs = Files.GetFilesFrom(clusterParameters.BaseFolder);
             var descriptors = new List<double[]>();
             var featuresPerImage = clusterParameters.MaxNumberClusterFeatures / sampleImgs.Length;
 

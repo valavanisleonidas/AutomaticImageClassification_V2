@@ -17,13 +17,12 @@ namespace AutomaticImageClassificationTests
         {
             Stopwatch stopwatch = Stopwatch.StartNew(); //creates and start the instance of Stopwatch
 
+            var trainDataPath = @"Data\Features\lboc_50_1024_train_libsvm_test.txt";
+            var testDataPath = @"Data\Features\lboc_50_1024_test_libsvm_test.txt";
 
-            const string trainDataPath = @"Data\Features\DenseSift_normalized_Lire_JavaML_4096_train.txt";
-            const string testDataPath = @"Data\Features\DenseSift_normalized_Lire_JavaML_4096_test.txt";
-
-            const string trainlabelsPath = @"Data\Features\boc_labels_train.txt";
-            const string testlabelsPath = @"Data\Features\boc_labels_test.txt";
-
+            var trainlabelsPath = @"Data\Features\boc_labels_train_libsvm_test.txt";
+            var testlabelsPath = @"Data\Features\boc_labels_test_libsvm_test.txt";
+            
             var trainFeat = Files.ReadFileToListArrayList<double>(trainDataPath).ToList();
             var trainlabels = Files.ReadFileTo1DArray<double>(trainlabelsPath);
 
@@ -132,11 +131,11 @@ namespace AutomaticImageClassificationTests
         {
             Stopwatch stopwatch = Stopwatch.StartNew(); //creates and start the instance of Stopwatch
 
-            var trainDataPath = @"Data\Features\lboc_50_1024_train.txt";
-            var testDataPath = @"Data\Features\lboc_50_1024_test.txt";
+            var trainDataPath = @"Data\Features\lboc_50_1024_train_libsvm_test.txt";
+            var testDataPath = @"Data\Features\lboc_50_1024_test_libsvm_test.txt";
 
-            var trainlabelsPath = @"Data\Features\boc_labels_train.txt";
-            var testlabelsPath = @"Data\Features\boc_labels_test.txt";
+            var trainlabelsPath = @"Data\Features\boc_labels_train_libsvm_test.txt";
+            var testlabelsPath = @"Data\Features\boc_labels_test_libsvm_test.txt";
 
             var trainFeat = Files.ReadFileToListArrayList<double>(trainDataPath).ToList();
             var testFeat = Files.ReadFileToListArrayList<double>(testDataPath).ToList();

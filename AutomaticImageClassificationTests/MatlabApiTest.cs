@@ -31,13 +31,13 @@ namespace AutomaticImageClassificationTests
         public void CanApplyKernelMapping()
         {
             //works fine too
-            var trainDataPath = @"Data\Features\boc_train.txt";
-            var features = Files.ReadFileToListArrayList<double>(trainDataPath).ToList();
+            //var trainDataPath = @"Data\Features\boc_train.txt";
+            //var features = Files.ReadFileToListArrayList<double>(trainDataPath).ToList();
 
-            //List<double[]> features = new List<double[]>();
-            //features.Add(new double[] { 1, 2, 3 });
-            //features.Add(new double[] { 100, 200, 300 });
-            //features.Add(new double[] { 0.4, 0.6, 0.8 });
+            List<double[]> features = new List<double[]>();
+            features.Add(new double[] { 1, 2, 3 });
+            features.Add(new double[] { 100, 200, 300 });
+            features.Add(new double[] { 0.4, 0.6, 0.8 });
 
             var _params = new LibLinearParameters
             {
@@ -50,7 +50,7 @@ namespace AutomaticImageClassificationTests
             var classifier = new LibLinearLib(_params);
             // APPLY KERNEL MAPPING
             classifier.ApplyKernelMapping(ref features);
-            Files.WriteFile("liblinear_ApplyKernelMap_bocTrain.txt", features);
+            //Files.WriteFile("liblinear_ApplyKernelMap_bocTrain.txt", features);
 
         }
 
@@ -58,8 +58,8 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void CanTrainLibLinear()
         {
-            var trainDataPath = @"Data\Features\boc_train.txt";
-            var trainlabelsPath = @"Data\Features\train_labels.txt";
+            var trainDataPath = @"Data\Features\lboc_50_1024_train_libsvm_test.txt";
+            var trainlabelsPath = @"Data\Features\boc_labels_train_libsvm_test.txt";
 
             var trainFeat = Files.ReadFileToListArrayList<double>(trainDataPath).ToList();
             double[] trainlabels = Files.ReadFileTo1DArray<double>(trainlabelsPath);
@@ -94,8 +94,10 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void CanUseLibLinearGridSearch()
         {
-            var trainDataPath = @"Data\Features\boc_train.txt";
-            var trainlabelsPath = @"Data\Features\train_labels.txt";
+            var trainDataPath = @"Data\Features\lboc_50_1024_train_libsvm_test.txt";
+            var trainlabelsPath = @"Data\Features\boc_labels_train_libsvm_test.txt";
+
+          
             var trainFeat = Files.ReadFileToListArrayList<double>(trainDataPath).ToList();
 
             double[] trainlabels = Files.ReadFileTo1DArray<double>(trainlabelsPath);
@@ -126,11 +128,11 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void CanTestLibLinear()
         {
-            var trainDataPath = @"Data\Features\boc_train.txt";
-            var testDataPath = @"Data\Features\boc_test.txt";
+            var trainDataPath = @"Data\Features\lboc_50_1024_train_libsvm_test.txt";
+            var testDataPath = @"Data\Features\lboc_50_1024_test_libsvm_test.txt";
 
-            var trainlabelsPath = @"Data\Features\train_labels.txt";
-            var testlabelsPath = @"Data\Features\test_labels.txt";
+            var trainlabelsPath = @"Data\Features\boc_labels_train_libsvm_test.txt";
+            var testlabelsPath = @"Data\Features\boc_labels_test_libsvm_test.txt";
 
             var trainFeat = Files.ReadFileToListArrayList<double>(trainDataPath).ToList();
             var testFeat = Files.ReadFileToListArrayList<double>(testDataPath).ToList();
@@ -168,7 +170,9 @@ namespace AutomaticImageClassificationTests
 
             var accuracy = AutomaticImageClassification.Evaluation.Measures.Accuracy(labels, predictedLabels);
 
-            Assert.AreEqual(accuracy, 0.39310611928737416);
+            Assert.AreEqual(accuracy, 0.3969,0.001);
+            
+
 
         }
 
@@ -307,10 +311,7 @@ namespace AutomaticImageClassificationTests
             {
                 CollectionAssert.AreEqual(train[i], results[i]);
             }
-
-            //correct results
-            //double[] resultIg = { 0.845, 0.444, 0.194, 0.012, 0.433, 0.311, 0.183, 0.242, 0.189 };
-            //CollectionAssert.AreEqual(ig,resultIg);
+            
 
         }
 
@@ -357,57 +358,45 @@ namespace AutomaticImageClassificationTests
             {
                 CollectionAssert.AreEqual(train[i], results[i]);
             }
-
-            //correct results
-            //double[] resultIg = { 0.845, 0.444, 0.194, 0.012, 0.433, 0.311, 0.183, 0.242, 0.189 };
-            //CollectionAssert.AreEqual(ig,resultIg);
-
+            
         }
 
         [TestMethod]
         public void CanPlotConfusionMatrix()
         {
-            const string trainlabelsPath = @"Data\Features\boc_labels_test.txt";
-            const string testlabelsPath = @"Data\Features\labelsTest.txt";
+          
 
-            var trueLabels = Files.ReadFileTo1DArray<int>(trainlabelsPath);
-            var predictedLabels = Files.ReadFileTo1DArray<int>(testlabelsPath);
+            // g1 = [3 2 2 3 1 1]';	% Known groups
+            // g2 = [3 2 3 1 1 1]';
+            // C = confusionmat(g1, g2)
+
+            //C =
+
+            //     2     0     0
+            //     0     1     1
+            //     1     0     1
+
+
+
+
+            var trueLabels =      new int[] { 3, 2, 2, 3, 1, 1 };
+            var predictedLabels = new int[] { 3, 2, 3, 1, 1, 1 };
             int[] categories = trueLabels.Distinct().ToArray();
+
 
             var accuracy = AutomaticImageClassification.Evaluation.Measures.Accuracy(trueLabels, predictedLabels);
             var macroF1 = AutomaticImageClassification.Evaluation.Measures.MacroF1(trueLabels, predictedLabels, categories);
             var conf = AutomaticImageClassification.Evaluation.Measures.
-                        ConfusionMatrix(trueLabels, predictedLabels, categories);
+                        ConfusionMatrix(trueLabels, predictedLabels, categories,true);
+
+
+
+
 
             Measures.PlotConfusionMatrix(ref conf, "plot", "a title" + accuracy + " " + macroF1, categories);
 
         }
 
-        [TestMethod]
-        public void CanClusterVlFeatGmm()
-        {
-            string baseFolder = @"Data";
-            //string trainPath = Path.Combine(baseFolder, "Train");
-
-            var numOfClusters = 10;
-            var sampleImgs = Files.GetFilesFrom(baseFolder);
-
-            IFeatures extractor = new AccordSurf();
-            ICluster cluster = new VlFeatGmm();
-            List<double[]> clusters = new List<double[]>();
-            int counter = 0;
-            foreach (var image in sampleImgs)
-            {
-                if (counter == 5)
-                {
-                    break;
-                }
-                counter++;
-                LocalBitmap bitmap = new LocalBitmap(image);
-                clusters.AddRange(extractor.ExtractDescriptors(bitmap));
-            }
-            ClusterModel model = cluster.CreateClusters(clusters, numOfClusters);
-        }
 
         [TestMethod]
         public void CanExtendGeometricallyFeatures()
@@ -430,15 +419,18 @@ namespace AutomaticImageClassificationTests
 
             List<double[]> finalResultdescriptors = new List<double[]>
             {
-                new[] {0.7094, 0.6797, 0.1190, 0.3404, -0.4986, -0.4985},
-                new[] {0.7547, 0.6551, 0.4984, 0.5853, -0.4985, -0.4989},
-                new[] {0.2760, 0.1626, 0.9597, 0.2238, -0.4998, -0.4998}
+                new[] {0.7094, 0.6797, 0.1190, 0.3404, -0.4986, -0.4984},
+                new[] {0.7547, 0.6551, 0.4984, 0.5853, -0.4984, -0.4989},
+                new[] {0.2760, 0.1626, 0.9597, 0.2238, -0.4997, -0.4998}
             };
+            
+            for (int i = 0; i < descriptors.Count; i++)
+            {
+                //keep only 3 digits 
+                descriptors[i] = descriptors[i].Select(d => Math.Truncate(d * 10000d) / 10000d).ToArray();
 
-            //for (int i = 0; i < descriptors.Count; i++)
-            //{
-            //    CollectionAssert.AreEqual(descriptors[i],finalResultdescriptors[i]);
-            //}
+                CollectionAssert.AreEqual(descriptors[i], finalResultdescriptors[i]);
+            }
 
         }
 

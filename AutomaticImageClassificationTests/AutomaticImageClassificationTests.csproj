@@ -105,6 +105,53 @@
     <None Include="test.runsettings" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Data\Comparison\boc\boc experiment1.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Comparison\boc\boc experiment2.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Comparison\boc\boc experiment3.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Comparison\boc\boc experiment4.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Comparison\boc\boc experiment5.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Comparison\boc\boc experiment6.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Comparison\boc\boc experiment7.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Comparison\boc\boc experiment8.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Comparison\bovw\ColorCorrelogram\ColorCorrelogram experiment 1.txt" />
+    <Content Include="Data\Comparison\bovw\ColorCorrelogram\ColorCorrelogram experiment 2.txt" />
+    <Content Include="Data\Comparison\bovw\dense sift\time difference.txt" />
+    <Content Include="Data\Comparison\bovw\fisher\fisher experiment 1.txt" />
+    <Content Include="Data\Comparison\bovw\phow\phow experiment 1.txt" />
+    <Content Include="Data\Comparison\bovw\phow\phow experiment 2.txt" />
+    <Content Include="Data\Comparison\bovw\phow\phow experiment 3.txt" />
+    <Content Include="Data\Comparison\bovw\sift\sift experiment 1.txt" />
+    <Content Include="Data\Comparison\bovw\sift\sift experiment 2.txt" />
+    <Content Include="Data\Comparison\bovw\sift\sift experiment 3.txt" />
+    <Content Include="Data\Comparison\bovw\surf\surf experiment 1.txt" />
+    <Content Include="Data\Comparison\bovw\surf\surf experiment 2.txt" />
+    <Content Include="Data\Comparison\bovw\surf\surf experiment 3.txt" />
+    <Content Include="Data\Comparison\bovw\surf\surf experiment 4.txt" />
+    <Content Include="Data\Comparison\bovw\surf\surf experiment 5.txt" />
+    <Content Include="Data\Comparison\bovw\surf\surf experiment 6.txt" />
+    <Content Include="Data\Comparison\bovw\vlad\vlad experiment 1.txt" />
+    <Content Include="Data\Comparison\bovw\vlad\vlad experiment 2.txt" />
+    <Content Include="Data\Comparison\bovw\vlad\vlad experiment 3.txt" />
+    <Content Include="Data\Comparison\bovw\vlad\vlad experiment 4.txt" />
+    <Content Include="Data\Comparison\lboc\lboc experiment1.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Data\database\03432.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -120,7 +167,107 @@
     <Content Include="Data\database\inner_piecepng.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Data\database\test\0\03432.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\database\test\0\einstein.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\database\test\1\03432.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\database\test\1\einstein.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\database\test\1\inner_piecepng.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\database\train\0\einstein.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\database\train\0\inner_piece.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\database\train\0\inner_piecepng.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\database\train\1\03432.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\database\train\1\dogInNeed.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\database\train\1\einstein.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Dictionaries\lboc_dictionaryLire.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Features\boc_labels_test_libsvm_test.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Features\boc_labels_train_libsvm_test.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Features\lboc_50_1024_test_libsvm_test.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Features\lboc_50_1024_train_libsvm_test.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Palettes\lboc_paleteLire.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Results\LibSVMBocPredictedLabels.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Results\LibSVMBocPredictedProbabilities.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\test results\apply kernel mapping -g 0.5 chi2\c# liblinear_ApplyKernelMap.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\test results\apply kernel mapping -g 0.5 chi2\matlab liblinear_apply_kernel.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\test results\grid search -s 2 -B 1 -C 10\c# grid search.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\test results\grid search -s 2 -B 1 -C 10\matlab grid search.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\test results\model liblinear default params\c# liblinear_model_bias.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\test results\model liblinear default params\c# liblinear_model_weights.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\test results\model liblinear default params\matlab liblinear_model_bias.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\test results\model liblinear default params\matlab liblinear_model_weights.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\test results\results from boc test\liblinear_results_labels.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\test results\results from boc test\liblinear_results_probs.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\test results\results from boc test\matlab_liblinear_results_labels.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\test results\results from boc test\matlab_liblinear_results_probs.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\textData\testFiguresTest.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\textData\test_figures.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

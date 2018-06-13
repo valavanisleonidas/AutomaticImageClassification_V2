@@ -22,6 +22,19 @@ namespace AutomaticImageClassificationTests
         {
             var list = new List<double[]> { new double[] { 0, 1, 1 }, new double[] { 0, 2, 2 }, new double[] { 0, 4, 5 } };
             Normalization.Normalize(ref list);
+  
+            var results = new List<double[]> {
+                new double[] { 0, 0.2182, 0.1826 },
+                new double[] { 0, 0.4364, 0.3651 },
+                new double[] { 0, 0.8729, 0.9129 }
+            };
+
+            for (var i = 0; i < list.Count; i++)
+            {
+                list[i] = list[i].Select(d => Math.Round(d,4)).ToArray();
+                CollectionAssert.AreEqual(list[i].ToArray(), results[i].ToArray());
+            }
+
         }
 
         [TestMethod]
@@ -30,6 +43,18 @@ namespace AutomaticImageClassificationTests
             var list = new List<double[]> { new double[] { 0, 1, 1 }, new double[] { 0, 2, 2 }, new double[] { 0, 4, 5 } };
             var sigmoid = 0.2;
             Normalization.ReNormalize(ref list, sigmoid);
+            
+            var results = new List<double[]> {
+                new double[] { 0.5000, 0.5498, 0.5498 },
+                new double[] { 0.5000, 0.5987, 0.5987 },
+                new double[] { 0.5000, 0.6900, 0.7311 }
+            };
+
+            for (var i = 0; i < list.Count; i++)
+            {
+                list[i] = list[i].Select(d => Math.Round(d, 4)).ToArray();
+                CollectionAssert.AreEqual(list[i].ToArray(), results[i].ToArray());
+            }
         }
 
         [TestMethod]
@@ -54,38 +79,46 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void CanReadAllImagesFromFolder()
         {
-            var searchFolder = @"C:\Users\l.valavanis\Desktop\personal\dbs\Clef2013\Compound";
+            var searchFolder = @"Data\Database";
             string[] files = Files.GetFilesFrom(searchFolder);
-
-            Console.WriteLine(files.Length);
-            foreach (var file in files)
-            {
-                //double category = Convert.ToDouble(file.Split('\\')[file.Split('\\').Length - 2]);
-                string cat = file.Split('\\')[file.Split('\\').Length - 2] + "\\" + file.Split('\\')[file.Split('\\').Length - 1];
-                Console.WriteLine(cat);
-            }
-
+            
+            Assert.AreEqual(files.Length, 5);
+            
         }
 
         [TestMethod]
         public void CanGetSubfoldersOfPath()
         {
-            var searchFolder = @"C:\Users\l.valavanis\Desktop\personal\dbs\Clef2013\Compound\Test";
+            var searchFolder = @"Data\Database";
             string[] subfolders = Files.GetSubFolders(searchFolder);
+
+            Assert.AreEqual(subfolders.Length, 0);
         }
 
         [TestMethod]
         public void CanMapCategoriesToNumbers()
         {
-            var searchFolder = @"C:\Users\l.valavanis\Desktop\personal\dbs\Clef2013\Compound\Test";
+            var searchFolder = @"Data";
             Dictionary<string, int> mapping = Files.MapCategoriesToNumbers(searchFolder);
+
+            Dictionary<string, int> results = new Dictionary<string, int>();
+            results.Add("Comparison", 1);
+            results.Add("database",2);
+            results.Add("Dictionaries", 3);
+            results.Add("Features",4);
+            results.Add("Palettes", 5);
+            results.Add("test results", 6);
+            results.Add("textData", 7);
+
+            CollectionAssert.AreEquivalent(mapping, results);
+
         }
 
         [TestMethod]
         public void CanWriteFileToFolder()
         {
             List<double[]> features = new List<double[]>();
-            double[] lines = { 012, 1.1, 2.2 };
+            double[] lines = { 12, 1.1, 2.2 };
             double[] lines2 = { 0.0, 5.1, 2.1 };
             features.Add(lines);
             features.Add(lines2);
@@ -109,20 +142,46 @@ namespace AutomaticImageClassificationTests
             categories.Add(3);
             string fileToWrite2 = @"Data\categories.txt";
             Files.WriteFile(fileToWrite2, categories);
-
-
-
+            
+            //TODO
         }
 
         [TestMethod]
         public void CanReadFile()
         {
-            string path = @"Data\train1.txt";
-            var result = Files.ReadFileToListArrayList<double[]>(path);
-            string fileToWrite = @"Data\testpalete.txt";
-            Files.WriteFile(fileToWrite, result.ToList());
+            List<double[]> list = new List<double[]>();
+
+            list.Add(new double[] { 5, 2, 3 });
+            list.Add(new double[] { 5, 2, 3 });
+            list.Add(new double[] { 5, 1, 3 });
+            list.Add(new double[] { 5, 4, 3 });
+            list.Add(new double[] { 5, 4, 3 });
+            list.Add(new double[] { 2, 4, 1 });
+            list.Add(new double[] { 3, 2, 3 });
+
+            string path = @"Data\test_listFile.txt";
+            Files.WriteFile(path,list);
+
+            var result = Files.ReadFileToListArrayList<double>(path);
+
+            for (int i = 0; i < result.Count; i++)
+            {
+                CollectionAssert.AreEqual(list[i], result[i]);
+            }
+        }
+
+        [TestMethod]
+        public void TestNormalizationSquareArray()
+        {
+            double[,] arr1 = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
+            double[][] arr = Arrays.ToJaggedArray(ref arr1);
+
+            var a = Normalization.SqrtArray(ref arr[1]);
+
+            Assert.AreEqual(a, new double[] { 2, 2.23, 2.44 });
 
         }
+
 
         [TestMethod]
         public void TestNormalization()
@@ -139,6 +198,8 @@ namespace AutomaticImageClassificationTests
             Normalization.Tfidf(ref arr);
 
             Console.WriteLine(arr);
+            //TODO add assert
+
         }
 
         [TestMethod]
@@ -165,7 +226,7 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void CanReadXml()
         {
-            string file = @"Data\test_figures.xml";
+            string file = @"Data\textData\test_figures.xml";
             Figures images = XmlFiguresReader.ReadXml<Figures>(file);
         }
 
@@ -355,11 +416,7 @@ namespace AutomaticImageClassificationTests
             {
                 CollectionAssert.AreEqual(train[i], results[i]);
             }
-
-            //correct results
-            //double[] resultIg = { 0.845, 0.444, 0.194, 0.012, 0.433, 0.311, 0.183, 0.242, 0.189 };
-            //CollectionAssert.AreEqual(ig,resultIg);
-
+            
         }
 
         [TestMethod]
@@ -406,10 +463,7 @@ namespace AutomaticImageClassificationTests
             {
                 CollectionAssert.AreEqual(train[i], results[i]);
             }
-
-            //correct results
-            //double[] resultIg = { 0.845, 0.444, 0.194, 0.012, 0.433, 0.311, 0.183, 0.242, 0.189 };
-            //CollectionAssert.AreEqual(ig,resultIg);
+            
         }
 
         [TestMethod]
@@ -417,17 +471,17 @@ namespace AutomaticImageClassificationTests
         {
             var train = new List<double[]>
             {
-                new double[] {1,  2,  1,  0,  3,  9,  0,  1,  2},
+                new double[] {1,  2,  1,  0,  3,  9,  0,  1,  2  },
                 new double[] {0,  5,  2,  7,  1,  0,  2,  0,  1  },
                 new double[] {0,  1,  1 , 0,  2,  0,  1,  0,  1  },
                 new double[] {0,  0,  1,  0,  1,  0,  4,  0,  1  },
                 new double[] {3,  2,  5,  1,  0,  0,  1,  0,  2  },
                 new double[] {0,  0,  2,  0,  2,  2,  1,  5,  1  },
-                new double[] {2,  3,  0,  4,  0,  1,  1,  1,  1 },
+                new double[] {2,  3,  0,  4,  0,  1,  1,  1,  1  },
                 new double[] {0,  0,  0,  3,  2,  0,  1,  1,  2  },
                 new double[] {0,  4,  3,  2,  5,  6,  1,  0,  3  },
-                new double[] {0,  1,  0,  7,  4,  0,  0,  2,  2},
-                new double[] {0,  0,  0,  1,  1,  2,  4,  5,  0 }
+                new double[] {0,  1,  0,  7,  4,  0,  0,  2,  2  },
+                new double[] {0,  0,  0,  1,  1,  2,  4,  5,  0  }
             };
 
             int[] labels = { 2, 1, 3, 4, 2, 1, 2, 4, 3, 4, 1 };
@@ -436,18 +490,22 @@ namespace AutomaticImageClassificationTests
             var ig = FeatureSelection.InformationGain(ref train, ref labels, categories);
 
             //correct results
-            //double[] resultIg = { 0.845, 0.444, 0.194, 0.012, 0.433, 0.311, 0.183, 0.242, 0.189 };
-            //CollectionAssert.AreEqual(ig,resultIg);
+            double[] resultIg = { 0.845, 0.444, 0.194, 0.012, 0.433, 0.311, 0.183, 0.242, 0.189 };
+            
+            //keep only 3 digits 
+            ig = ig.Select(d => Math.Truncate(d * 1000d) / 1000d ).ToArray();
+
+            CollectionAssert.AreEqual(ig,resultIg);
         }
 
         [TestMethod]
         public void CanPerformFeatureSelectionUsingThresholdCompareMatlabCSharp()
         {
 
-            const string trainDataPath = @"Data\Features\Phow_rgb_1_2_4_Lire_JavaML_1536_train.txt";
-            const string testDataPath = @"Data\Features\Phow_rgb_1_2_4_Lire_JavaML_1536_test.txt";
-            const string trainlabelsPath = @"Data\Features\boc_labels_train.txt";
-
+            var trainDataPath = @"Data\Features\lboc_50_1024_train_libsvm_test.txt";
+            var testDataPath = @"Data\Features\lboc_50_1024_test_libsvm_test.txt";
+            var trainlabelsPath = @"Data\Features\boc_labels_train_libsvm_test.txt";
+            
             //MkLabRootSift_Lire_JavaML_512_test
             var trainFeat = Files.ReadFileToListArrayList<double>(trainDataPath).ToList();
             var testFeat = Files.ReadFileToListArrayList<double>(testDataPath).ToList();
@@ -457,7 +515,7 @@ namespace AutomaticImageClassificationTests
             var threshold = 0.1;
             var train = trainFeat;
             var test = testFeat;
-            //all features ( columns ) that have more than half non zero elements are removed with threshold 0.5
+            //all features ( columns ) that have more than half non zero elements are removed with threshold 0.1
             Stopwatch wat = new Stopwatch();
             wat.Start();
             FeatureSelection.InformationGainThreshold(ref trainFeat, ref testFeat, ref trainlabels, threshold);
@@ -484,11 +542,12 @@ namespace AutomaticImageClassificationTests
         public void CanPerformFeatureSelectionKFirstCompareMatlabCSharp()
         {
 
-            const string trainDataPath = @"Data\Features\Phow_rgb_1_2_4_Lire_JavaML_1536_train.txt";
-            const string testDataPath = @"Data\Features\Phow_rgb_1_2_4_Lire_JavaML_1536_test.txt";
-            const string trainlabelsPath = @"Data\Features\boc_labels_train.txt";
+            var trainDataPath = @"Data\Features\lboc_50_1024_train_libsvm_test.txt";
+            var testDataPath = @"Data\Features\lboc_50_1024_test_libsvm_test.txt";
 
-            //MkLabRootSift_Lire_JavaML_512_test
+            var trainlabelsPath = @"Data\Features\boc_labels_train_libsvm_test.txt";
+           
+            
             var trainFeat = Files.ReadFileToListArrayList<double>(trainDataPath).ToList();
             var testFeat = Files.ReadFileToListArrayList<double>(testDataPath).ToList();
 
@@ -523,14 +582,18 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void CanComputePearsonCorrelation()
         {
-            const string trainlabelsPath = @"Data\Features\boc_labels_test.txt";
-            const string testlabelsPath = @"Data\Features\labelsTest.txt";
+            //A_1 = [10 200 7 150];
+            //A_2 = [0.001 0.450 0.007 0.200];
+            //R = corrcoef(A_1, A_2)
+            //matlab result = 0.9568
 
-            var a = Files.ReadFileTo1DArray<int>(trainlabelsPath);
-            var b = Files.ReadFileTo1DArray<int>(testlabelsPath);
 
+            var a = new double[] { 10, 200, 7, 150 };
+            var b = new double[] { 0.001, 0.450, 0.007, 0.200 };
+            
             var result = PearsonCorrelationCoefficient.Compute(ref a, ref b);
-
+            
+            Assert.AreEqual(result, 0.956,0.001);
         }
 
         [TestMethod]
@@ -547,13 +610,36 @@ namespace AutomaticImageClassificationTests
         public void CanResizeSaveImage()
         {
             string imagePath = @"Data\database\einstein.jpg";
-            Bitmap image = new Bitmap(imagePath);
-            Bitmap im = ImageProcessing.ResizeImage(image, 256, 256);
-            ImageProcessing.SaveImage(im, "test.jpg");
+            string savedImagePath = @"Data\test_ResizedImage.jpg";
 
-            Bitmap ima = new Bitmap(@"C:\Users\l.valavanis\Desktop\personal\dbs\Clef2013\Compound\Test\COMP\1423-0127-16-57-3.jpg");
+            int width = 256;
+            int height = 200;
+
+            Bitmap image = new Bitmap(imagePath);
+            Bitmap im = ImageProcessing.ResizeImage(image, width, height);
+            ImageProcessing.SaveImage(im, savedImagePath);
+
+            Bitmap savedImage = new Bitmap(savedImagePath);
+
+            Assert.AreEqual(savedImage.Height, height);
+            Assert.AreEqual(savedImage.Width, width);
+        }
+
+        [TestMethod]
+        public void CanResizeImageFixedHeight()
+        {
+            string imagePath = @"Data\database\einstein.jpg";
+            string savedImagePath = @"Data\test_ResizedImageFixedHeight.jpg";
+
+            int height = 550;
+
+            Bitmap ima = new Bitmap(imagePath);
             Bitmap resizedImage = (Bitmap)ImageProcessing.ResizeImageFixedHeight(ima, 550);
-            ImageProcessing.SaveImage(resizedImage, "test1.jpg");
+            ImageProcessing.SaveImage(resizedImage, savedImagePath);
+
+            Bitmap savedImage = new Bitmap(savedImagePath);
+
+            Assert.AreEqual(savedImage.Height, height);
 
         }
 

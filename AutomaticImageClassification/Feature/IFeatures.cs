@@ -31,9 +31,7 @@ namespace AutomaticImageClassification.Feature
         JOpenSurf,
         MkLabSift,
         MkLabSurf,
-        OpenCvSift,
-        OpenCvSurf,
-       
+        
 
         //textual model
         TfIdf,

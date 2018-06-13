@@ -17,21 +17,11 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void CanComputeAccuracy()
         {
-            const string trainlabelsPath = @"Data\Features\boc_labels_test.txt";
-            const string testlabelsPath = @"Data\Features\labelsTest.txt";
-            
-            var trueLabels = Files.ReadFileTo1DArray<int>(trainlabelsPath);
-            var predictedLabels = Files.ReadFileTo1DArray<int>(testlabelsPath);
-            int[] categories = trueLabels.Distinct().ToArray();
 
-            var accuracy = AutomaticImageClassification.Evaluation.Measures.Accuracy(trueLabels, predictedLabels);
-            var macroF1 = AutomaticImageClassification.Evaluation.Measures.MacroF1(trueLabels, predictedLabels, categories);
-            var microF1 = AutomaticImageClassification.Evaluation.Measures.MicroF1(trueLabels, predictedLabels, categories);
-
-            //var labels = new[] { 2, 2, 2, 2, 3 };
-            //var predictions = new[] { 1, 1, 2, 2, 3 };
-            //var accuracy = AutomaticImageClassification.Evaluation.Measures.Accuracy(labels, predictions);
-            //Assert.AreEqual(accuracy, 0.6);
+            var labels =      new[] { 2, 2, 2, 2, 3 };
+            var predictions = new[] { 1, 1, 2, 2, 3 };
+            var accuracy = AutomaticImageClassification.Evaluation.Measures.Accuracy(labels, predictions);
+            Assert.AreEqual(accuracy, 0.6);
         }
 
         [TestMethod]
@@ -47,26 +37,31 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void CanComputePrecision()
         {
-            int[] labels = { 0, 1, 2, 0, 1, 2 };
-            int[] predictions = { 0, 2, 1, 0, 0, 1 };
+            int[] labels =      { 0, 1, 2, 0, 1, 2 };
+            int[] predictions = { 0, 2, 1, 0, 0, 0 };
             var precision = AutomaticImageClassification.Evaluation.Measures.Precision(labels, predictions, 0);
-            Assert.AreEqual(precision, 0.666666666666667);
+            Assert.AreEqual(precision, 0.5);
         }
 
         [TestMethod]
         public void CanComputeRecall()
         {
-            int[] labels = { 0, 1, 2, 0, 1, 2 };
+            int[] labels =      { 0, 1, 2, 0, 1, 2 };
             int[] predictions = { 0, 2, 1, 0, 0, 1 };
+            //recall for category 0
             var recall = AutomaticImageClassification.Evaluation.Measures.Recall(labels, predictions, 0);
+
+            Assert.AreEqual(recall, 1);
         }
 
         [TestMethod]
         public void CanComputeF1()
         {
-            int[] labels = { 0, 1, 2, 0, 1, 2 };
+            int[] labels =      { 0, 1, 2, 0, 1, 2 };
             int[] predictions = { 0, 2, 1, 0, 0, 1 };
             var f1 = AutomaticImageClassification.Evaluation.Measures.F1(labels, predictions, 0);
+
+            Assert.AreEqual(f1, 0.8);
         }
 
         [TestMethod]

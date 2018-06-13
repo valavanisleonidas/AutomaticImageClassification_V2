@@ -59,7 +59,7 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void CanUseAccordSurf()
         {
-            string imagePath = @"Data\einstein.jpg";
+            string imagePath = @"Data\database\einstein.jpg";
 
             IFeatures surf = new AccordSurf();
             LocalBitmap bitmap = new LocalBitmap(imagePath);
@@ -70,7 +70,7 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void CanUseJOpenSurf()
         {
-            string imagePath = @"Data\einstein.jpg";
+            string imagePath = @"Data\database\einstein.jpg";
 
             IFeatures surf = new JOpenSurf();
             LocalBitmap bitmap = new LocalBitmap(imagePath);
@@ -78,34 +78,16 @@ namespace AutomaticImageClassificationTests
         }
 
         [TestMethod]
-        public void CanUseOpenCvSift()
-        {
-            string imagePath = @"Data\einstein.jpg";
-
-            IFeatures sift = new OpenCvSift();
-            LocalBitmap bitmap = new LocalBitmap(imagePath);
-            List<double[]> featu = sift.ExtractDescriptors(bitmap);
-        }
-
-        [TestMethod]
-        public void CanUseOpenCvSurf()
-        {
-            string imagePath = @"Data\einstein.jpg";
-
-            IFeatures surf = new OpenCvSurf();
-            LocalBitmap bitmap = new LocalBitmap(imagePath);
-            List<double[]> featu = surf.ExtractDescriptors(bitmap);
-        }
-
-        [TestMethod]
         public void CanUseLireAutoColorCorrelogram()
         {
-            string imagePath = @"Data\einstein.jpg";
+            string imagePath = @"Data\database\einstein.jpg";
 
             IFeatures colorCorrelo = new ColorCorrelogram();
             LocalBitmap bitmap = new LocalBitmap(imagePath);
             double[] featu = colorCorrelo.ExtractHistogram(bitmap);
-            Files.WriteFile(@"C:\Users\l.valavanis\Desktop\colorCorre.txt", new List<double[]> { featu });
+
+            Assert.AreEqual(featu.Length, 1024);
+            //Files.WriteFile(@"C:\Users\l.valavanis\Desktop\colorCorre.txt", new List<double[]> { featu });
         }
         
         //TODO THEMA OTAN GRAFW DECIMAL KAI DIAVAZW ME TELEIES KAI KOMMATA
@@ -133,12 +115,12 @@ namespace AutomaticImageClassificationTests
             //var trainPath = Path.Combine(baseFolder, "Train");
             //var testPath = Path.Combine(baseFolder, "Test");
 
-            const string baseFolder = @"C:\Users\leonidas\Desktop\libsvm\databases\Clef2013\Compound";
-            var trainPath = Path.Combine(baseFolder, "TrainSet");
-            var testPath = Path.Combine(baseFolder, "TestSet");
+            const string baseFolder = @"Data\database";
+            var trainPath = baseFolder;
+            var testPath = baseFolder;
 
             //Create Palette
-            var sampleImgs = Files.GetFilesFrom(trainPath, sampleImages);
+            var sampleImgs = Files.GetFilesFrom(trainPath);
             IFeatures boc = new Boc(colorspace);
 
             var colors = new List<double[]>();
@@ -230,13 +212,16 @@ namespace AutomaticImageClassificationTests
             //string trainPath = Path.Combine(baseFolder, "Train");
             //string testPath = Path.Combine(baseFolder, "Test");
 
-            const string baseFolder = @"C:\Users\leonidas\Desktop\libsvm\databases\Clef2013\Compound";
-            var trainPath = Path.Combine(baseFolder, "TrainSet");
-            var testPath = Path.Combine(baseFolder, "TestSet");
+            const string baseFolder = @"Data\database";
+            var trainPath = baseFolder;
+            var testPath = baseFolder;
+
+
 
             #region cluster boc
 
-            var sampleImgs = Files.GetFilesFrom(trainPath, sampleImages);
+            //Create Palette
+            var sampleImgs = Files.GetFilesFrom(trainPath);
             IFeatures _boc = new Boc(colorspace);
 
             List<double[]> bocColors = new List<double[]>();
@@ -329,9 +314,13 @@ namespace AutomaticImageClassificationTests
             ICluster cluster = new VlFeatGmm();
             IFeatures feature = new VlFeatFisherVector();
 
-            const string baseFolder = @"C:\Users\leonidas\Desktop\libsvm\databases\Clef2013\Compound";
-            var trainPath = Path.Combine(baseFolder, "TrainSet");
-            var testPath = Path.Combine(baseFolder, "TestSet");
+            //const string baseFolder = @"C:\Users\leonidas\Desktop\libsvm\databases\Clef2013\Compound";
+            //var trainPath = Path.Combine(baseFolder, "TrainSet");
+            //var testPath = Path.Combine(baseFolder, "TestSet");
+
+            const string baseFolder = @"Data\database";
+            var trainPath = baseFolder;
+            var testPath = baseFolder;
 
             var trainFile = @"Data\Features\" + feature + "_" + cluster + "_" + clusterNum + "_train.txt";
             var testFile = @"Data\Features\" + feature + "_" + cluster + "_" + clusterNum + "_test.txt";
@@ -339,7 +328,7 @@ namespace AutomaticImageClassificationTests
 
             #region Cluster
 
-            var sampleImgs = Files.GetFilesFrom(trainPath, sampleImages);
+            var sampleImgs = Files.GetFilesFrom(trainPath);
 
             var clusters = new List<double[]>();
             foreach (var image in sampleImgs)
@@ -402,9 +391,13 @@ namespace AutomaticImageClassificationTests
             IFeatures feature = new VlFeatPhow();
             IKdTree tree = new VlFeatKdTree();
 
-            const string baseFolder = @"C:\Users\l.valavanis\Desktop\personal\dbs\Clef2013\Compound";
-            var trainPath = Path.Combine(baseFolder, "Train");
-            var testPath = Path.Combine(baseFolder, "Test");
+            //const string baseFolder = @"C:\Users\l.valavanis\Desktop\personal\dbs\Clef2013\Compound";
+            //var trainPath = Path.Combine(baseFolder, "Train");
+            //var testPath = Path.Combine(baseFolder, "Test");
+
+            const string baseFolder = @"Data\database";
+            var trainPath = baseFolder;
+            var testPath = baseFolder;
 
             var trainFile = @"Data\Features\" + feature + "_Tree" + tree + "_Cluster" + cluster + "_" + clusterNum + "_train.txt";
             var testFile = @"Data\Features\" + feature + "_Tree" + tree + "_Cluster" + cluster + "_" + clusterNum + "_test.txt";
@@ -425,7 +418,7 @@ namespace AutomaticImageClassificationTests
             {
                 #region Cluster
 
-                var sampleImgs = Files.GetFilesFrom(trainPath, sampleImages);
+                var sampleImgs = Files.GetFilesFrom(trainPath);
                 var clusterFeaturesPerImage = maxNumberClusterFeatures / sampleImgs.Length;
 
                 var clusters = new List<double[]>();
@@ -479,16 +472,20 @@ namespace AutomaticImageClassificationTests
         {
             Stopwatch stopwatch = Stopwatch.StartNew(); //creates and start the instance of Stopwatch
 
-            const int clusterNum = 4096;
+            const int clusterNum = 100;
             const int sampleImages = 10;
             const int maxNumberClusterFeatures = 200000;
 
             ICluster cluster = new VlFeatKmeans();
             IFeatures feature = new VlFeatDenseSift();
 
-            const string baseFolder = @"C:\Users\leonidas\Desktop\libsvm\databases\Clef2013\Compound";
-            var trainPath = Path.Combine(baseFolder, "TrainSet");
-            var testPath = Path.Combine(baseFolder, "TestSet");
+            //const string baseFolder = @"C:\Users\leonidas\Desktop\libsvm\databases\Clef2013\Compound";
+            //var trainPath = Path.Combine(baseFolder, "TrainSet");
+            //var testPath = Path.Combine(baseFolder, "TestSet");
+
+            const string baseFolder = @"Data\database";
+            var trainPath = baseFolder;
+            var testPath = baseFolder;
 
             var trainFile = @"Data\Features\" + feature + "_Lire_JavaML_" + clusterNum + "_train.txt";
             var testFile = @"Data\Features\" + feature + "_Lire_JavaML_" + clusterNum + "_test.txt";
@@ -496,7 +493,8 @@ namespace AutomaticImageClassificationTests
 
             #region Cluster
 
-            var sampleImgs = Files.GetFilesFrom(trainPath, sampleImages);
+            //var sampleImgs = Files.GetFilesFrom(trainPath, sampleImages);
+            var sampleImgs = Files.GetFilesFrom(trainPath);
             var clusterFeaturesPerImage = maxNumberClusterFeatures / sampleImgs.Length;
 
             var clusters = new List<double[]>();
@@ -512,6 +510,7 @@ namespace AutomaticImageClassificationTests
 
             IKdTree tree = new JavaMlKdTree();
             tree.CreateTree(finalClusters);
+            model.Tree = tree;
 
             Files.WriteFile(clustersFile, finalClusters);
 
@@ -544,50 +543,7 @@ namespace AutomaticImageClassificationTests
             Console.WriteLine("program run for : " + stopwatch.Elapsed);
 
         }
-
-        [TestMethod]
-        public void CanCreateAutoColorCorrelogram()
-        {
-            Stopwatch stopwatch = Stopwatch.StartNew(); //creates and start the instance of Stopwatch
-
-            IFeatures feature = new ColorCorrelogram(ColorCorrelogram.ColorCorrelogramExtractionMethod.LireAlgorithm);
-
-            const string baseFolder = @"C:\Users\leonidas\Desktop\libsvm\databases\Clef2013\Compound";
-            var trainPath = Path.Combine(baseFolder, "TrainSet");
-            var testPath = Path.Combine(baseFolder, "TestSet");
-
-            var trainFile = @"Data\Features\" + feature + "_train.txt";
-            var testFile = @"Data\Features\" + feature + "_test.txt";
-
-
-            #region features extraction
-
-            //Feature extraction bovw
-            List<double[]> trainFeatures = new List<double[]>();
-            foreach (var train in Files.GetFilesFrom(trainPath))
-            {
-                LocalBitmap bitmap = new LocalBitmap(train);
-                double[] vec = feature.ExtractHistogram(bitmap);
-                trainFeatures.Add(vec);
-            }
-            Files.WriteFile(trainFile, trainFeatures);
-            trainFeatures.Clear();
-            //Feature extraction bovw
-            List<double[]> testFeatures = new List<double[]>();
-            foreach (var test in Files.GetFilesFrom(testPath))
-            {
-                LocalBitmap bitmap = new LocalBitmap(test);
-                double[] vec = feature.ExtractHistogram(bitmap);
-                testFeatures.Add(vec);
-            }
-            Files.WriteFile(testFile, testFeatures);
-            testFeatures.Clear();
-            #endregion
-
-            stopwatch.Stop();
-            Console.WriteLine("program run for : " + stopwatch.Elapsed);
-
-        }
+        
 
         [TestMethod]
         public void CanCreateTfidf()
@@ -595,7 +551,7 @@ namespace AutomaticImageClassificationTests
             bool removeStopwords = false;
             bool UseTfidf = true;
 
-            string file = @"Data\testFiguresTest.xml";
+            string file = @"Data\textData\testFiguresTest.xml";
             Figures images = XmlFiguresReader.ReadXml<Figures>(file);
 
             #region train set 
@@ -612,7 +568,7 @@ namespace AutomaticImageClassificationTests
 
             #endregion
 
-            string testfile = @"Data\testFiguresTest.xml";
+            string testfile = @"Data\textData\testFiguresTest.xml";
             Figures testImages = XmlFiguresReader.ReadXml<Figures>(testfile);
 
             #region test set 
@@ -647,7 +603,7 @@ namespace AutomaticImageClassificationTests
             var numOfClusters = 10;
             var sampleImgs = Files.GetFilesFrom(baseFolder);
 
-            IFeatures extractor = new AccordSurf();
+            IFeatures extractor = new VlFeatFisherVector();
             ICluster cluster = new VlFeatGmm();
             List<double[]> clusters = new List<double[]>();
             int counter = 0;
@@ -665,7 +621,7 @@ namespace AutomaticImageClassificationTests
 
             string imagePath = @"Data\database\einstein.jpg";
 
-            IFeatures fisher = new VlFeatFisherVector(model,new AccordSurf() );
+            IFeatures fisher = new VlFeatFisherVector(model,new VlFeatFisherVector() );
             LocalBitmap bitmap1 = new LocalBitmap(imagePath);
             var histogram = fisher.ExtractHistogram(bitmap1);
         }

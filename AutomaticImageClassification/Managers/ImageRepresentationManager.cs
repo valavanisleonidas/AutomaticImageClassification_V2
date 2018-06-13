@@ -61,12 +61,6 @@ namespace AutomaticImageClassification.Managers
 
                     irmParameters.CurrentImageRepresentationMethod = baseParameters.IrmParameters.BasicImageRepresentationMethod;
                     break;
-                case ImageRepresentationMethod.OpenCvSift:
-                    baseParameters.ExtractionFeature = new OpenCvSift();
-                    break;
-                case ImageRepresentationMethod.OpenCvSurf:
-                    baseParameters.ExtractionFeature = new OpenCvSurf();
-                    break;
                 case ImageRepresentationMethod.VlFeatDenseSift:
                     baseParameters.ExtractionFeature = new VlFeatDenseSift(irmParameters.UseCombinedQuantization);
                     break;
@@ -131,12 +125,6 @@ namespace AutomaticImageClassification.Managers
                     baseParameters.ExtractionFeature = new MkLabVlad(irmParameters.ClusterModels[0], baseParameters.ExtractionFeature);
 
                     irmParameters.CurrentImageRepresentationMethod = baseParameters.IrmParameters.BasicImageRepresentationMethod;
-                    break;
-                case ImageRepresentationMethod.OpenCvSift:
-                    baseParameters.ExtractionFeature = new OpenCvSift(irmParameters.ClusterModels[0]);
-                    break;
-                case ImageRepresentationMethod.OpenCvSurf:
-                    baseParameters.ExtractionFeature = new OpenCvSurf(irmParameters.ClusterModels[0]);
                     break;
                 case ImageRepresentationMethod.VlFeatDenseSift:
                     baseParameters.ExtractionFeature = new VlFeatDenseSift(irmParameters.ClusterModels[0], irmParameters.UseCombinedQuantization);

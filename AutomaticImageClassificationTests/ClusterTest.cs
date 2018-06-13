@@ -39,6 +39,7 @@ namespace AutomaticImageClassificationTests
 
             int index = kdtree.SearchTree(search);
 
+            Assert.AreEqual(index, 4);
         }
 
         [TestMethod]
@@ -54,39 +55,14 @@ namespace AutomaticImageClassificationTests
 
             IKdTree kdtree = new JavaMlKdTree();
             kdtree.CreateTree(centers);
-            double[] search = { 5000.0, 5000.0, 5000.0 };
+            double[] search = { 50000.0, 50000.0, 50000.0 };
 
             int index = kdtree.SearchTree(search);
 
-        }
-
-        [TestMethod]
-        public void CanClusterAccordKmeans()
-        {
-            string baseFolder = @"Data";
-            //string trainPath = Path.Combine(baseFolder, "Train");
-
-            var numOfClusters = 10;
-            var sampleImgs = Files.GetFilesFrom(baseFolder);
-
-            IFeatures phow = new VlFeatPhow();
-            ICluster cluster = new AccordKmeans();
-            List<double[]> colors = new List<double[]>();
-            int counter = 0;
-            foreach (var image in sampleImgs)
-            {
-                if (counter == 2)
-                {
-                    break;
-                }
-                counter++;
-                LocalBitmap bitmap = new LocalBitmap(image);
-                colors.AddRange(phow.ExtractDescriptors(bitmap));
-            }
-            ClusterModel model = cluster.CreateClusters(colors, numOfClusters);
+            Assert.AreEqual(index, 4);
 
         }
-
+        
         //TODO NEED TO CHECK vsexecution problem.exe PROBLEM
         //pass vlfeat kmeans,vlfeat em , accord kmeans
         [TestMethod]
@@ -98,7 +74,7 @@ namespace AutomaticImageClassificationTests
             var numOfClusters = 10;
             var sampleImgs = Files.GetFilesFrom(baseFolder);
 
-            IFeatures phow = new VlFeatPhow();
+            IFeatures colorFeatures = new AccordSurf();
             ICluster cluster = new VlFeatKmeans();
             List<double[]> colors = new List<double[]>();
             int counter = 0;
@@ -111,9 +87,11 @@ namespace AutomaticImageClassificationTests
                 counter++;
 
                 LocalBitmap bitmap = new LocalBitmap(image);
-                colors.AddRange(phow.ExtractDescriptors(bitmap));
+                colors.AddRange(colorFeatures.ExtractDescriptors(bitmap));
             }
             ClusterModel model = cluster.CreateClusters(colors, numOfClusters);
+            Assert.AreEqual(model.Means.Count, 10);
+            
 
         }
 
@@ -243,7 +221,7 @@ namespace AutomaticImageClassificationTests
             var sampleImgs = Files.GetFilesFrom(baseFolder);
 
             IFeatures extractor = new AccordSurf();
-            ICluster cluster = new AccordKmeans();
+            ICluster cluster = new VlFeatKmeans();
             List<double[]> clusters = new List<double[]>();
             int counter = 0;
             foreach (var image in sampleImgs)

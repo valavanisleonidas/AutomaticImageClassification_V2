@@ -26,7 +26,7 @@ namespace AutomaticImageClassification.Utilities
                 .ToList();
         }
 
-        //model1 = 1./ (1 + exp(-a* result_model1));
+        //a= 1./ (1 + exp(-sigmoid* a))
         public static void ReNormalize(ref List<double[]> list, double sigmoid)
         {
             list = list.Select(a => a.Select((b, i) => 1 / (1 + Math.Exp(-sigmoid * b))).ToArray()).ToList();

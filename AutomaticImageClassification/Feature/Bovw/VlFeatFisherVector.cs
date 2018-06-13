@@ -55,6 +55,11 @@ namespace AutomaticImageClassification.Feature.Bovw
                         + ".Clusters dimensions : " + _model.Means[0].Length+".Please use features of the same dimensions!");
                 }
 
+                if (_model.Covariances == null || _model.Priors == null)
+                {
+                    throw new ArgumentException("Gmm clustering is required");
+                }
+
                 MWArray[] result = fisher.GetFisherVector(1,
                     new MWNumericArray(features.ToArray()),
                     new MWNumericArray(_model.Means.ToArray()),

@@ -28,9 +28,9 @@ namespace AutomaticImageClassificationTests
 
         private BaseParameters _baseParameters;
 
-        private const string BaseFolder = @"C:\Users\l.valavanis\Desktop\personal\dbs\Clef2013\Compound";
-        private readonly string _trainPath = Path.Combine(BaseFolder, "Train");
-        private readonly string _testPath = Path.Combine(BaseFolder, "Test");
+        private const string BaseFolder = @"Data";
+        private readonly string _trainPath = Path.Combine(BaseFolder, "database");
+        private readonly string _testPath = Path.Combine(BaseFolder, "database");
 
 
         private const int ImageHeight = 256;

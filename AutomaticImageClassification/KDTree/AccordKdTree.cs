@@ -6,17 +6,13 @@ namespace AutomaticImageClassification.KDTree
     public class AccordKdTree : IKdTree
     {
         private static Accord.Collections.KDTree<double[]> _kdtree;
-        private readonly List<double[]> _centers;
-
-        public AccordKdTree(List<double[]> centers)
-        {
-            _centers = centers;
-        }
-
+        private static List<double[]> _centers;
+        
         public void CreateTree(List<double[]> centers)
         {
             // To create a tree from a set of points, we use
             _kdtree = Accord.Collections.KDTree.FromData<double[]>(centers.ToArray());
+            _centers = centers;
         }
 
         //returns nearest object of array centroid in tree
@@ -24,7 +20,8 @@ namespace AutomaticImageClassification.KDTree
         {
             //find nearest object to query (centroid)
             var a = _kdtree.Nearest(centroid, 1);
-            return _centers.FindIndex(da => da[0] == a.Nearest.Position[0] && da[1] == a.Nearest.Position[1] && da[2] == a.Nearest.Position[2]);
+            //it returns position with is the center and then we find by index to find the actual index
+            return _centers.FindIndex(da => da == a.Nearest.Position);
         }
 
         public List<int> SearchTree(List<double[]> centers)

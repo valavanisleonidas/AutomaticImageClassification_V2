@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ikvm.extensions;
 using MathWorks.MATLAB.NET.Arrays;
 using MatlabAPI;
 
@@ -250,7 +249,7 @@ namespace AutomaticImageClassification.Utilities
          */
         public static double ComputeTf(string[] totalterms, string termToCheck)
         {
-            var count = totalterms.Count(s => s.equalsIgnoreCase(termToCheck));  //to count the overall occurrence of the term termToCheck
+            var count = totalterms.Count(s => s.Equals(termToCheck));  //to count the overall occurrence of the term termToCheck
             return Math.Sqrt(count);
             //return Math.sqrt (count / totalterms.Length );
         }
@@ -263,7 +262,7 @@ namespace AutomaticImageClassification.Utilities
          */
         public static double ComputeIdf(List<string[]> allTerms, string termToCheck)
         {
-            var count = allTerms.Count(ss => ss.Any(s => s.equalsIgnoreCase(termToCheck)));
+            var count = allTerms.Count(ss => ss.Any(s => string.Equals(s,termToCheck,StringComparison.OrdinalIgnoreCase) ));
             return 1 + Math.Log(allTerms.Count / (1 + count));
         }
 

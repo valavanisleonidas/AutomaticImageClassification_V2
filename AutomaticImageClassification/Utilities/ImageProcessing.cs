@@ -1,6 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.Linq;
+using static AutomaticImageClassification.Utilities.ColorConversion;
 
 namespace AutomaticImageClassification.Utilities
 {
@@ -29,7 +34,7 @@ namespace AutomaticImageClassification.Utilities
 
         public static void SaveImage(string image, string fileToSave)
         {
-            SaveImage(new Bitmap(image),fileToSave );
+            SaveImage(new Bitmap(image), fileToSave);
         }
 
         public static void SaveImage(Bitmap image, string fileToSave)
@@ -77,6 +82,87 @@ namespace AutomaticImageClassification.Utilities
             return b;
         }
 
+
+        //get dominant color of image into colorspace cs
+        public static int[][] GetDominantColors(Bitmap img, int cols, int rows, ColorSpace cs)
+        {
+            int[][] ret = new int[cols * rows][];
+            List<Bitmap> imgs = SplitImage(img, cols, rows);
+            for (int i = 0; i < imgs.Count; i++)
+            {
+                ret[i] = GetDominantColor(imgs[i], cs);
+            }
+            return ret;
+        }
+
+        public static List<Bitmap> SplitImage(Bitmap img, int cols, int rows)
+        {
+            List<Bitmap> res = new List<Bitmap>();
+            int w = img.Width / cols;
+            int h = img.Height / rows;
+            for (int y = 0; y < rows; y++)
+            {
+                for (int x = 0; x < cols; x++)
+                {
+                    Bitmap bmp = new Bitmap(w, h, PixelFormat.Format24bppRgb);
+                    
+                    using (Graphics grp = Graphics.FromImage(bmp))
+                    {
+                        Rectangle dest = new Rectangle(0, 0, w, h);
+                        Rectangle source = new Rectangle(w * x, h * y, w, h);
+                   
+                        grp.DrawImage(img, dest, source, GraphicsUnit.Pixel);
+                      }
+                   
+                    res.Add(bmp);
+                }
+            }
+
+
+            return res;
+
+        }
+
+        public static int[] GetDominantColor(Bitmap img, ColorSpace cs)
+        {
+            int[] ret = new int[3];
+            Dictionary<string, int> domC = new Dictionary<string, int>();
+            for (int x = 0; x < img.Width; x++)
+            {
+                for (int y = 0; y < img.Height; y++)
+                {
+                    Color cl = img.GetPixel(x, y);
+                    
+                    int[] color = ColorConversion.ConvertFromRGB(cs, cl.R, cl.G, cl.B);
+                    string key = string.Join(";", color);
+
+                    if (domC.ContainsKey(key))
+                    {
+                        domC[key] += 1;
+                    }
+                    else
+                    {
+                        domC.Add(key, 1);
+                    }
+                }
+            }
+         
+            string keyMax = "";
+            int max = -1;
+            foreach (var entry in domC.ToArray())
+            {
+                if (max < entry.Value)
+                {
+                    max = entry.Value;
+                    keyMax = entry.Key;
+                }
+            }
+          
+            string[] scolors = keyMax.Split(';');
+
+            return new int[] { int.Parse(scolors[0]) , int.Parse(scolors[1]) , int.Parse(scolors[2]) };
+        }
+        
 
     }
 }

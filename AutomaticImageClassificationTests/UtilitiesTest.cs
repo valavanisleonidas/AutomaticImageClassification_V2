@@ -2,21 +2,211 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.IO;
+
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using AutomaticImageClassification.FusionTypes;
 using AutomaticImageClassification.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 
 namespace AutomaticImageClassificationTests
 {
     [TestClass]
     public class UtilitiesTest
     {
+
+        [TestMethod]
+        public void CanGetImagePixelRGBSameAsJava()
+        {
+            string sourceImage = @"Data\database\dogInNeed.jpg";
+            Bitmap image = new Bitmap(sourceImage);
+
+            var img = new java.awt.image.BufferedImage(image);
+
+            List<int[]> list1 = new List<int[]>();
+            List<int[]> list2 = new List<int[]>();
+
+            //java code
+            for (var x = 0; x < img.getWidth(); x++)
+            {
+                for (var y = 0; y < img.getHeight(); y++)
+                {
+                    var color = new java.awt.Color(img.getRGB(x, y));
+                    list1.Add(new int[] { color.getRed(), color.getGreen(), color.getBlue() });
+                }
+            }
+
+            //c# code
+            for (int x = 0; x < image.Width; x++)
+            {
+                for (int y = 0; y < image.Height; y++)
+                {
+                    System.Drawing.Color pxl = image.GetPixel(x, y);
+                    int red = pxl.R;
+                    int green = pxl.G;
+                    int blue = pxl.B;
+                    list2.Add(new int[] { red, green, blue });
+                }
+            }
+
+            for (var i = 0; i < list1.Count; i++)
+            {
+                CollectionAssert.AreEqual(list1[i].ToArray(), list2[i].ToArray());
+            }
+
+        }
+
+        [TestMethod]
+        public void CanConvertRGBtoHSVColorSpace()
+        {
+            string sourceImage = @"Data\database\einstein.jpg";
+            Bitmap image = new Bitmap(sourceImage);
+
+            ColorConversion.ColorSpace _cs = ColorConversion.ColorSpace.HSV;
+
+            AutomaticImageClassification.Utilities.ColorConversion.ColorSpace _cs1 = 
+                AutomaticImageClassification.Utilities.ColorConversion.ColorSpace.HSV;
+
+            var img = new java.awt.image.BufferedImage(image);
+
+            List<int[]> list1 = new List<int[]>();
+            List<int[]> list2 = new List<int[]>();
+
+            //java code
+            for (var x = 0; x < img.getWidth(); x++)
+            {
+                for (var y = 0; y < img.getHeight(); y++)
+                {
+                    var color = new java.awt.Color(img.getRGB(x, y));
+                    int[] cl = ColorConversion.ConvertFromRGB(_cs, color.getRed(), color.getGreen(), color.getBlue());
+
+                    list1.Add(cl);
+                }
+            }
+
+            //c# code
+            for (int x = 0; x < image.Width; x++)
+            {
+                for (int y = 0; y < image.Height; y++)
+                {
+                  
+                    System.Drawing.Color pxl = image.GetPixel(x, y);
+
+                    int red = pxl.R;
+                    int green = pxl.G;
+                    int blue = pxl.B;
+
+                    int[] hsv = AutomaticImageClassification.Utilities.ColorConversion.ConvertFromRGB(_cs1, red, green, blue);
+
+                    list2.Add(hsv);
+                }
+            }
+
+            for (var i = 0; i < list1.Count; i++)
+            {
+                CollectionAssert.AreEqual(list1[i].ToArray(), list2[i].ToArray());
+            }
+         
+        }
+
+        [TestMethod]
+        public void CanConvertRGBtoCieLabColorSpace()
+        {
+            string sourceImage = @"Data\database\einstein.jpg";
+            Bitmap image = new Bitmap(sourceImage);
+
+            ColorConversion.ColorSpace _cs = ColorConversion.ColorSpace.CIELab;
+
+            AutomaticImageClassification.Utilities.ColorConversion.ColorSpace _cs1 =
+                AutomaticImageClassification.Utilities.ColorConversion.ColorSpace.CIELab;
+
+            var img = new java.awt.image.BufferedImage(image);
+
+            List<int[]> list1 = new List<int[]>();
+            List<int[]> list2 = new List<int[]>();
+
+           
+
+            //c# code
+            for (int x = 0; x < image.Width; x++)
+            {
+                for (int y = 0; y < image.Height; y++)
+                {
+
+                    System.Drawing.Color pxl = image.GetPixel(x, y);
+
+                    int red = pxl.R;
+                    int green = pxl.G;
+                    int blue = pxl.B;
+
+                    int[] hsv = AutomaticImageClassification.Utilities.ColorConversion.ConvertFromRGB(_cs1, red, green, blue);
+
+                    list2.Add(hsv);
+                }
+            }
+
+            //for (var i = 0; i < list1.Count; i++)
+            //{
+            //    CollectionAssert.AreEqual(list1[i].ToArray(), list2[i].ToArray());
+            //}
+
+        }
+
+        //einstein image has a color in a subimage that has the same max value but its ok
+        [TestMethod]
+        public void CanGetDominantColors()
+        {
+            string sourceImage = @"Data\database\03432.png";
+            Bitmap image = new Bitmap(sourceImage);
+            //image = ImageProcessing.ResizeImage(image, 256, 256);
+
+            ColorConversion.ColorSpace _cs = ColorConversion.ColorSpace.RGB;
+            AutomaticImageClassification.Utilities.ColorConversion.ColorSpace _cs1 =
+                AutomaticImageClassification.Utilities.ColorConversion.ColorSpace.RGB;
+
+            int patches = 4;
+
+            List<Bitmap> imgs = ImageProcessing.SplitImage(image, patches, patches);
+
+            
+            int[][] domColors = ImageProcessing.GetDominantColors(image, patches, patches, _cs1);
+
+            //for (var i = 0; i < domColors.Length; i++)
+            //{
+            //    CollectionAssert.AreEqual(domColorsJava[i].ToArray(), domColors[i].ToArray());
+            //}
+
+        }
+
+        [TestMethod]
+        public void CanSplitImageIntoBlocks()
+        {
+            string sourceImage = @"Data\database\einstein.jpg";
+            Bitmap image = new Bitmap(sourceImage);
+            //image = ImageProcessing.ResizeImage(image, 256, 256);
+
+            ColorConversion.ColorSpace _cs = ColorConversion.ColorSpace.RGB;
+            AutomaticImageClassification.Utilities.ColorConversion.ColorSpace _cs1 =
+                AutomaticImageClassification.Utilities.ColorConversion.ColorSpace.RGB;
+
+            int patches = 2;
+
+            List<Bitmap> imgs = ImageProcessing.SplitImage(image, patches, patches);
+
+            for (int i = 0; i < imgs.Count; i++)
+            {
+                ImageProcessing.SaveImage(imgs[i], @"C:\Users\l.valavanis\Desktop\images\im_" + i + ".jpg");
+            }
+            int[][] domColors = ImageProcessing.GetDominantColors(image, patches, patches, _cs1);
+
+
+
+        }
+
+
+
+
         [TestMethod]
         public void CanNormalize()
         {

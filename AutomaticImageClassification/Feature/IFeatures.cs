@@ -26,9 +26,9 @@ namespace AutomaticImageClassification.Feature
         VlFeatSift,
         VlFeatDenseSift,
         VlFeatPhow,
-        AccordSurf,
+        //AccordSurf,
         ColorCorrelogram,
-        JOpenSurf,
+        //JOpenSurf,
         MkLabSift,
         MkLabSurf,
         

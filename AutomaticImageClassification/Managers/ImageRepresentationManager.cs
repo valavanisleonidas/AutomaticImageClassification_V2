@@ -33,16 +33,10 @@ namespace AutomaticImageClassification.Managers
 
                     baseParameters.ExtractionFeature = new Lboc(irmParameters.ColorSpace, irmParameters.ClusterModels[0]);
                     break;
-                case ImageRepresentationMethod.AccordSurf:
-                    baseParameters.ExtractionFeature = new AccordSurf();
-                    break;
                 case ImageRepresentationMethod.ColorCorrelogram:
                     //extraction method
                     //throw new ArgumentException("Auto color correlogram returns the final histogram and not descriptors of an image!");
                     baseParameters.ExtractionFeature = new ColorCorrelogram(irmParameters.ColorCorrelogramExtractionMethod);
-                    break;
-                case ImageRepresentationMethod.JOpenSurf:
-                    baseParameters.ExtractionFeature = new JOpenSurf();
                     break;
                 case ImageRepresentationMethod.MkLabSift:
                     //extraction method
@@ -100,14 +94,8 @@ namespace AutomaticImageClassification.Managers
                 case ImageRepresentationMethod.Lboc:
                     baseParameters.ExtractionFeature = new Lboc(irmParameters.ColorSpace, irmParameters.ClusterModels[0], irmParameters.ClusterModels[1]);
                     break;
-                case ImageRepresentationMethod.AccordSurf:
-                    baseParameters.ExtractionFeature = new AccordSurf(irmParameters.ClusterModels[0]);
-                    break;
                 case ImageRepresentationMethod.ColorCorrelogram:
                     baseParameters.ExtractionFeature = new ColorCorrelogram(irmParameters.ColorCorrelogramExtractionMethod);
-                    break;
-                case ImageRepresentationMethod.JOpenSurf:
-                    baseParameters.ExtractionFeature = new JOpenSurf(irmParameters.ClusterModels[0]);
                     break;
                 case ImageRepresentationMethod.MkLabSift:
                     //extraction method

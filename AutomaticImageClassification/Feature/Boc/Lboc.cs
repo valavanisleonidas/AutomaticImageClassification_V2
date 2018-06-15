@@ -2,9 +2,8 @@
 using System.Drawing;
 using System.Linq;
 using AutomaticImageClassification.Cluster.ClusterModels;
-using AutomaticImageClassification.KDTree;
 using AutomaticImageClassification.Utilities;
-using java.awt.image;
+
 
 namespace AutomaticImageClassification.Feature.Boc
 {
@@ -12,7 +11,7 @@ namespace AutomaticImageClassification.Feature.Boc
     {
 
         private readonly int _patches = 64;
-        private readonly ColorConversion.ColorSpace _cs;
+        private readonly Utilities.ColorConversion.ColorSpace _cs;
         private readonly ClusterModel _lbocClusterModel;
         private readonly ClusterModel _bocClusterModel;
 
@@ -36,9 +35,8 @@ namespace AutomaticImageClassification.Feature.Boc
 
         public List<double[]> ExtractDescriptors(LocalBitmap input)
         {
-            var img = new BufferedImage(input.Bitmap);
             //img = ImageProcessor.resizeImage(img, _resize, _resize, false);
-            BufferedImage[] blocks = ImageProcessor.splitImage(img, _patches, _patches);
+            List<Bitmap> blocks = ImageProcessing.SplitImage(input.Bitmap, _patches, _patches);
 
             var boc = new Boc(_cs, _bocClusterModel);
             return blocks.Select(b => boc.ExtractHistogram(b)).ToList();
@@ -46,15 +44,8 @@ namespace AutomaticImageClassification.Feature.Boc
 
         public double[] ExtractHistogram(LocalBitmap input)
         {
-            var bimg = new BufferedImage(input.Bitmap);
-            return ExtractHistogram(bimg);
-        }
-        
-        public double[] ExtractHistogram(BufferedImage input)
-        {
-            //input = ImageProcessor.resizeImage(input, _resize, _resize, false);
             var vector = new double[_lbocClusterModel.Means.Count];
-            BufferedImage[] blocks = ImageProcessor.splitImage(input, _patches, _patches);
+            List<Bitmap> blocks = ImageProcessing.SplitImage(input.Bitmap, _patches, _patches);
 
             var boc = new Boc(_cs, _bocClusterModel);
             foreach (var b in blocks)
@@ -67,13 +58,13 @@ namespace AutomaticImageClassification.Feature.Boc
                 vector[indx]++;
             }
             return vector;
-
         }
+       
         
         public override string ToString()
         {
             return "LBoc" + (_lbocClusterModel?.Tree?.ToString() ?? "L2") + "_" + _bocClusterModel?.Means.Count
-                + "_Palette" + _lbocClusterModel?.Means.Count + "VWords_" + _cs.toString();
+                + "_Palette" + _lbocClusterModel?.Means.Count + "VWords_" + _cs.ToString();
         }
 
         

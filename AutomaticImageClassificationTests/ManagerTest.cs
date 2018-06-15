@@ -5,7 +5,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using AutomaticImageClassification.Cluster;
-using AutomaticImageClassification.Cluster.ClusterModels;
 using AutomaticImageClassification.Feature;
 using AutomaticImageClassification.Feature.Bovw;
 using AutomaticImageClassification.KDTree;
@@ -44,8 +43,8 @@ namespace AutomaticImageClassificationTests
         private readonly int _maxNumberClusterFeatures = 200000;
 
         private readonly ClusterMethod _clusterMethod = ClusterMethod.LireKmeans;
-        private readonly KdTreeMethod _kdTreeMethod = KdTreeMethod.JavaMlKdTree;
-        private readonly ImageRepresentationMethod _imageRepresentationMethod = ImageRepresentationMethod.JOpenSurf;
+        private readonly KdTreeMethod _kdTreeMethod = KdTreeMethod.VlFeatKdTree;
+        private readonly ImageRepresentationMethod _imageRepresentationMethod = ImageRepresentationMethod.MkLabSurf;
 
         private readonly bool _lite = true;
 

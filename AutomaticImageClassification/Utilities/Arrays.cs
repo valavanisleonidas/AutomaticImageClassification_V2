@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Accord.Math.Comparers;
 using java.util;
-using MathWorks.MATLAB.NET.Arrays;
-using AutomaticImageClassification.Utilities;
+
 
 namespace AutomaticImageClassification.Utilities
 {

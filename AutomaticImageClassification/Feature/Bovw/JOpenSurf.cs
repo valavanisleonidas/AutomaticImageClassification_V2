@@ -1,75 +1,72 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Accord.Math;
-using AutomaticImageClassification.Cluster.ClusterModels;
-using AutomaticImageClassification.KDTree;
-using AutomaticImageClassification.Utilities;
-using OpenSURFcs;
+﻿
+//deprecated not used surf implementation. just keep it to have it if needed
 
-namespace AutomaticImageClassification.Feature.Bovw
-{
-    public class JOpenSurf : IFeatures
-    {
+//using System;
+//using System.Collections.Generic;
+//using AutomaticImageClassification.Cluster.ClusterModels;
+//using AutomaticImageClassification.Utilities;
+//using OpenSURFcs;
 
-        private readonly ClusterModel _clusterModel;
+//namespace AutomaticImageClassification.Feature.Bovw
+//{
+//    public class JOpenSurf : IFeatures
+//    {
 
-        public bool CanCluster
-        {
-            get { return true; }
-        }
+//        private readonly ClusterModel _clusterModel;
 
-        public JOpenSurf() { }
+//        public bool CanCluster
+//        {
+//            get { return true; }
+//        }
 
-        public JOpenSurf(ClusterModel clusterModel)
-        {
-            _clusterModel = clusterModel;
-        }
-        
-        public double[] ExtractHistogram(LocalBitmap input)
-        {
-            List<double[]> features = ExtractDescriptors(input);
-            double[] imgVocVector = new double[_clusterModel.ClusterNum];//num of clusters
+//        public JOpenSurf() { }
 
-            //for each centroid find min position in tree and increase corresponding index
-            List<int> indexes = _clusterModel.Tree.SearchTree(features);
-            foreach (var index in indexes)
-            {
-                imgVocVector[index]++;
-            }
-            return imgVocVector;
-        }
+//        public JOpenSurf(ClusterModel clusterModel)
+//        {
+//            _clusterModel = clusterModel;
+//        }
 
-        public List<double[]> ExtractDescriptors(LocalBitmap input)
-        {
-            try
-            {
-                // Create Integral Image
-                IntegralImage iimg = IntegralImage.FromImage(input.Bitmap);
+//        public double[] ExtractHistogram(LocalBitmap input)
+//        {
+//            List<double[]> features = ExtractDescriptors(input);
+//            double[] imgVocVector = new double[_clusterModel.ClusterNum];//num of clusters
 
-                // Extract the interest points
-                List<IPoint> ipts = FastHessian.getIpoints(0.0002f, 5, 2, iimg);
+//            //for each centroid find min position in tree and increase corresponding index
+//            List<int> indexes = _clusterModel.Tree.SearchTree(features);
+//            foreach (var index in indexes)
+//            {
+//                imgVocVector[index]++;
+//            }
+//            return imgVocVector;
+//        }
 
-                // Describe the interest points
-                SurfDescriptor.DecribeInterestPoints(ipts, false, false, iimg);
+//        public List<double[]> ExtractDescriptors(LocalBitmap input)
+//        {
+//            try
+//            {
+//                // Create Integral Image
+//                IntegralImage iimg = IntegralImage.FromImage(input.Bitmap);
 
-               // List<double[]> aaa = ipts.Select(a => a.descriptor.Select( b => Convert.ToDouble(b) ).ToArray() ).ToList();
+//                // Extract the interest points
+//                List<IPoint> ipts = FastHessian.getIpoints(0.0002f, 5, 2, iimg);
 
-                return ipts.ConvertAll(des => Array.ConvertAll(des.descriptor, x => (double)x));
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
+//                // Describe the interest points
+//                SurfDescriptor.DecribeInterestPoints(ipts, false, false, iimg);
 
-        public override string ToString()
-        {
-            return "JOpenSurf";
-        }
+//               // List<double[]> aaa = ipts.Select(a => a.descriptor.Select( b => Convert.ToDouble(b) ).ToArray() ).ToList();
 
-    }
-}
+//                return ipts.ConvertAll(des => Array.ConvertAll(des.descriptor, x => (double)x));
+//            }
+//            catch (Exception e)
+//            {
+//                throw e;
+//            }
+//        }
+
+//        public override string ToString()
+//        {
+//            return "JOpenSurf";
+//        }
+
+//    }
+//}

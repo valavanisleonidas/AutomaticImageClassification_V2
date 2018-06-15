@@ -3,9 +3,7 @@ using net.semanticmetadata.lire.imageanalysis;
 using net.semanticmetadata.lire.imageanalysis.correlogram;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using AutomaticImageClassification.Utilities;
-using java.awt;
 
 namespace AutomaticImageClassification.Feature.Bovw
 {
@@ -81,9 +79,10 @@ namespace AutomaticImageClassification.Feature.Bovw
                 pixels[x] = new int[r.getHeight()][];
                 for (int y = 0; y < r.getHeight(); y++)
                 {
+                    int[] rgb = r.getPixel(x, y, pixel);
                     // converting to HSV:
-                    int[] hsv = new int[3];
-                    ConvertRgbToHsv(r.getPixel(x, y, pixel), hsv);
+                    
+                    var hsv = ColorConversion.rgb2hsv(rgb[0], rgb[1], rgb[2]);
                     // quantize the actual pixel:
                     pixels[x][y] = new int[3];
                     pixels[x][y] = hsv;
@@ -92,65 +91,7 @@ namespace AutomaticImageClassification.Feature.Bovw
             return pixels;
         }
 
-        /**
-     * @param rgb RGB Values
-     * @param hsv HSV values to set.
-     */
-
-        private static void ConvertRgbToHsv(int[] rgb, int[] hsv)
-        {
-            //TODO: Conversion
-            if (hsv.Length < 3)
-            {
-                throw new IndexOutOfRangeException("HSV array too small, a minimum of three elements is required.");
-            }
-            int R = rgb[0];
-            int G = rgb[1];
-            int B = rgb[2];
-            int max, min;
-            float hue = 0f;
-
-            max = Math.Max(R, G); //calculation of max(R,G,B)
-            max = Math.Max(max, B);
-
-            min = Math.Min(R, G); //calculation of min(R,G,B)
-            min = Math.Min(min, B);
-
-            if (max == 0)
-                hsv[1] = 0;
-            else
-            {
-                // Saturation in [0,255]
-                hsv[1] = (int) (((max - min)/(float) max)*255f);
-            }
-
-            if (max == min)
-            {
-                hue = 0; // (max - min) = 0
-            }
-            else
-            {
-                float maxMinusMin = (max - min);
-                if (R == max)
-                    hue = ((G - B)/maxMinusMin);
-
-                else if (G == max)
-                    hue = (2 + (B - R)/maxMinusMin);
-
-                else if (B == max)
-                    hue = (4 + (R - G)/maxMinusMin);
-
-                hue *= 60f;
-
-                if (hue < 0f)
-                    hue += 360f;
-            }
-            // hue in [0,359]
-            hsv[0] = (int) hue;
-            // value in [0,255]
-            hsv[2] = max;
-        }
-
+  
         public override string ToString()
         {
             return "ColorCorrelogram" + _colorCorrelogramExtractionMethod;

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AutomaticImageClassification.Utilities
 {
@@ -13,10 +11,10 @@ namespace AutomaticImageClassification.Utilities
         {
             int index = 0;
             if (clusters.Count <= 0) return index;
-            double distance = DistanceFunctions.getL2Distance(clusters[0], p);
+            double distance = GetL2Distance(clusters[0], p);
             for (int i = 1; i < clusters.Count; i++)
             {
-                double tmpDistance = DistanceFunctions.getL2Distance(clusters[i], p);
+                double tmpDistance = GetL2Distance(clusters[i], p);
                 if (!(tmpDistance < distance)) continue;
                 distance = tmpDistance;
                 index = i;
@@ -59,16 +57,45 @@ namespace AutomaticImageClassification.Utilities
         {
             int index = 0;
             if (clusters.Count <= 0) return index;
-            double distance = DistanceFunctions.getL2Distance(clusters[0], p);
+            double distance = GetL2Distance(clusters[0], p);
             for (int i = 1; i < clusters.Count; i++)
             {
-                double tmpDistance = DistanceFunctions.getL2Distance(clusters[i], p);
+                double tmpDistance = GetL2Distance(clusters[i], p);
                 if (!(tmpDistance < distance)) continue;
                 distance = tmpDistance;
                 index = i;
             }
             return index;
         }
+        
+        public static double GetL2Distance(double[] point1, double[] point2)
+        {
+            double dist = 0;
+            for (int i = 0; i < point1.Length; i++)
+            {
+                dist += (point1[i] - point2[i]) * (point1[i] - point2[i]);
+            }
+            return Math.Sqrt(dist);
+        }
+        public static double GetL2Distance(float[] point1, float[] point2)
+        {
+            double dist = 0;
+            for (int i = 0; i < point1.Length; i++)
+            {
+                dist += (point1[i] - point2[i]) * (point1[i] - point2[i]);
+            }
+            return Math.Sqrt(dist);
+        }
+        public static double GetL2Distance(int[] point1, int[] point2)
+        {
+            double dist = 0;
+            for (int i = 0; i < point1.Length; i++)
+            {
+                dist += (point1[i] - point2[i]) * (point1[i] - point2[i]);
+            }
+            return Math.Sqrt(dist);
+        }
+
 
     }
 }

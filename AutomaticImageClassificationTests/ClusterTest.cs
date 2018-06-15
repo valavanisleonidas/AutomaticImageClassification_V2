@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AutomaticImageClassification.Cluster;
 using AutomaticImageClassification.Cluster.ClusterModels;
 using AutomaticImageClassification.Cluster.EM;
@@ -14,7 +11,6 @@ using AutomaticImageClassification.Feature.Bovw;
 using AutomaticImageClassification.KDTree;
 using AutomaticImageClassification.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using sun.security.jca;
 
 namespace AutomaticImageClassificationTests
 {
@@ -33,7 +29,7 @@ namespace AutomaticImageClassificationTests
             centers.Add(new[] { 1000.0, 2000.0, 3000.0 });
             centers.Add(new[] { 10000.0, 20000.0, 30000.0 });
 
-            IKdTree kdtree = new AccordKdTree(centers);
+            IKdTree kdtree = new AccordKdTree();
             kdtree.CreateTree(centers);
             double[] search = { 50000.0, 50000.0, 50000.0 };
 
@@ -43,7 +39,7 @@ namespace AutomaticImageClassificationTests
         }
 
         [TestMethod]
-        public void CanUseJavaMlKdTree()
+        public void CanUseVlFeatKdTree()
         {
 
             List<double[]> centers = new List<double[]>();
@@ -53,7 +49,7 @@ namespace AutomaticImageClassificationTests
             centers.Add(new[] { 1000.0, 2000.0, 3000.0 });
             centers.Add(new[] { 10000.0, 20000.0, 30000.0 });
 
-            IKdTree kdtree = new JavaMlKdTree();
+            IKdTree kdtree = new VlFeatKdTree();
             kdtree.CreateTree(centers);
             double[] search = { 50000.0, 50000.0, 50000.0 };
 
@@ -62,7 +58,7 @@ namespace AutomaticImageClassificationTests
             Assert.AreEqual(index, 4);
 
         }
-        
+
         //TODO NEED TO CHECK vsexecution problem.exe PROBLEM
         //pass vlfeat kmeans,vlfeat em , accord kmeans
         [TestMethod]
@@ -74,7 +70,7 @@ namespace AutomaticImageClassificationTests
             var numOfClusters = 10;
             var sampleImgs = Files.GetFilesFrom(baseFolder);
 
-            IFeatures colorFeatures = new AccordSurf();
+            IFeatures colorFeatures = new MkLabSurf();
             ICluster cluster = new VlFeatKmeans();
             List<double[]> colors = new List<double[]>();
             int counter = 0;
@@ -134,7 +130,7 @@ namespace AutomaticImageClassificationTests
             var numOfClusters = 10;
             var sampleImgs = Files.GetFilesFrom(baseFolder);
 
-            IFeatures colorFeatures = new AccordSurf();
+            IFeatures colorFeatures = new MkLabSurf();
             ICluster cluster = new LireKmeans();
             List<double[]> colors = new List<double[]>();
             int counter = 0;
@@ -163,7 +159,7 @@ namespace AutomaticImageClassificationTests
             var numOfClusters = 10;
             var sampleImgs = Files.GetFilesFrom(baseFolder);
 
-            IFeatures extractor = new AccordSurf();
+            IFeatures extractor = new MkLabSurf();
             ICluster cluster = new AccordGmm();
             List<double[]> clusters = new List<double[]>();
             int counter = 0;
@@ -190,7 +186,7 @@ namespace AutomaticImageClassificationTests
             var numOfClusters = 10;
             var sampleImgs = Files.GetFilesFrom(baseFolder);
 
-            IFeatures extractor = new AccordSurf();
+            IFeatures extractor = new MkLabSurf();
             ICluster cluster = new VlFeatGmm();
             List<double[]> clusters = new List<double[]>();
             int counter = 0;
@@ -220,7 +216,7 @@ namespace AutomaticImageClassificationTests
             var numOfClusters = 10;
             var sampleImgs = Files.GetFilesFrom(baseFolder);
 
-            IFeatures extractor = new AccordSurf();
+            IFeatures extractor = new MkLabSurf();
             ICluster cluster = new VlFeatKmeans();
             List<double[]> clusters = new List<double[]>();
             int counter = 0;

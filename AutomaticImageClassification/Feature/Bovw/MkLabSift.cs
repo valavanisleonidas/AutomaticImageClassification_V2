@@ -1,13 +1,9 @@
 ﻿using gr.iti.mklab.visual.extraction;
 using java.awt.image;
-using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AutomaticImageClassification.Cluster.ClusterModels;
-using AutomaticImageClassification.KDTree;
+
 using AutomaticImageClassification.Utilities;
 
 namespace AutomaticImageClassification.Feature.Bovw

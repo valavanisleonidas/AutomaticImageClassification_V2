@@ -55,27 +55,27 @@ namespace AutomaticImageClassificationTests
 
         }
 
+        ////pass test
+        //[TestMethod]
+        //public void CanUseAccordSurf()
+        //{
+        //    string imagePath = @"Data\database\einstein.jpg";
+
+        //    IFeatures surf = new AccordSurf();
+        //    LocalBitmap bitmap = new LocalBitmap(imagePath);
+        //    List<double[]> featu = surf.ExtractDescriptors(bitmap);
+        //}
+
         //pass test
-        [TestMethod]
-        public void CanUseAccordSurf()
-        {
-            string imagePath = @"Data\database\einstein.jpg";
+        //[TestMethod]
+        //public void CanUseJOpenSurf()
+        //{
+        //    string imagePath = @"Data\database\einstein.jpg";
 
-            IFeatures surf = new AccordSurf();
-            LocalBitmap bitmap = new LocalBitmap(imagePath);
-            List<double[]> featu = surf.ExtractDescriptors(bitmap);
-        }
-
-        //pass test
-        [TestMethod]
-        public void CanUseJOpenSurf()
-        {
-            string imagePath = @"Data\database\einstein.jpg";
-
-            IFeatures surf = new JOpenSurf();
-            LocalBitmap bitmap = new LocalBitmap(imagePath);
-            List<double[]> featu = surf.ExtractDescriptors(bitmap);
-        }
+        //    IFeatures surf = new JOpenSurf();
+        //    LocalBitmap bitmap = new LocalBitmap(imagePath);
+        //    List<double[]> featu = surf.ExtractDescriptors(bitmap);
+        //}
 
         [TestMethod]
         public void CanUseLireAutoColorCorrelogram()
@@ -101,53 +101,78 @@ namespace AutomaticImageClassificationTests
             ICluster cluster = new VlFeatEm();
 
             const bool isDistinctColors = true;
-            const int numOfcolors = 512;
-            const int sampleImages = 10;
+            const int numOfcolors = 50;
+            const int sampleImages = 2;
             var colorspace = ColorConversion.ColorSpace.RGB;
+
+            var resizeImages = 256;
             const string paleteFile = @"Data\Palettes\boc_paleteVLFeatEM.txt";
-            string trainFile = @"Data\Features\boc_VLFeatEM_javaML_train.txt";
-            const string testFile = @"Data\Features\boc_VLFeatEM_javaML_test.txt";
+            string trainFile = @"Data\Features\boc_New_train.txt";
+            const string testFile = @"Data\Features\boc_New_test.txt";
             const string trainLabelsFile = @"Data\Features\boc_labels_train.txt";
             const string testLabelsFile = @"Data\Features\boc_labels_test.txt";
 
 
-            //const string baseFolder = @"C:\Users\l.valavanis\Desktop\personal\dbs\Clef2013\Compound";
-            //var trainPath = Path.Combine(baseFolder, "Train");
-            //var testPath = Path.Combine(baseFolder, "Test");
+            const string baseFolder = @"C:\Users\l.valavanis\Desktop\Clef2013";
+            var trainPath = Path.Combine(baseFolder, "TrainSet");
+            var testPath = Path.Combine(baseFolder, "TestSet");
 
-            const string baseFolder = @"Data\database";
-            var trainPath = baseFolder;
-            var testPath = baseFolder;
+            //const string baseFolder = @"Data\database";
+            //var trainPath = baseFolder;
+            //var testPath = baseFolder;
 
-            //Create Palette
-            var sampleImgs = Files.GetFilesFrom(trainPath);
             IFeatures boc = new Boc(colorspace);
 
-            var colors = new List<double[]>();
-            foreach (var img in sampleImgs)
+
+            //Create Palette
+            ClusterModel model;
+            List<double[]> finalClusters;
+            if (File.Exists(paleteFile))
             {
-                LocalBitmap bitmap = new LocalBitmap(img);
-                colors.AddRange(boc.ExtractDescriptors(bitmap));
+                #region read Clusters from File
+
+                finalClusters = Files.ReadFileToListArrayList<double>(paleteFile);
+                model = new KmeansModel(finalClusters);
+
+                #endregion
             }
-            if (isDistinctColors)
+            else
             {
-                Arrays.GetDistinctObjects(ref colors);
+                #region Cluster
+
+                var sampleImgs = Files.GetFilesFrom(trainPath, sampleImages);
+
+                var colors = new List<double[]>();
+                foreach (var image in sampleImgs)
+                {
+                    LocalBitmap bitmap = new LocalBitmap(image, resizeImages, resizeImages);
+                    colors.AddRange(boc.ExtractDescriptors(bitmap));
+                    //.OrderBy(x => Guid.NewGuid()).Take(clusterFeaturesPerImage));
+                }
+                if (isDistinctColors)
+                {
+                    Arrays.GetDistinctObjects(ref colors);
+                }
+
+                sampleImgs = null;
+                model = cluster.CreateClusters(colors, numOfcolors);
+                colors.Clear();
+                finalClusters = model.Means;
+                finalClusters = finalClusters.OrderByDescending(b => b[0]).ToList();
+                
+                Files.WriteFile(paleteFile, finalClusters);
+
+                #endregion
             }
 
-            ClusterModel model = cluster.CreateClusters(colors, numOfcolors);
-            ClusterModel mod = new GmmModel(new List<double[]>(), new List<double[]>(), new double[10]);
-
-            List<double[]> centers = model.Means;
-            centers = centers.OrderByDescending(b => b[0]).ToList();
-
-            Files.WriteFile(paleteFile, centers);
 
             //Create Kd-Tree
-            IKdTree tree = new JavaMlKdTree();
+            IKdTree tree = new VlFeatKdTree();
 
-            tree.CreateTree(centers);
+            tree.CreateTree(finalClusters);
+            //model.Tree = tree;
 
-            int[][] palette = Arrays.ConvertDoubleListToIntArray(ref centers);
+            //int[][] palette = Arrays.ConvertDoubleListToIntArray(ref centers);
             boc = new Boc(colorspace, model);
 
             //Feature extraction BOC
@@ -157,7 +182,7 @@ namespace AutomaticImageClassificationTests
             Dictionary<string, int> mapping = Files.MapCategoriesToNumbers(trainPath);
             foreach (var train in Files.GetFilesFrom(trainPath))
             {
-                LocalBitmap bitmap = new LocalBitmap(train);
+                LocalBitmap bitmap = new LocalBitmap(train, resizeImages, resizeImages);
                 double[] vec = boc.ExtractHistogram(bitmap);
 
                 int cat;
@@ -173,7 +198,7 @@ namespace AutomaticImageClassificationTests
             var testLabels = new List<double>();
             foreach (var test in Files.GetFilesFrom(testPath))
             {
-                LocalBitmap bitmap = new LocalBitmap(test);
+                LocalBitmap bitmap = new LocalBitmap(test, resizeImages, resizeImages);
                 double[] vec = boc.ExtractHistogram(bitmap);
 
                 int cat;
@@ -242,7 +267,7 @@ namespace AutomaticImageClassificationTests
 
             Files.WriteFile(paleteFile, bocCenters);
 
-            IKdTree boctree = new AccordKdTree(bocCenters);
+            IKdTree boctree = new AccordKdTree();
             boctree.CreateTree(bocCenters);
             int[][] palette = Arrays.ConvertDoubleListToIntArray(ref bocCenters);
 
@@ -271,7 +296,7 @@ namespace AutomaticImageClassificationTests
 
             Files.WriteFile(dictionaryFile, lbocCenters);
 
-            IKdTree lboctree = new AccordKdTree(lbocCenters);
+            IKdTree lboctree = new AccordKdTree();
             lboctree.CreateTree(lbocCenters);
 
 
@@ -309,18 +334,18 @@ namespace AutomaticImageClassificationTests
             Stopwatch stopwatch = Stopwatch.StartNew(); //creates and start the instance of Stopwatch
 
             const int clusterNum = 512;
-            const int sampleImages = 10;
+            const int sampleImages = 2;
 
-            ICluster cluster = new VlFeatGmm();
-            IFeatures feature = new VlFeatFisherVector();
+            ICluster cluster = new VlFeatKmeans();
+            IFeatures feature = new MkLabSurf(MkLabSurf.MkLabSurfExtractionMethod.Surf);
 
-            //const string baseFolder = @"C:\Users\leonidas\Desktop\libsvm\databases\Clef2013\Compound";
-            //var trainPath = Path.Combine(baseFolder, "TrainSet");
-            //var testPath = Path.Combine(baseFolder, "TestSet");
+            const string baseFolder = @"C:\Users\l.valavanis\Desktop\Clef2013";
+            var trainPath = Path.Combine(baseFolder, "TrainSet");
+            var testPath = Path.Combine(baseFolder, "TestSet");
 
-            const string baseFolder = @"Data\database";
-            var trainPath = baseFolder;
-            var testPath = baseFolder;
+            //const string baseFolder = @"Data\database";
+            //var trainPath = baseFolder;
+            //var testPath = baseFolder;
 
             var trainFile = @"Data\Features\" + feature + "_" + cluster + "_" + clusterNum + "_train.txt";
             var testFile = @"Data\Features\" + feature + "_" + cluster + "_" + clusterNum + "_test.txt";
@@ -328,28 +353,49 @@ namespace AutomaticImageClassificationTests
 
             #region Cluster
 
-            var sampleImgs = Files.GetFilesFrom(trainPath);
-
-            var clusters = new List<double[]>();
-            foreach (var image in sampleImgs)
+            ClusterModel model;
+            List<double[]> finalClusters;
+            if (File.Exists(clustersFile))
             {
-                LocalBitmap bitmap = new LocalBitmap(image);
-                clusters.AddRange(feature.ExtractDescriptors(bitmap));
+                #region read Clusters from File
+
+                finalClusters = Files.ReadFileToListArrayList<double>(clustersFile);
+                model = new KmeansModel(finalClusters);
+
+                #endregion
             }
-            sampleImgs = null;
-            ClusterModel model = cluster.CreateClusters(clusters, clusterNum);
+            else
+            {
+                #region Cluster
 
-            clusters.Clear();
+                var sampleImgs = Files.GetFilesFrom(trainPath, sampleImages);
 
-            List<double[]> finalClusters = model.Means;
-            IKdTree tree = new JavaMlKdTree();
+                var clusters = new List<double[]>();
+                foreach (var image in sampleImgs)
+                {
+                    LocalBitmap bitmap = new LocalBitmap(image);
+                    clusters.AddRange(feature.ExtractDescriptors(bitmap));
+                                    //.OrderBy(x => Guid.NewGuid()).Take(clusterFeaturesPerImage));
+                }
+                sampleImgs = null;
+                model = cluster.CreateClusters(clusters, clusterNum);
+                clusters.Clear();
+                finalClusters = model.Means;
+
+
+                Files.WriteFile(clustersFile, finalClusters);
+
+                #endregion
+            }
+
+ 
+            IKdTree tree = new VlFeatKdTree();
             tree.CreateTree(finalClusters);
-
-            Files.WriteFile(clustersFile, finalClusters);
-
+            model.Tree = tree;
+            
             #endregion
 
-            feature = new VlFeatFisherVector(model);
+            feature = new MkLabSurf(model, MkLabSurf.MkLabSurfExtractionMethod.Surf);
 
 
             #region features extraction
@@ -374,7 +420,7 @@ namespace AutomaticImageClassificationTests
             #endregion
 
             stopwatch.Stop();
-            Console.WriteLine("program run for : " + stopwatch.Elapsed);
+            Console.WriteLine(" program run for : " + stopwatch.Elapsed);
 
         }
 
@@ -508,7 +554,7 @@ namespace AutomaticImageClassificationTests
             clusters.Clear();
             List<double[]> finalClusters = model.Means;
 
-            IKdTree tree = new JavaMlKdTree();
+            IKdTree tree = new VlFeatKdTree();
             tree.CreateTree(finalClusters);
             model.Tree = tree;
 

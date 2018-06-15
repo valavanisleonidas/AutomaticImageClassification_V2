@@ -2,10 +2,7 @@
 using System.Drawing;
 using System.Linq;
 using AutomaticImageClassification.Cluster.ClusterModels;
-using AutomaticImageClassification.KDTree;
 using AutomaticImageClassification.Utilities;
-using java.awt.image;
-using Color = java.awt.Color;
 
 namespace AutomaticImageClassification.Feature.Boc
 {
@@ -37,34 +34,32 @@ namespace AutomaticImageClassification.Feature.Boc
             _cs = cs;
         }
 
+        #region c# boc implementation
 
-        
 
         public double[] ExtractHistogram(LocalBitmap input)
         {
-            var img = new BufferedImage(input.Bitmap);
-            //img = ImageProcessor.resizeImage(img, _resize, _resize, false);
-            return ExtractHistogram(img);
+            return ExtractHistogram(input.Bitmap);
         }
 
         public List<double[]> ExtractDescriptors(LocalBitmap input)
         {
-            var img = new BufferedImage(input.Bitmap);
-            //img = ImageProcessor.resizeImage(img, _resize, _resize, false);
-            int[][] domColors = ImageProcessor.getDominantColors(img, _patches, _patches, _cs);
+
+            int[][] domColors =
+                ImageProcessing.GetDominantColors(input.Bitmap, _patches, _patches, _cs);
+
             return domColors.Select(domColor => new double[] { domColor[0], domColor[1], domColor[2] }).ToList();
         }
 
-
-        public double[] ExtractHistogram(BufferedImage img)
+        public double[] ExtractHistogram(Bitmap img)
         {
             var vector = new double[_clusterModel.ClusterNum];
-            for (var x = 0; x < img.getWidth(); x++)
+            for (int x = 0; x < img.Width; x++)
             {
-                for (var y = 0; y < img.getHeight(); y++)
+                for (int y = 0; y < img.Height; y++)
                 {
-                    var color = new Color(img.getRGB(x, y));
-                    int[] cl = ColorConversion.convertFromRGB(_cs, color.getRed(), color.getGreen(), color.getBlue());
+                    var color = img.GetPixel(x, y);
+                    int[] cl = Utilities.ColorConversion.ConvertFromRGB(_cs, color.R, color.G, color.B);
 
                     int indx = _clusterModel.Tree?.SearchTree(new double[] { cl[0], cl[1], cl[2] })
                         ?? DistanceMetrics.ComputeNearestCentroidL2(ref _clusterModel.Means, cl.Select(a => (double)a).ToArray());
@@ -75,10 +70,14 @@ namespace AutomaticImageClassification.Feature.Boc
             return vector;
         }
 
+
+
+        #endregion
+
         public override string ToString()
         {
             //return "Boc_" + (_clusterModel.Tree?.ToString() ?? "L2") + "_" + _clusterModel.ClusterNum + "_" + _cs.toString();
-            return "Boc" + "_" + _cs.toString();
+            return "Boc" + "_" + _cs.ToString();
         }
 
     }

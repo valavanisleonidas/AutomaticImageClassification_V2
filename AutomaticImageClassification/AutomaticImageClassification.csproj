@@ -55,10 +55,6 @@
       <HintPath>..\packages\Accord.3.8.0\lib\net46\Accord.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Accord.Imaging, Version=3.8.0.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=MSIL">
-      <HintPath>..\packages\Accord.Imaging.3.8.0\lib\net46\Accord.Imaging.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Accord.MachineLearning, Version=3.8.0.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=MSIL">
       <HintPath>..\packages\Accord.MachineLearning.3.8.0\lib\net46\Accord.MachineLearning.dll</HintPath>
       <Private>True</Private>
@@ -79,24 +75,17 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\FeatureSelectionAPI.dll</HintPath>
     </Reference>
-    <Reference Include="IKVM.OpenJDK.Core, Version=7.2.4630.5, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+    <Reference Include="IKVM.OpenJDK.Core, Version=8.1.5717.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\ikvm-8.1.5717.0\bin\IKVM.OpenJDK.Core.dll</HintPath>
     </Reference>
-    <Reference Include="IKVM.OpenJDK.SwingAWT, Version=7.2.4630.5, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+    <Reference Include="IKVM.OpenJDK.SwingAWT, Version=8.1.5717.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\ikvm-8.1.5717.0\bin\IKVM.OpenJDK.SwingAWT.dll</HintPath>
     </Reference>
-    <Reference Include="IKVM.Runtime, Version=7.2.4630.5, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+    <Reference Include="IKVM.Runtime, Version=8.1.5717.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\ikvm-8.1.5717.0\bin\IKVM.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="ImageUtilities, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libs\ImageUtilities.dll</HintPath>
-    </Reference>
-    <Reference Include="javaml-0.1.7">
-      <HintPath>..\Libs\javaml-0.1.7.dll</HintPath>
     </Reference>
     <Reference Include="LibSVMsharp">
       <HintPath>..\Libs\LibSvmSharp\LibSVMsharp.dll</HintPath>
@@ -111,15 +100,13 @@
     <Reference Include="MatlabAPI">
       <HintPath>..\Libs\MatlabAPI.dll</HintPath>
     </Reference>
-    <Reference Include="MKLab">
+    <Reference Include="MKLab, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\MKLab.dll</HintPath>
     </Reference>
     <Reference Include="MWArray, Version=2.10.0.0, Culture=neutral, PublicKeyToken=e1d84a0da19db86f, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\MWArray.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenSURFcs">
-      <HintPath>..\Libs\JOpenSurf\OpenSURFcs.dll</HintPath>
     </Reference>
     <Reference Include="PlotAPI">
       <HintPath>..\Libs\PlotAPI.dll</HintPath>
@@ -183,13 +170,13 @@
     <Compile Include="Managers\ImageRepresentationManager.cs" />
     <Compile Include="Managers\KdTreeManager.cs" />
     <Compile Include="Utilities\Arrays.cs" />
+    <Compile Include="Utilities\ColorConversion.cs" />
     <Compile Include="Utilities\CustomGenericArrayEqualityComparator.cs" />
     <Compile Include="Utilities\DistanceMetrics.cs" />
     <Compile Include="Utilities\ImageProcessing.cs" />
     <Compile Include="Utilities\LocalBitmap.cs" />
     <Compile Include="Utilities\Normalization.cs" />
     <Compile Include="Utilities\Files.cs" />
-    <Compile Include="KDTree\JavaMlKdTree.cs" />
     <Compile Include="Utilities\FeatureSelection.cs" />
     <Compile Include="Utilities\PcaDimensionalityReduction.cs" />
     <Compile Include="Utilities\PearsonCorrelationCoefficient.cs" />

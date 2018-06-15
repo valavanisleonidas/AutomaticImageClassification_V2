@@ -59,10 +59,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\ikvm-8.1.5717.0\bin\IKVM.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="ImageUtilities, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libs\ImageUtilities.dll</HintPath>
-    </Reference>
     <Reference Include="LibSVMsharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\LibSvmSharp\LibSVMsharp.dll</HintPath>

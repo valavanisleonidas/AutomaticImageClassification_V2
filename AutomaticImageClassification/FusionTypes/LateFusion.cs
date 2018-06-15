@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AutomaticImageClassification.Evaluation;
 using AutomaticImageClassification.Utilities;
-using net.sf.javaml.filter.normalize;
 
 namespace AutomaticImageClassification.FusionTypes
 {

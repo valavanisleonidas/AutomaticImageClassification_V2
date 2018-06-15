@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutomaticImageClassification.Cluster.ClusterModels;
 using AutomaticImageClassification.KDTree;
 
 namespace AutomaticImageClassification.Managers
@@ -17,10 +13,7 @@ namespace AutomaticImageClassification.Managers
             switch (baseParameters.KdTreeParameters.Kdtree)
             {
                 case KdTreeMethod.AccordKdTree:
-                    model.Tree = new AccordKdTree(model.Means);
-                    break;
-                case KdTreeMethod.JavaMlKdTree:
-                    model.Tree = new JavaMlKdTree();
+                    model.Tree = new AccordKdTree();
                     break;
                 case KdTreeMethod.VlFeatKdTree:
                     model.Tree = new VlFeatKdTree();

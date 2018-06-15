@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Accord.Math;
 using AutomaticImageClassification.Cluster.ClusterModels;
 using AutomaticImageClassification.Utilities;
 using MathWorks.MATLAB.NET.Arrays;

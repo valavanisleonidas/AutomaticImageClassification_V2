@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Linq;
 using AutomaticImageClassification.Cluster.ClusterModels;
 using AutomaticImageClassification.Utilities;
+using System.Diagnostics;
 
 
 namespace AutomaticImageClassification.Feature.Boc
@@ -35,7 +36,6 @@ namespace AutomaticImageClassification.Feature.Boc
 
         public List<double[]> ExtractDescriptors(LocalBitmap input)
         {
-            //img = ImageProcessor.resizeImage(img, _resize, _resize, false);
             List<Bitmap> blocks = ImageProcessing.SplitImage(input.Bitmap, _patches, _patches);
 
             var boc = new Boc(_cs, _bocClusterModel);
@@ -45,18 +45,26 @@ namespace AutomaticImageClassification.Feature.Boc
         public double[] ExtractHistogram(LocalBitmap input)
         {
             var vector = new double[_lbocClusterModel.Means.Count];
+
             List<Bitmap> blocks = ImageProcessing.SplitImage(input.Bitmap, _patches, _patches);
+            List<double[]> bocColors = new List<double[]>();
 
             var boc = new Boc(_cs, _bocClusterModel);
             foreach (var b in blocks)
             {
-                double[] _boc = boc.ExtractHistogram(b);
-
-                int indx = _lbocClusterModel.Tree?.SearchTree(_boc)
-                    ?? DistanceMetrics.ComputeNearestCentroidL2(ref _lbocClusterModel.Means, _boc);
-
-                vector[indx]++;
+                bocColors.Add(boc.ExtractHistogram(b));
             }
+
+            //get images
+            List<int> indices = _lbocClusterModel.Tree?.SearchTree(bocColors)
+                                ?? DistanceMetrics.ComputeNearestCentroidL2(ref _lbocClusterModel.Means, bocColors);
+
+            //fix histogram
+            foreach (var index in indices)
+            {
+                vector[index]++;
+            }
+ 
             return vector;
         }
        

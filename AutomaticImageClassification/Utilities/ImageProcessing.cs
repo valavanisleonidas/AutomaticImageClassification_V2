@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -84,13 +83,13 @@ namespace AutomaticImageClassification.Utilities
 
 
         //get dominant color of image into colorspace cs
-        public static int[][] GetDominantColors(Bitmap img, int cols, int rows, ColorSpace cs)
+        public static List<double[]> GetDominantColors(Bitmap img, int cols, int rows, ColorSpace cs)
         {
-            int[][] ret = new int[cols * rows][];
+            List<double[]> ret = new List<double[]>();
             List<Bitmap> imgs = SplitImage(img, cols, rows);
             for (int i = 0; i < imgs.Count; i++)
             {
-                ret[i] = GetDominantColor(imgs[i], cs);
+                ret.Add(GetDominantColor<double>(imgs[i], cs));
             }
             return ret;
         }
@@ -122,10 +121,10 @@ namespace AutomaticImageClassification.Utilities
             return res;
 
         }
-
-        public static int[] GetDominantColor(Bitmap img, ColorSpace cs)
+        
+        public static T[] GetDominantColor<T>(Bitmap img, ColorSpace cs)
         {
-            int[] ret = new int[3];
+            T[] ret = new T[3];
             Dictionary<string, int> domC = new Dictionary<string, int>();
             for (int x = 0; x < img.Width; x++)
             {
@@ -160,7 +159,10 @@ namespace AutomaticImageClassification.Utilities
           
             string[] scolors = keyMax.Split(';');
 
-            return new int[] { int.Parse(scolors[0]) , int.Parse(scolors[1]) , int.Parse(scolors[2]) };
+            return new T[] { (T)Convert.ChangeType(scolors[0], typeof(T)),
+                             (T)Convert.ChangeType(scolors[1], typeof(T)),
+                             (T)Convert.ChangeType(scolors[2], typeof(T))
+                        };
         }
         
 

@@ -16,6 +16,9 @@ using AutomaticImageClassification.Feature.Bovw;
 using AutomaticImageClassification.Feature.Textual;
 using AutomaticImageClassification.KDTree;
 
+using static AutomaticImageClassification.Feature.Bovw.ColorCorrelogram;
+
+
 namespace AutomaticImageClassificationTests
 {
     [TestClass]
@@ -81,15 +84,29 @@ namespace AutomaticImageClassificationTests
         public void CanUseLireAutoColorCorrelogram()
         {
             string imagePath = @"Data\database\einstein.jpg";
-
-            IFeatures colorCorrelo = new ColorCorrelogram();
             LocalBitmap bitmap = new LocalBitmap(imagePath);
-            double[] featu = colorCorrelo.ExtractHistogram(bitmap);
 
-            Assert.AreEqual(featu.Length, 1024);
+
+            IFeatures colorCorrelo = new ColorCorrelogram(ColorCorrelogramExtractionMethod.NaiveHuangAlgorithm);
+            double[] featuNaiveHuangAlgorithm = colorCorrelo.ExtractHistogram(bitmap);
+
+
+            //colorCorrelo = new ColorCorrelogram(ColorCorrelogramExtractionMethod.NaiveHuangAlgorithm);
+            //double[] featuNaiveHuangAlgorithm = colorCorrelo.ExtractHistogram(bitmap);
+            
+            
+            //Files.WriteFile("einstein_MLuxAutoCorrelogramExtraction_correlo.txt", featuLireAlgorithm.ToList());
+            //Files.WriteFile("einstein_NaiveHuangAlgorithm_correlo.txt", featuNaiveHuangAlgorithm.ToList());
+            //Files.WriteFile("einstein_naive_correlo.txt", featu1cSharpNaive.ToList());
+            //Files.WriteFile("einstein_MXLux_correlo.txt", featuMXLux.ToList());
+
+            //CollectionAssert.AreEqual(featuLireAlgorithm, featuMXLux);
+            //CollectionAssert.AreEqual(featuNaiveHuangAlgorithm, featu1cSharpNaive);
+
+            //Assert.AreEqual(featu.Length, 1024);
             //Files.WriteFile(@"C:\Users\l.valavanis\Desktop\colorCorre.txt", new List<double[]> { featu });
         }
-        
+
         //TODO THEMA OTAN GRAFW DECIMAL KAI DIAVAZW ME TELEIES KAI KOMMATA
         //TODO cannot read Dictionary
         //TODO NEED TO CHECK vsexecution problem.exe PROBLEM
@@ -106,9 +123,9 @@ namespace AutomaticImageClassificationTests
             var colorspace = ColorConversion.ColorSpace.RGB;
 
             var resizeImages = 256;
-            const string paleteFile = @"Data\Palettes\boc_paleteVLFeatEM.txt";
-            string trainFile = @"Data\Features\boc_New_train.txt";
-            const string testFile = @"Data\Features\boc_New_test.txt";
+            const string paleteFile = @"Data\Palettes\boc_paleteVLFeatEM_JAVAImplementation.txt";
+            string trainFile = @"Data\Features\boc_New_train_FromJavaCluster.txt";
+            const string testFile = @"Data\Features\boc_New_test_FromJavaCluster.txt";
             const string trainLabelsFile = @"Data\Features\boc_labels_train.txt";
             const string testLabelsFile = @"Data\Features\boc_labels_test.txt";
 
@@ -170,7 +187,7 @@ namespace AutomaticImageClassificationTests
             IKdTree tree = new VlFeatKdTree();
 
             tree.CreateTree(finalClusters);
-            //model.Tree = tree;
+            model.Tree = tree;
 
             //int[][] palette = Arrays.ConvertDoubleListToIntArray(ref centers);
             boc = new Boc(colorspace, model);
@@ -221,94 +238,132 @@ namespace AutomaticImageClassificationTests
 
             ICluster cluster = new LireKmeans();
 
+            var resizeImages = 256;
             const bool isDistinctColors = true;
             const int numOfcolors = 50;
             const int numOfVisualWords = 1024;
 
-            const int sampleImages = 10;
+            const int sampleImages = 2;
             ColorConversion.ColorSpace colorspace = ColorConversion.ColorSpace.RGB;
-            const string paleteFile = @"Data\Palettes\lboc_paleteLire.txt";
+            const string paleteFile = @"Data\Palettes\lboc_paleteLire1.txt";
             const string dictionaryFile = @"Data\Dictionaries\lboc_dictionaryLire.txt";
 
             string trainFile = @"Data\Features\lboc_" + numOfcolors + "_" + numOfVisualWords + "_Lire_AccordKDTree_train.txt";
             string testFile = @"Data\Features\lboc_" + numOfcolors + "_" + numOfVisualWords + "_Lire_AccordKDTree_test.txt";
 
-            //const string baseFolder = @"C:\Users\l.valavanis\Desktop\personal\dbs\Clef2013\Compound";
-            //string trainPath = Path.Combine(baseFolder, "Train");
-            //string testPath = Path.Combine(baseFolder, "Test");
+            const string baseFolder = @"C:\Users\l.valavanis\Desktop\Clef2013";
+            var trainPath = Path.Combine(baseFolder, "TrainSet");
+            var testPath = Path.Combine(baseFolder, "TestSet");
 
-            const string baseFolder = @"Data\database";
-            var trainPath = baseFolder;
-            var testPath = baseFolder;
+            //const string baseFolder = @"Data\database";
+            //var trainPath = baseFolder;
+            //var testPath = baseFolder;
 
-
+            IFeatures boc = new Boc(colorspace);
 
             #region cluster boc
 
+
+
             //Create Palette
-            var sampleImgs = Files.GetFilesFrom(trainPath);
-            IFeatures _boc = new Boc(colorspace);
+            ClusterModel model;
+            List<double[]> finalClusters;
+            var sampleImgs = Files.GetFilesFrom(trainPath, sampleImages);
 
-            List<double[]> bocColors = new List<double[]>();
-            foreach (var img in sampleImgs)
+            if (File.Exists(paleteFile))
             {
-                LocalBitmap bitmap = new LocalBitmap(img);
-                bocColors.AddRange(_boc.ExtractDescriptors(bitmap));
+                #region read Clusters from File
+
+                finalClusters = Files.ReadFileToListArrayList<double>(paleteFile);
+                model = new KmeansModel(finalClusters);
+
+                #endregion
             }
-            if (isDistinctColors)
+            else
             {
-                Arrays.GetDistinctObjects(ref bocColors);
+                #region Cluster
+
+
+                var colors = new List<double[]>();
+                foreach (var image in sampleImgs)
+                {
+                    LocalBitmap bitmap = new LocalBitmap(image, resizeImages, resizeImages);
+                    colors.AddRange(boc.ExtractDescriptors(bitmap));
+                    //.OrderBy(x => Guid.NewGuid()).Take(clusterFeaturesPerImage));
+                }
+                if (isDistinctColors)
+                {
+                    Arrays.GetDistinctObjects(ref colors);
+                }
+
+                sampleImgs = null;
+                model = cluster.CreateClusters(colors, numOfcolors);
+                colors.Clear();
+                finalClusters = model.Means;
+                finalClusters = finalClusters.OrderByDescending(b => b[0]).ToList();
+
+                Files.WriteFile(paleteFile, finalClusters);
+
+                #endregion
             }
 
-            ClusterModel Bocmodel = cluster.CreateClusters(bocColors, numOfcolors);
-            List<double[]> bocCenters = Bocmodel.Means;
-
-            bocCenters = bocCenters.OrderByDescending(b => b[0]).ToList();
-
-            Files.WriteFile(paleteFile, bocCenters);
-
-            IKdTree boctree = new AccordKdTree();
-            boctree.CreateTree(bocCenters);
-            int[][] palette = Arrays.ConvertDoubleListToIntArray(ref bocCenters);
-
+         
             #endregion
 
 
             #region cluster lboc and create dictionary
 
-            IFeatures lboc = new Lboc(colorspace, Bocmodel);
+            IFeatures lboc = new Lboc(colorspace, model);
 
-            List<double[]> lbocColors = new List<double[]>();
-            foreach (var img in sampleImgs)
+            ClusterModel lbocModel;
+            List<double[]> lbocCenters;
+            if (File.Exists(dictionaryFile))
             {
-                LocalBitmap bitmap = new LocalBitmap(img);
-                lbocColors.AddRange(lboc.ExtractDescriptors(bitmap));
+                #region read Clusters from File
+
+                lbocCenters = Files.ReadFileToListArrayList<double>(dictionaryFile);
+                lbocModel = new KmeansModel(lbocCenters);
+
+                #endregion
             }
-            if (isDistinctColors)
-            {
-                Arrays.GetDistinctObjects(ref lbocColors);
+            else{
+                List<double[]> lbocColors = new List<double[]>();
+                foreach (var img in sampleImgs)
+                {
+                    LocalBitmap bitmap = new LocalBitmap(img, resizeImages, resizeImages);
+                    lbocColors.AddRange(lboc.ExtractDescriptors(bitmap));
+                }
+                if (isDistinctColors)
+                {
+                    Arrays.GetDistinctObjects(ref lbocColors);
+                }
+
+                lbocModel = cluster.CreateClusters(lbocColors, numOfVisualWords);
+
+                lbocCenters = lbocModel.Means;
+                lbocCenters = lbocCenters.OrderByDescending(b => b[0]).ToList();
+
+                Files.WriteFile(dictionaryFile, lbocCenters);
+
             }
 
-            ClusterModel lbocModel = cluster.CreateClusters(lbocColors, numOfVisualWords);
-            List<double[]> lbocCenters = lbocModel.Means;
-
-            lbocCenters = lbocCenters.OrderByDescending(b => b[0]).ToList();
-
-            Files.WriteFile(dictionaryFile, lbocCenters);
-
-            IKdTree lboctree = new AccordKdTree();
-            lboctree.CreateTree(lbocCenters);
-
+            
+            
 
             #endregion
 
-            lboc = new Lboc(colorspace, Bocmodel, lbocModel);
+            IKdTree lboctree = new VlFeatKdTree();
+            lboctree.CreateTree(lbocCenters);
+            lbocModel.Tree = lboctree;
+
+
+            lboc = new Lboc(colorspace, model, lbocModel);
 
             //Feature extraction BOC
             List<double[]> trainFeatures = new List<double[]>();
             foreach (var train in Files.GetFilesFrom(trainPath))
             {
-                LocalBitmap bitmap = new LocalBitmap(train);
+                LocalBitmap bitmap = new LocalBitmap(train, resizeImages, resizeImages);
                 double[] vec = lboc.ExtractHistogram(bitmap);
                 trainFeatures.Add(vec);
             }
@@ -318,7 +373,7 @@ namespace AutomaticImageClassificationTests
 
             foreach (var test in Files.GetFilesFrom(testPath))
             {
-                LocalBitmap bitmap = new LocalBitmap(test);
+                LocalBitmap bitmap = new LocalBitmap(test, resizeImages, resizeImages);
                 double[] vec = lboc.ExtractHistogram(bitmap);
                 testFeatures.Add(vec);
             }

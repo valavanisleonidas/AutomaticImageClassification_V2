@@ -7,6 +7,17 @@ namespace AutomaticImageClassification.Utilities
     public class DistanceMetrics
     {
 
+        public static List<int> ComputeNearestCentroidL2(ref List<double[]> clusters, List<double[]> points)
+        {
+            List<int> indices = new List<int>();
+            foreach(var point in points)
+            {
+                indices.Add(ComputeNearestCentroidL2(ref clusters, point));
+            }
+
+            return indices;
+        }
+
         public static int ComputeNearestCentroidL2(ref List<double[]> clusters, double[] p)
         {
             int index = 0;

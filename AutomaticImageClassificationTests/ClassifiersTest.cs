@@ -17,8 +17,8 @@ namespace AutomaticImageClassificationTests
         {
             Stopwatch stopwatch = Stopwatch.StartNew(); //creates and start the instance of Stopwatch
 
-            var trainDataPath = @"Data\Features\boc_New_train.txt";
-            var testDataPath = @"Data\Features\boc_New_test.txt";
+            var trainDataPath = @"Data\Features\boc_New_train_FromJavaCluster.txt";
+            var testDataPath = @"Data\Features\boc_New_test_FromJavaCluster.txt";
 
             var trainlabelsPath = @"Data\Features\boc_labels_train.txt";
             var testlabelsPath = @"Data\Features\boc_labels_test.txt";
@@ -26,7 +26,7 @@ namespace AutomaticImageClassificationTests
             var trainFeat = Files.ReadFileToListArrayList<double>(trainDataPath).ToList();
             var trainlabels = Files.ReadFileTo1DArray<double>(trainlabelsPath);
 
-            const bool doCrossVal = false;
+            const bool doCrossVal = true;
 
             //normalize
             const bool sqrt = true;

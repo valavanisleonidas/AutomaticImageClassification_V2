@@ -169,8 +169,8 @@ namespace AutomaticImageClassificationTests
 
             List<Bitmap> imgs = ImageProcessing.SplitImage(image, patches, patches);
 
-            
-            int[][] domColors = ImageProcessing.GetDominantColors(image, patches, patches, _cs1);
+
+            List<double[]> domColors = ImageProcessing.GetDominantColors(image, patches, patches, _cs1);
 
             //for (var i = 0; i < domColors.Length; i++)
             //{
@@ -198,7 +198,7 @@ namespace AutomaticImageClassificationTests
             {
                 ImageProcessing.SaveImage(imgs[i], @"C:\Users\l.valavanis\Desktop\images\im_" + i + ".jpg");
             }
-            int[][] domColors = ImageProcessing.GetDominantColors(image, patches, patches, _cs1);
+            List<double[]> domColors = ImageProcessing.GetDominantColors(image, patches, patches, _cs1);
 
 
 

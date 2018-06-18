@@ -44,33 +44,39 @@ namespace AutomaticImageClassification.Feature.Boc
 
         public List<double[]> ExtractDescriptors(LocalBitmap input)
         {
-
-            int[][] domColors =
-                ImageProcessing.GetDominantColors(input.Bitmap, _patches, _patches, _cs);
-
-            return domColors.Select(domColor => new double[] { domColor[0], domColor[1], domColor[2] }).ToList();
+            return ImageProcessing.GetDominantColors(input.Bitmap, _patches, _patches, _cs);
         }
 
         public double[] ExtractHistogram(Bitmap img)
         {
+            
+            List<double[]> colors = new List<double[]>();
             var vector = new double[_clusterModel.ClusterNum];
+
+            //get colors of image
             for (int x = 0; x < img.Width; x++)
             {
                 for (int y = 0; y < img.Height; y++)
                 {
                     var color = img.GetPixel(x, y);
-                    int[] cl = Utilities.ColorConversion.ConvertFromRGB(_cs, color.R, color.G, color.B);
+                    int[] cl = ColorConversion.ConvertFromRGB(_cs, color.R, color.G, color.B);
 
-                    int indx = _clusterModel.Tree?.SearchTree(new double[] { cl[0], cl[1], cl[2] })
-                        ?? DistanceMetrics.ComputeNearestCentroidL2(ref _clusterModel.Means, cl.Select(a => (double)a).ToArray());
-
-                    vector[indx]++;
+                    colors.Add(new double[] { cl[0], cl[1], cl[2] });
                 }
             }
+            
+            //get images
+            List<int> indices = _clusterModel.Tree?.SearchTree(colors)
+                                ?? DistanceMetrics.ComputeNearestCentroidL2(ref _clusterModel.Means, colors);
+            
+            //fix histogram
+            foreach (var index in indices)
+            {
+                vector[index]++;
+            }
+
             return vector;
         }
-
-
 
         #endregion
 

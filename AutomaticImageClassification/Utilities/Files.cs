@@ -159,7 +159,7 @@ namespace AutomaticImageClassification.Utilities
                 .Select(
                     l =>
                         l.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
-                            .Select(i => (T)Convert.ChangeType(i, typeof(T)))
+                            .Select(i => (T)Convert.ChangeType(i, typeof(T),CultureInfo.InvariantCulture))
                             .ToArray())
                 .ToArray();
         }

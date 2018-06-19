@@ -39,10 +39,6 @@ namespace AutomaticImageClassification.Managers
                     //throw new ArgumentException("Auto color correlogram returns the final histogram and not descriptors of an image!");
                     baseParameters.ExtractionFeature = new ColorCorrelogram(irmParameters.ColorCorrelogramExtractionMethod);
                     break;
-                case ImageRepresentationMethod.MkLabSift:
-                    //extraction method
-                    baseParameters.ExtractionFeature = new MkLabSift(irmParameters.MkLabSiftExtractionMethod);
-                    break;
                 case ImageRepresentationMethod.MkLabSurf:
                     //extraction method
                     baseParameters.ExtractionFeature = new MkLabSurf(irmParameters.MkLabSurfExtractionMethod);
@@ -98,10 +94,6 @@ namespace AutomaticImageClassification.Managers
                 case ImageRepresentationMethod.ColorCorrelogram:
                     baseParameters.ExtractionFeature = new ColorCorrelogram(irmParameters.ColorCorrelogramExtractionMethod);
                     break;
-                case ImageRepresentationMethod.MkLabSift:
-                    //extraction method
-                    baseParameters.ExtractionFeature = new MkLabSift(irmParameters.ClusterModels[0], irmParameters.MkLabSiftExtractionMethod);
-                    break;
                 case ImageRepresentationMethod.MkLabSurf:
                     //extraction method
                     baseParameters.ExtractionFeature = new MkLabSurf(irmParameters.ClusterModels[0], irmParameters.MkLabSurfExtractionMethod);
@@ -152,7 +144,7 @@ namespace AutomaticImageClassification.Managers
         public ImageRepresentationMethod CurrentImageRepresentationMethod;
 
         public ColorCorrelogram.ColorCorrelogramExtractionMethod ColorCorrelogramExtractionMethod;
-        public MkLabSift.MkLabSiftExtractionMethod MkLabSiftExtractionMethod;
+        
         public MkLabSurf.MkLabSurfExtractionMethod MkLabSurfExtractionMethod;
 
         //some extraction methods need another feature to extract features

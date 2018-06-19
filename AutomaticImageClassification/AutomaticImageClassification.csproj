@@ -141,7 +141,6 @@
     <Compile Include="Feature\Global\Correlogram\MLuxAutoCorrelogramExtraction.cs" />
     <Compile Include="Feature\Global\Correlogram\NaiveAutoCorrelogramExtraction.java.cs" />
     <Compile Include="Feature\IFeatures.cs" />
-    <Compile Include="Feature\Local\MkLabSift.cs" />
     <Compile Include="Feature\Local\MKLabSurf.cs" />
     <Compile Include="Feature\Local\MkLabVlad.cs" />
     <Compile Include="Feature\Local\VlFeatDenseSift.cs" />

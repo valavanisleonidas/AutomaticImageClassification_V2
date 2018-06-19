@@ -90,10 +90,6 @@
     <Reference Include="LibSVMsharp">
       <HintPath>..\Libs\LibSvmSharp\LibSVMsharp.dll</HintPath>
     </Reference>
-    <Reference Include="lire, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libs\lire.dll</HintPath>
-    </Reference>
     <Reference Include="MathNet.Iridium">
       <HintPath>..\Libs\JOpenSurf\MathNet.Iridium.dll</HintPath>
     </Reference>
@@ -138,16 +134,20 @@
     <Compile Include="Cluster\GaussianMixtureModel\AccordGmm.cs" />
     <Compile Include="Cluster\GaussianMixtureModel\VlFeatGmm.cs" />
     <Compile Include="Cluster\ICluster.cs" />
-    <Compile Include="Feature\Bovw\Correlogram\AutoColorCorrelogram.cs" />
-    <Compile Include="Feature\Bovw\Correlogram\IAutoCorrelogramFeature.cs" />
-    <Compile Include="Feature\Bovw\Correlogram\MLuxAutoCorrelogramExtraction.cs" />
-    <Compile Include="Feature\Bovw\Correlogram\NaiveAutoCorrelogramExtraction.java.cs" />
-    <Compile Include="Feature\Bovw\OpenCvSift.cs" />
-    <Compile Include="Feature\Bovw\OpenCvSurf.cs" />
-    <Compile Include="Feature\Bovw\VlFeatDenseSift.cs" />
-    <Compile Include="Feature\Bovw\VlFeatFisherVector.cs" />
-    <Compile Include="Feature\Bovw\VlFeatSift.cs" />
+    <Compile Include="Cluster\Kmeans\Lire\KMeans.cs" />
+    <Compile Include="Feature\Global\ColorCorrelogram.cs" />
+    <Compile Include="Feature\Global\Correlogram\AutoColorCorrelogram.cs" />
+    <Compile Include="Feature\Global\Correlogram\IAutoCorrelogramFeature.cs" />
+    <Compile Include="Feature\Global\Correlogram\MLuxAutoCorrelogramExtraction.cs" />
+    <Compile Include="Feature\Global\Correlogram\NaiveAutoCorrelogramExtraction.java.cs" />
     <Compile Include="Feature\IFeatures.cs" />
+    <Compile Include="Feature\Local\MkLabSift.cs" />
+    <Compile Include="Feature\Local\MKLabSurf.cs" />
+    <Compile Include="Feature\Local\MkLabVlad.cs" />
+    <Compile Include="Feature\Local\VlFeatDenseSift.cs" />
+    <Compile Include="Feature\Local\VlFeatFisherVector.cs" />
+    <Compile Include="Feature\Local\VlFeatPhow.cs" />
+    <Compile Include="Feature\Local\VlFeatSift.cs" />
     <Compile Include="KDTree\IKdTree.cs" />
     <Compile Include="KDTree\AccordKdTree.cs" />
     <Compile Include="Cluster\Kmeans\LireKmeans.cs" />
@@ -155,14 +155,7 @@
     <Compile Include="Cluster\Kmeans\VlFeatKmeans.cs" />
     <Compile Include="Evaluation\Measures.cs" />
     <Compile Include="Feature\Boc\Boc.cs" />
-    <Compile Include="Feature\Bovw\ColorCorrelogram.cs" />
-    <Compile Include="Feature\Bovw\MkLabSift.cs" />
     <Compile Include="Feature\Boc\Lboc.cs" />
-    <Compile Include="Feature\Bovw\MKLabSurf.cs" />
-    <Compile Include="Feature\Bovw\MkLabVlad.cs" />
-    <Compile Include="Feature\Bovw\JOpenSurf.cs" />
-    <Compile Include="Feature\Bovw\VlFeatPhow.cs" />
-    <Compile Include="Feature\Bovw\AccordSurf.cs" />
     <Compile Include="Feature\Textual\TfIdf.cs" />
     <Compile Include="Feature\Textual\WordEmbedding.cs" />
     <Compile Include="FusionTypes\EarlyFusion.cs" />

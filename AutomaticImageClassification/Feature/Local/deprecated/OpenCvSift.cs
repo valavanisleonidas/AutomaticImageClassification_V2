@@ -1,17 +1,20 @@
-﻿
-//deprecated not used surf implementation. just keep it to have it if needed
-
-//using System;
+﻿//using System;
 //using System.Collections.Generic;
+//using System.Drawing;
+//using System.Linq;
+//using System.Text;
+//using System.Threading.Tasks;
 //using AutomaticImageClassification.Cluster.ClusterModels;
+//using AutomaticImageClassification.KDTree;
 //using AutomaticImageClassification.Utilities;
-//using OpenSURFcs;
+//using OpenCvSharp.CPlusPlus;
 
-//namespace AutomaticImageClassification.Feature.Bovw
+//namespace AutomaticImageClassification.Feature.Local
 //{
-//    public class JOpenSurf : IFeatures
+//    //deprecated
+//    public class OpenCvSift : IFeatures
 //    {
-
+//        private readonly SIFT _sift = new SIFT();
 //        private readonly ClusterModel _clusterModel;
 
 //        public bool CanCluster
@@ -19,12 +22,12 @@
 //            get { return true; }
 //        }
 
-//        public JOpenSurf() { }
-
-//        public JOpenSurf(ClusterModel clusterModel)
+//        public OpenCvSift(ClusterModel clusterModel)
 //        {
 //            _clusterModel = clusterModel;
 //        }
+
+//        public OpenCvSift() { }
 
 //        public double[] ExtractHistogram(LocalBitmap input)
 //        {
@@ -37,35 +40,30 @@
 //            {
 //                imgVocVector[index]++;
 //            }
+
 //            return imgVocVector;
 //        }
 
 //        public List<double[]> ExtractDescriptors(LocalBitmap input)
 //        {
-//            try
-//            {
-//                // Create Integral Image
-//                IntegralImage iimg = IntegralImage.FromImage(input.Bitmap);
 
-//                // Extract the interest points
-//                List<IPoint> ipts = FastHessian.getIpoints(0.0002f, 5, 2, iimg);
+//            Mat src = new Mat(input.Path);
 
-//                // Describe the interest points
-//                SurfDescriptor.DecribeInterestPoints(ipts, false, false, iimg);
+//            KeyPoint[] keuPoints;
+//            MatOfFloat descriptors = new MatOfFloat();
 
-//               // List<double[]> aaa = ipts.Select(a => a.descriptor.Select( b => Convert.ToDouble(b) ).ToArray() ).ToList();
-
-//                return ipts.ConvertAll(des => Array.ConvertAll(des.descriptor, x => (double)x));
-//            }
-//            catch (Exception e)
-//            {
-//                throw e;
-//            }
+//            _sift.Run(src, null, out keuPoints, descriptors);
+//            float[,] arr = descriptors.ToRectangularArray();
+//            //convert to list<double[]>
+//            return Arrays.ToJaggedArray(ref arr)
+//                .ToList()
+//                .ConvertAll(
+//                        des => Array.ConvertAll(des, x => (double)x));
 //        }
 
 //        public override string ToString()
 //        {
-//            return "JOpenSurf";
+//            return "OpenCvSift";
 //        }
 
 //    }

@@ -7,7 +7,7 @@ using AutomaticImageClassification.Cluster.ClusterModels;
 using AutomaticImageClassification.Utilities;
 using MathWorks.MATLAB.NET.Arrays;
 
-namespace AutomaticImageClassification.Feature.Bovw
+namespace AutomaticImageClassification.Feature.Local
 {
     public class VlFeatFisherVector : IFeatures
     {

@@ -1,20 +1,17 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Drawing;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
-//using AutomaticImageClassification.Cluster.ClusterModels;
-//using AutomaticImageClassification.KDTree;
-//using AutomaticImageClassification.Utilities;
-//using OpenCvSharp.CPlusPlus;
+﻿
+//deprecated not used surf implementation. just keep it to have it if needed
 
-//namespace AutomaticImageClassification.Feature.Bovw
+//using System;
+//using System.Collections.Generic;
+//using AutomaticImageClassification.Cluster.ClusterModels;
+//using AutomaticImageClassification.Utilities;
+//using OpenSURFcs;
+
+//namespace AutomaticImageClassification.Feature.Local
 //{
-//    //deprecated 
-//    public class OpenCvSurf: IFeatures
+//    public class JOpenSurf : IFeatures
 //    {
-//        private readonly SURF _surf = new SURF();
+
 //        private readonly ClusterModel _clusterModel;
 
 //        public bool CanCluster
@@ -22,12 +19,12 @@
 //            get { return true; }
 //        }
 
-//        public OpenCvSurf(ClusterModel clusterModel)
+//        public JOpenSurf() { }
+
+//        public JOpenSurf(ClusterModel clusterModel)
 //        {
 //            _clusterModel = clusterModel;
 //        }
-
-//        public OpenCvSurf() { }
 
 //        public double[] ExtractHistogram(LocalBitmap input)
 //        {
@@ -40,29 +37,35 @@
 //            {
 //                imgVocVector[index]++;
 //            }
-
 //            return imgVocVector;
 //        }
-        
+
 //        public List<double[]> ExtractDescriptors(LocalBitmap input)
 //        {
-//            Mat src1 = new Mat(input.Path);
+//            try
+//            {
+//                // Create Integral Image
+//                IntegralImage iimg = IntegralImage.FromImage(input.Bitmap);
 
-//            KeyPoint[] keypoints1;
-//            MatOfFloat descriptors1 = new MatOfFloat();
+//                // Extract the interest points
+//                List<IPoint> ipts = FastHessian.getIpoints(0.0002f, 5, 2, iimg);
 
-//            _surf.Run(src1, null, out keypoints1, descriptors1);
+//                // Describe the interest points
+//                SurfDescriptor.DecribeInterestPoints(ipts, false, false, iimg);
 
-//            float[,] arr = descriptors1.ToRectangularArray();
-//            //convert to list<double[]>
-//            return Arrays.ToJaggedArray(ref arr).ToList()
-//                    .ConvertAll(
-//                            des => Array.ConvertAll(des, x => (double)x));
+//               // List<double[]> aaa = ipts.Select(a => a.descriptor.Select( b => Convert.ToDouble(b) ).ToArray() ).ToList();
+
+//                return ipts.ConvertAll(des => Array.ConvertAll(des.descriptor, x => (double)x));
+//            }
+//            catch (Exception e)
+//            {
+//                throw e;
+//            }
 //        }
 
 //        public override string ToString()
 //        {
-//            return "OpenCvSurf";
+//            return "JOpenSurf";
 //        }
 
 //    }

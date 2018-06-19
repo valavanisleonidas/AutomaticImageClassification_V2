@@ -12,12 +12,12 @@ using AutomaticImageClassification.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AutomaticImageClassification.Cluster.Kmeans;
 using AutomaticImageClassification.Feature.Boc;
-using AutomaticImageClassification.Feature.Bovw;
+using AutomaticImageClassification.Feature.Local;
 using AutomaticImageClassification.Feature.Textual;
 using AutomaticImageClassification.KDTree;
 
-using static AutomaticImageClassification.Feature.Bovw.ColorCorrelogram;
-
+using static AutomaticImageClassification.Feature.Global.ColorCorrelogram;
+using AutomaticImageClassification.Feature.Global;
 
 namespace AutomaticImageClassificationTests
 {
@@ -58,6 +58,42 @@ namespace AutomaticImageClassificationTests
 
         }
 
+        [TestMethod]
+        public void MKLabVlad_test()
+        {
+
+            string baseFolder = @"Data";
+
+            var numOfClusters = 10;
+            var sampleImgs = Files.GetFilesFrom(baseFolder, 2);
+
+            IFeatures phow = new MkLabVlad();
+            ICluster cluster = new VlFeatKmeans();
+            List<double[]> colors = new List<double[]>();
+
+            foreach (var image in sampleImgs)
+            {
+                LocalBitmap bitmap = new LocalBitmap(image);
+                colors.AddRange(phow.ExtractDescriptors(bitmap));
+            }
+            ClusterModel model = cluster.CreateClusters(colors, numOfClusters);
+
+            IKdTree tree = new VlFeatKdTree();
+            tree.CreateTree(model.Means);
+            model.Tree = tree;
+
+            phow = new MkLabVlad(model);
+
+            foreach (var image in sampleImgs)
+            {
+                Console.WriteLine("extracting image " + image);
+                LocalBitmap bitmap = new LocalBitmap(image);
+                double[] vector = phow.ExtractHistogram(bitmap);
+            }
+
+        }
+
+
         ////pass test
         //[TestMethod]
         //public void CanUseAccordSurf()
@@ -91,19 +127,8 @@ namespace AutomaticImageClassificationTests
             double[] featuNaiveHuangAlgorithm = colorCorrelo.ExtractHistogram(bitmap);
 
 
-            //colorCorrelo = new ColorCorrelogram(ColorCorrelogramExtractionMethod.NaiveHuangAlgorithm);
-            //double[] featuNaiveHuangAlgorithm = colorCorrelo.ExtractHistogram(bitmap);
-            
-            
-            //Files.WriteFile("einstein_MLuxAutoCorrelogramExtraction_correlo.txt", featuLireAlgorithm.ToList());
-            //Files.WriteFile("einstein_NaiveHuangAlgorithm_correlo.txt", featuNaiveHuangAlgorithm.ToList());
-            //Files.WriteFile("einstein_naive_correlo.txt", featu1cSharpNaive.ToList());
-            //Files.WriteFile("einstein_MXLux_correlo.txt", featuMXLux.ToList());
-
-            //CollectionAssert.AreEqual(featuLireAlgorithm, featuMXLux);
-            //CollectionAssert.AreEqual(featuNaiveHuangAlgorithm, featu1cSharpNaive);
-
-            //Assert.AreEqual(featu.Length, 1024);
+         
+            Assert.AreEqual(featuNaiveHuangAlgorithm.Length, 1024);
             //Files.WriteFile(@"C:\Users\l.valavanis\Desktop\colorCorre.txt", new List<double[]> { featu });
         }
 
@@ -115,7 +140,7 @@ namespace AutomaticImageClassificationTests
         {
             Stopwatch stopwatch = Stopwatch.StartNew(); //creates and start the instance of Stopwatch
 
-            ICluster cluster = new VlFeatEm();
+            ICluster cluster = new VlFeatKmeans();
 
             const bool isDistinctColors = true;
             const int numOfcolors = 50;
@@ -123,9 +148,9 @@ namespace AutomaticImageClassificationTests
             var colorspace = ColorConversion.ColorSpace.RGB;
 
             var resizeImages = 256;
-            const string paleteFile = @"Data\Palettes\boc_paleteVLFeatEM_JAVAImplementation.txt";
-            string trainFile = @"Data\Features\boc_New_train_FromJavaCluster.txt";
-            const string testFile = @"Data\Features\boc_New_test_FromJavaCluster.txt";
+            const string paleteFile = @"Data\Palettes\boc_paleteVLFeatLmeans.txt";
+            string trainFile = @"Data\Features\boc_train_VLFeatLmeans.txt";
+            const string testFile = @"Data\Features\boc_test_VLFeatLmeans.txt";
             const string trainLabelsFile = @"Data\Features\boc_labels_train.txt";
             const string testLabelsFile = @"Data\Features\boc_labels_test.txt";
 

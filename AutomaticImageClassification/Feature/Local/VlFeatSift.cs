@@ -8,7 +8,7 @@ using AutomaticImageClassification.KDTree;
 using AutomaticImageClassification.Utilities;
 using MathWorks.MATLAB.NET.Arrays;
 
-namespace AutomaticImageClassification.Feature.Bovw
+namespace AutomaticImageClassification.Feature.Local
 {
     public class VlFeatSift : IFeatures
     {
@@ -22,6 +22,11 @@ namespace AutomaticImageClassification.Feature.Bovw
         public bool CanCluster
         {
             get { return true; }
+        }
+
+        public VlFeatSift()
+        {
+            _useCombinedQuantization = true;
         }
 
         public VlFeatSift(bool useCombinedQuantization)

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using AutomaticImageClassification.Utilities;
-using AutomaticImageClassification.Feature.Bovw.Correlogram;
+using AutomaticImageClassification.Feature.Global.Correlogram;
 
-namespace AutomaticImageClassification.Feature.Bovw
+namespace AutomaticImageClassification.Feature.Global
 {
     public class ColorCorrelogram : IFeatures
     {

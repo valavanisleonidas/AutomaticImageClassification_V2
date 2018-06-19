@@ -6,11 +6,13 @@ using System.IO;
 using System.Linq;
 using AutomaticImageClassification.Cluster;
 using AutomaticImageClassification.Feature;
-using AutomaticImageClassification.Feature.Bovw;
+using AutomaticImageClassification.Feature.Global;
 using AutomaticImageClassification.KDTree;
 using AutomaticImageClassification.Managers;
 using AutomaticImageClassification.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using AutomaticImageClassification.Feature.Global;
+using AutomaticImageClassification.Feature.Local;
 
 namespace AutomaticImageClassificationTests
 {

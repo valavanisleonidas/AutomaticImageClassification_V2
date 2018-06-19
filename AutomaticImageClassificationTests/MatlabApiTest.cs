@@ -9,7 +9,8 @@ using AutomaticImageClassification.Cluster.ClusterModels;
 using AutomaticImageClassification.Cluster.GaussianMixtureModel;
 using AutomaticImageClassification.Evaluation;
 using AutomaticImageClassification.Feature;
-using AutomaticImageClassification.Feature.Bovw;
+using AutomaticImageClassification.Feature.Global;
+using AutomaticImageClassification.Feature.Local;
 using AutomaticImageClassification.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

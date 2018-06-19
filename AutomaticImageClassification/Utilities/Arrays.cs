@@ -20,27 +20,27 @@ namespace AutomaticImageClassification.Utilities
             return Arrays.ToJaggedArray(ref array).ToList().Select(floatset => floatset.ToList().Select(i => i).ToArray()).ToList();
         }
 
-        public static List ConvertGenericListToArrayList<T>(ref List<T[]> list)
-        {
-            ArrayList arrayList = new ArrayList();
-            foreach (var descriptorFeature in list)
-            {
-                arrayList.add(descriptorFeature);
-            }
-            return arrayList;
-        }
+        //public static List ConvertGenericListToArrayList<T>(ref List<T[]> list)
+        //{
+        //    ArrayList arrayList = new ArrayList();
+        //    foreach (var descriptorFeature in list)
+        //    {
+        //        arrayList.add(descriptorFeature);
+        //    }
+        //    return arrayList;
+        //}
 
-        public static List<T[]> ConvertArrayListToGenericList<T>(ref List arraylist)
-        {
-            var list = new List<T[]>();
+        //public static List<T[]> ConvertArrayListToGenericList<T>(ref List arraylist)
+        //{
+        //    var list = new List<T[]>();
 
-            var it = arraylist.iterator();
-            while (it.hasNext())
-            {
-                list.Add( (T[])it.next());
-            }
-            return list;
-        }
+        //    var it = arraylist.iterator();
+        //    while (it.hasNext())
+        //    {
+        //        list.Add( (T[])it.next());
+        //    }
+        //    return list;
+        //}
 
         public static void GetDistinctObjects<T>(ref List<T[]> objects)
         {

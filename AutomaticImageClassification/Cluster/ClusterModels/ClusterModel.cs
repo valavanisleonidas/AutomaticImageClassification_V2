@@ -14,6 +14,11 @@ namespace AutomaticImageClassification.Cluster.ClusterModels
         public IKdTree Tree;
         public int ClusterNum;
 
+        protected ClusterModel()
+        {
+            
+        }
+
         protected ClusterModel(List<double[]> means)
         {
             ClusterNum = means.Count;

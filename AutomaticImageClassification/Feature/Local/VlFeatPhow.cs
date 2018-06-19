@@ -9,7 +9,7 @@ using AutomaticImageClassification.KDTree;
 using AutomaticImageClassification.Utilities;
 using MathWorks.MATLAB.NET.Arrays;
 
-namespace AutomaticImageClassification.Feature.Bovw
+namespace AutomaticImageClassification.Feature.Local
 {
     public class VlFeatPhow : IFeatures
     {

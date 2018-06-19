@@ -33,6 +33,18 @@ namespace AutomaticImageClassification.Utilities
             return index;
         }
 
+
+        public static List<int> ComputeNearestCentroidL2NotSquare(ref List<double[]> clusters, List<double[]> points)
+        {
+            List<int> indices = new List<int>();
+            foreach (var point in points)
+            {
+                indices.Add(ComputeNearestCentroidL2NotSquare(ref clusters, point));
+            }
+
+            return indices;
+        }
+
         public static int ComputeNearestCentroidL2NotSquare(ref List<double[]> clusters, double[] p)
         {
             int centroidIndex = -1;

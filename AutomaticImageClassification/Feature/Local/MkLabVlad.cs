@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using AutomaticImageClassification.Cluster.ClusterModels;
-using AutomaticImageClassification.KDTree;
 using AutomaticImageClassification.Utilities;
-using gr.iti.mklab.visual.aggregation;
 
-namespace AutomaticImageClassification.Feature.Bovw
+namespace AutomaticImageClassification.Feature.Local
 {
     public class MkLabVlad : IFeatures
     {
@@ -67,16 +64,17 @@ namespace AutomaticImageClassification.Feature.Bovw
                 return vlad;
             }
 
-            foreach (var descriptor in descriptors)
-            {
-                int index = _clusterModel.Tree?.SearchTree(descriptor)
-                    ?? DistanceMetrics.ComputeNearestCentroidL2NotSquare(ref _clusterModel.Means, descriptor);
+            List<int> indices = _clusterModel.Tree?.SearchTree(descriptors)
+                    ?? DistanceMetrics.ComputeNearestCentroidL2NotSquare(ref _clusterModel.Means, descriptors);
 
+            for (int y = 0; y < descriptors.Count; y++)
+            {
                 for (int i = 0; i < codebookDimensions; i++)
                 {
-                    vlad[index * codebookDimensions + i] += descriptor[i] - _clusterModel.Means[index][i];
+                    vlad[indices[y] * codebookDimensions + i] += descriptors[y][i] - _clusterModel.Means[indices[y]][i];
                 }
             }
+        
             return vlad;
         }
 

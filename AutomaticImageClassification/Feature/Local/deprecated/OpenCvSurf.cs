@@ -9,12 +9,12 @@
 //using AutomaticImageClassification.Utilities;
 //using OpenCvSharp.CPlusPlus;
 
-//namespace AutomaticImageClassification.Feature.Bovw
+//namespace AutomaticImageClassification.Feature.Local
 //{
-//    //deprecated
-//    public class OpenCvSift : IFeatures
+//    //deprecated 
+//    public class OpenCvSurf: IFeatures
 //    {
-//        private readonly SIFT _sift = new SIFT();
+//        private readonly SURF _surf = new SURF();
 //        private readonly ClusterModel _clusterModel;
 
 //        public bool CanCluster
@@ -22,12 +22,12 @@
 //            get { return true; }
 //        }
 
-//        public OpenCvSift(ClusterModel clusterModel)
+//        public OpenCvSurf(ClusterModel clusterModel)
 //        {
 //            _clusterModel = clusterModel;
 //        }
 
-//        public OpenCvSift() { }
+//        public OpenCvSurf() { }
 
 //        public double[] ExtractHistogram(LocalBitmap input)
 //        {
@@ -43,27 +43,26 @@
 
 //            return imgVocVector;
 //        }
-        
+
 //        public List<double[]> ExtractDescriptors(LocalBitmap input)
 //        {
+//            Mat src1 = new Mat(input.Path);
 
-//            Mat src = new Mat(input.Path);
-            
-//            KeyPoint[] keuPoints;
-//            MatOfFloat descriptors = new MatOfFloat();
+//            KeyPoint[] keypoints1;
+//            MatOfFloat descriptors1 = new MatOfFloat();
 
-//            _sift.Run(src, null, out keuPoints, descriptors);
-//            float[,] arr = descriptors.ToRectangularArray();
+//            _surf.Run(src1, null, out keypoints1, descriptors1);
+
+//            float[,] arr = descriptors1.ToRectangularArray();
 //            //convert to list<double[]>
-//            return Arrays.ToJaggedArray(ref arr)
-//                .ToList()
-//                .ConvertAll(
-//                        des => Array.ConvertAll(des, x => (double)x));
+//            return Arrays.ToJaggedArray(ref arr).ToList()
+//                    .ConvertAll(
+//                            des => Array.ConvertAll(des, x => (double)x));
 //        }
 
 //        public override string ToString()
 //        {
-//            return "OpenCvSift";
+//            return "OpenCvSurf";
 //        }
 
 //    }

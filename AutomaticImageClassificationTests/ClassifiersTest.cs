@@ -17,8 +17,8 @@ namespace AutomaticImageClassificationTests
         {
             Stopwatch stopwatch = Stopwatch.StartNew(); //creates and start the instance of Stopwatch
 
-            var trainDataPath = @"Data\Features\boc_New_train_FromJavaCluster.txt";
-            var testDataPath = @"Data\Features\boc_New_test_FromJavaCluster.txt";
+            var trainDataPath = @"Data\Features\boc_train_VLFeatLmeans.txt";
+            var testDataPath = @"Data\Features\boc_test_VLFeatLmeans.txt";
 
             var trainlabelsPath = @"Data\Features\boc_labels_train.txt";
             var testlabelsPath = @"Data\Features\boc_labels_test.txt";
@@ -29,7 +29,7 @@ namespace AutomaticImageClassificationTests
             const bool doCrossVal = true;
 
             //normalize
-            const bool sqrt = true;
+            const bool sqrt = false;
             const bool tfidf = false;
             const bool l1 = true;
             const bool l2 = false;
@@ -39,7 +39,7 @@ namespace AutomaticImageClassificationTests
                 Gamma = 0.5,
                 Homker = "KCHI2",
                 Kernel = "chi2",
-                Cost = 32,
+                Cost = 64,
                 BiasMultiplier = 1,
                 Solver = "liblinear",
                 SolverType = 0,

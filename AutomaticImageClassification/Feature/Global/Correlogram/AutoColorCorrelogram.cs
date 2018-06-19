@@ -1,12 +1,10 @@
 ﻿using AutomaticImageClassification.Utilities;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace AutomaticImageClassification.Feature.Bovw.Correlogram
+
+namespace AutomaticImageClassification.Feature.Global.Correlogram
 {
     public class AutoColorCorrelogram
     {

@@ -7,7 +7,8 @@ using AutomaticImageClassification.Cluster.EM;
 using AutomaticImageClassification.Cluster.GaussianMixtureModel;
 using AutomaticImageClassification.Cluster.Kmeans;
 using AutomaticImageClassification.Feature;
-using AutomaticImageClassification.Feature.Bovw;
+using AutomaticImageClassification.Feature.Global;
+using AutomaticImageClassification.Feature.Local;
 using AutomaticImageClassification.KDTree;
 using AutomaticImageClassification.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -149,6 +150,42 @@ namespace AutomaticImageClassificationTests
 
 
         }
+
+        [TestMethod]
+        public void CanClusterLireCSharpKMeans()
+        {
+            string baseFolder = @"Data";
+            //string trainPath = Path.Combine(baseFolder, "Train");
+
+            var numOfClusters = 10;
+            var sampleImgs = Files.GetFilesFrom(baseFolder);
+
+            IFeatures colorFeatures = new MkLabSurf();
+            ICluster cluster = new LireKmeans();
+            List<double[]> colors = new List<double[]>();
+            int counter = 0;
+            foreach (var image in sampleImgs)
+            {
+                if (counter == 10)
+                {
+                    break;
+                }
+                counter++;
+
+                LocalBitmap bitmap = new LocalBitmap(image);
+                colors.AddRange(colorFeatures.ExtractDescriptors(bitmap));
+            }
+            KMeans k = new KMeans(ref colors, numOfClusters);
+            List<double[]> clusters = k.getMeans();
+
+            ClusterModel model = cluster.CreateClusters(colors, numOfClusters);
+
+            Files.WriteFile("kmeansLire.txt", model.Means);
+            Files.WriteFile("kmeansLireCSHARP.txt", clusters);
+
+            int a = 5;
+        }
+
 
         [TestMethod]
         public void CanClusterAccordGmm()

@@ -10,7 +10,7 @@
 //using AutomaticImageClassification.KDTree;
 //using AutomaticImageClassification.Utilities;
 
-//namespace AutomaticImageClassification.Feature.Bovw
+//namespace AutomaticImageClassification.Feature.Local
 //{
 //    public class AccordSurf : IFeatures
 //    {

@@ -6,7 +6,7 @@ using AutomaticImageClassification.Cluster.ClusterModels;
 
 using AutomaticImageClassification.Utilities;
 
-namespace AutomaticImageClassification.Feature.Bovw
+namespace AutomaticImageClassification.Feature.Local
 {
     public class MkLabSift : IFeatures
     {

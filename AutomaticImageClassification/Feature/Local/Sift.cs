@@ -10,7 +10,8 @@ using MathWorks.MATLAB.NET.Arrays;
 
 namespace AutomaticImageClassification.Feature.Local
 {
-    public class VlFeatSift : IFeatures
+    //From vlfeat
+    public class Sift : IFeatures
     {
         private int _width;
         private int _height;
@@ -24,23 +25,23 @@ namespace AutomaticImageClassification.Feature.Local
             get { return true; }
         }
 
-        public VlFeatSift()
+        public Sift()
         {
             _useCombinedQuantization = true;
         }
 
-        public VlFeatSift(bool useCombinedQuantization)
+        public Sift(bool useCombinedQuantization)
         {
             _useCombinedQuantization = useCombinedQuantization;
         }
 
-        public VlFeatSift(ClusterModel clusterModel)
+        public Sift(ClusterModel clusterModel)
         {
             _clusterModel = clusterModel;
             _useCombinedQuantization = true;
         }
 
-        public VlFeatSift(ClusterModel clusterModel, bool useCombinedQuantization)
+        public Sift(ClusterModel clusterModel, bool useCombinedQuantization)
         {
             _clusterModel = clusterModel;
             _useCombinedQuantization = useCombinedQuantization;

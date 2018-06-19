@@ -17,17 +17,14 @@ namespace AutomaticImageClassification.Managers
         {
             switch (clusterParameters.ClusterMethod)
             {
-                case ClusterMethod.VlFeatEm:
-                    clusterParameters.Cluster = new VlFeatEm(clusterParameters.IsRandomInit);
+                case ClusterMethod.EM:
+                    clusterParameters.Cluster = new EM(clusterParameters.IsRandomInit);
                     break;
-                case ClusterMethod.VlFeatGmm:
-                    clusterParameters.Cluster = new VlFeatGmm();
+                case ClusterMethod.GMM:
+                    clusterParameters.Cluster = new GMM();
                     break;
-                case ClusterMethod.VlFeatKmeans:
-                    clusterParameters.Cluster = new VlFeatKmeans();
-                    break;
-                case ClusterMethod.LireKmeans:
-                    clusterParameters.Cluster = new LireKmeans();
+                case ClusterMethod.KMeans:
+                    clusterParameters.Cluster = new Kmeans();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(clusterParameters.ClusterMethod), clusterParameters.ClusterMethod, null);

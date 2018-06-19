@@ -11,7 +11,8 @@ using MathWorks.MATLAB.NET.Arrays;
 
 namespace AutomaticImageClassification.Feature.Local
 {
-    public class VlFeatDenseSift : IFeatures
+    //From VLFeat
+    public class DenseSift : IFeatures
     {
         private int _width, _height;
         private readonly int _step = 4;
@@ -27,17 +28,17 @@ namespace AutomaticImageClassification.Feature.Local
             get { return true; }
         }
 
-        public VlFeatDenseSift()
+        public DenseSift()
         {
             _useCombinedQuantization = true;
         }
 
-        public VlFeatDenseSift(bool useCombinedQuantization)
+        public DenseSift(bool useCombinedQuantization)
         {
             _useCombinedQuantization = useCombinedQuantization;
         }
 
-        public VlFeatDenseSift(int step, bool isRootSift, bool isNormalizedSift, bool useCombinedQuantization)
+        public DenseSift(int step, bool isRootSift, bool isNormalizedSift, bool useCombinedQuantization)
         {
             _step = step;
             _rootSift = isRootSift;
@@ -45,7 +46,7 @@ namespace AutomaticImageClassification.Feature.Local
             _useCombinedQuantization = useCombinedQuantization;
         }
 
-        public VlFeatDenseSift(ClusterModel clusterModel, int step, bool isRootSift, bool isNormalizedSift, bool useCombinedQuantization)
+        public DenseSift(ClusterModel clusterModel, int step, bool isRootSift, bool isNormalizedSift, bool useCombinedQuantization)
         {
             _clusterModel = clusterModel;
             _step = step;
@@ -54,7 +55,7 @@ namespace AutomaticImageClassification.Feature.Local
             _useCombinedQuantization = useCombinedQuantization;
         }
 
-        public VlFeatDenseSift(ClusterModel clusterModel, bool useCombinedQuantization)
+        public DenseSift(ClusterModel clusterModel, bool useCombinedQuantization)
         {
             _clusterModel = clusterModel;
             _step = 4;
@@ -63,7 +64,7 @@ namespace AutomaticImageClassification.Feature.Local
             _useCombinedQuantization = useCombinedQuantization;
         }
 
-        public VlFeatDenseSift(ClusterModel clusterModel)
+        public DenseSift(ClusterModel clusterModel)
         {
             _clusterModel = clusterModel;
         }

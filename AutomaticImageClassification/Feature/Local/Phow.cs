@@ -11,7 +11,8 @@ using MathWorks.MATLAB.NET.Arrays;
 
 namespace AutomaticImageClassification.Feature.Local
 {
-    public class VlFeatPhow : IFeatures
+    //from vlfeat
+    public class Phow : IFeatures
     {
         private readonly string _extractionColor = "rgb";
         private string _quantizer = "kdtree";
@@ -27,21 +28,21 @@ namespace AutomaticImageClassification.Feature.Local
             get { return true; }
         }
 
-        public VlFeatPhow() { }
+        public Phow() { }
 
-        public VlFeatPhow(ClusterModel clusterModel)
+        public Phow(ClusterModel clusterModel)
         {
             _clusterModel = clusterModel;
             _isFastPhow = true;
         }
 
-        public VlFeatPhow(ClusterModel clusterModel, bool isFastPhow)
+        public Phow(ClusterModel clusterModel, bool isFastPhow)
         {
             _clusterModel = clusterModel;
             _isFastPhow = isFastPhow;
         }
 
-        public VlFeatPhow(ClusterModel clusterModel, int width, int height, bool isFastPhow)
+        public Phow(ClusterModel clusterModel, int width, int height, bool isFastPhow)
         {
             _clusterModel = clusterModel;
             _width = width;
@@ -50,7 +51,7 @@ namespace AutomaticImageClassification.Feature.Local
 
         }
 
-        public VlFeatPhow(ClusterModel clusterModel, string extractionColor, int[,] numSpatialX, int[,] numSpatialY,
+        public Phow(ClusterModel clusterModel, string extractionColor, int[,] numSpatialX, int[,] numSpatialY,
             int width, int height, bool isFastPhow)
         {
             _clusterModel = clusterModel;

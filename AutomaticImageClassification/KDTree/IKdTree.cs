@@ -12,7 +12,6 @@ namespace AutomaticImageClassification.KDTree
     public enum KdTreeMethod
     {
         AccordKdTree,
-        JavaMlKdTree,
         VlFeatKdTree
     }
 }

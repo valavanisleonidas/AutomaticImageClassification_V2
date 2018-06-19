@@ -17,8 +17,8 @@ namespace AutomaticImageClassificationTests
         {
             Stopwatch stopwatch = Stopwatch.StartNew(); //creates and start the instance of Stopwatch
 
-            var trainDataPath = @"Data\Features\boc_train_VLFeatLmeans.txt";
-            var testDataPath = @"Data\Features\boc_test_VLFeatLmeans.txt";
+            var trainDataPath = @"Data\Features\lboc__K-Means_50_1024_Lire_AccordKDTree_train.txt";
+            var testDataPath = @"Data\Features\lboc__K-Means_50_1024_Lire_AccordKDTree_test.txt";
 
             var trainlabelsPath = @"Data\Features\boc_labels_train.txt";
             var testlabelsPath = @"Data\Features\boc_labels_test.txt";

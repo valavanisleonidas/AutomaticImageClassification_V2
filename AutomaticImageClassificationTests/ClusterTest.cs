@@ -71,8 +71,8 @@ namespace AutomaticImageClassificationTests
             var numOfClusters = 10;
             var sampleImgs = Files.GetFilesFrom(baseFolder);
 
-            IFeatures colorFeatures = new MkLabSurf();
-            ICluster cluster = new VlFeatKmeans();
+            IFeatures colorFeatures = new Surf();
+            ICluster cluster = new Kmeans();
             List<double[]> colors = new List<double[]>();
             int counter = 0;
             foreach (var image in sampleImgs)
@@ -103,8 +103,8 @@ namespace AutomaticImageClassificationTests
             var numOfClusters = 10;
             var sampleImgs = Files.GetFilesFrom(baseFolder);
 
-            IFeatures phow = new VlFeatPhow();
-            ICluster cluster = new VlFeatEm();
+            IFeatures phow = new Phow();
+            ICluster cluster = new EM();
             List<double[]> colors = new List<double[]>();
             int counter = 0;
             foreach (var image in sampleImgs)
@@ -121,99 +121,7 @@ namespace AutomaticImageClassificationTests
             ClusterModel model = cluster.CreateClusters(colors, numOfClusters);
 
         }
-
-        [TestMethod]
-        public void CanClusterLireKMeans()
-        {
-            string baseFolder = @"Data";
-            //string trainPath = Path.Combine(baseFolder, "Train");
-
-            var numOfClusters = 10;
-            var sampleImgs = Files.GetFilesFrom(baseFolder);
-
-            IFeatures colorFeatures = new MkLabSurf();
-            ICluster cluster = new LireKmeans();
-            List<double[]> colors = new List<double[]>();
-            int counter = 0;
-            foreach (var image in sampleImgs)
-            {
-                if (counter == 2)
-                {
-                    break;
-                }
-                counter++;
-
-                LocalBitmap bitmap = new LocalBitmap(image);
-                colors.AddRange(colorFeatures.ExtractDescriptors(bitmap));
-            }
-            ClusterModel model = cluster.CreateClusters(colors, numOfClusters);
-
-
-        }
-
-        [TestMethod]
-        public void CanClusterLireCSharpKMeans()
-        {
-            string baseFolder = @"Data";
-            //string trainPath = Path.Combine(baseFolder, "Train");
-
-            var numOfClusters = 10;
-            var sampleImgs = Files.GetFilesFrom(baseFolder);
-
-            IFeatures colorFeatures = new MkLabSurf();
-            ICluster cluster = new LireKmeans();
-            List<double[]> colors = new List<double[]>();
-            int counter = 0;
-            foreach (var image in sampleImgs)
-            {
-                if (counter == 10)
-                {
-                    break;
-                }
-                counter++;
-
-                LocalBitmap bitmap = new LocalBitmap(image);
-                colors.AddRange(colorFeatures.ExtractDescriptors(bitmap));
-            }
-            KMeans k = new KMeans(ref colors, numOfClusters);
-            List<double[]> clusters = k.getMeans();
-
-            ClusterModel model = cluster.CreateClusters(colors, numOfClusters);
-
-            Files.WriteFile("kmeansLire.txt", model.Means);
-            Files.WriteFile("kmeansLireCSHARP.txt", clusters);
-
-            int a = 5;
-        }
-
-
-        [TestMethod]
-        public void CanClusterAccordGmm()
-        {
-            string baseFolder = @"Data";
-            //string trainPath = Path.Combine(baseFolder, "Train");
-
-            var numOfClusters = 10;
-            var sampleImgs = Files.GetFilesFrom(baseFolder);
-
-            IFeatures extractor = new MkLabSurf();
-            ICluster cluster = new AccordGmm();
-            List<double[]> clusters = new List<double[]>();
-            int counter = 0;
-            foreach (var image in sampleImgs)
-            {
-                if (counter == 5)
-                {
-                    break;
-                }
-                counter++;
-
-                LocalBitmap bitmap = new LocalBitmap(image);
-                clusters.AddRange(extractor.ExtractDescriptors(bitmap));
-            }
-            ClusterModel model = cluster.CreateClusters(clusters, numOfClusters);
-        }
-
+        
         [TestMethod]
         public void CanClusterVlFeatGmm()
         {
@@ -223,8 +131,8 @@ namespace AutomaticImageClassificationTests
             var numOfClusters = 10;
             var sampleImgs = Files.GetFilesFrom(baseFolder);
 
-            IFeatures extractor = new MkLabSurf();
-            ICluster cluster = new VlFeatGmm();
+            IFeatures extractor = new Surf();
+            ICluster cluster = new GMM();
             List<double[]> clusters = new List<double[]>();
             int counter = 0;
             foreach (var image in sampleImgs)
@@ -253,8 +161,8 @@ namespace AutomaticImageClassificationTests
             var numOfClusters = 10;
             var sampleImgs = Files.GetFilesFrom(baseFolder);
 
-            IFeatures extractor = new MkLabSurf();
-            ICluster cluster = new VlFeatKmeans();
+            IFeatures extractor = new Surf();
+            ICluster cluster = new Kmeans();
             List<double[]> clusters = new List<double[]>();
             int counter = 0;
             foreach (var image in sampleImgs)

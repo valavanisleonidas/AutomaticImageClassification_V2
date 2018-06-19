@@ -39,35 +39,35 @@ namespace AutomaticImageClassification.Managers
                     //throw new ArgumentException("Auto color correlogram returns the final histogram and not descriptors of an image!");
                     baseParameters.ExtractionFeature = new ColorCorrelogram(irmParameters.ColorCorrelogramExtractionMethod);
                     break;
-                case ImageRepresentationMethod.MkLabSurf:
+                case ImageRepresentationMethod.Surf:
                     //extraction method
-                    baseParameters.ExtractionFeature = new MkLabSurf(irmParameters.MkLabSurfExtractionMethod);
+                    baseParameters.ExtractionFeature = new Surf(irmParameters.MkLabSurfExtractionMethod);
                     break;
-                case ImageRepresentationMethod.MkLabVlad:
+                case ImageRepresentationMethod.Vlad:
                     //ifeatures
                     irmParameters.CurrentImageRepresentationMethod = baseParameters.IrmParameters.IrmToUseDescriptors;
                     InitBeforeCluster(ref baseParameters);
 
-                    baseParameters.ExtractionFeature = new MkLabVlad(baseParameters.ExtractionFeature);
+                    baseParameters.ExtractionFeature = new Vlad(baseParameters.ExtractionFeature);
 
                     irmParameters.CurrentImageRepresentationMethod = baseParameters.IrmParameters.BasicImageRepresentationMethod;
                     break;
-                case ImageRepresentationMethod.VlFeatDenseSift:
-                    baseParameters.ExtractionFeature = new VlFeatDenseSift(irmParameters.UseCombinedQuantization);
+                case ImageRepresentationMethod.DenseSift:
+                    baseParameters.ExtractionFeature = new DenseSift(irmParameters.UseCombinedQuantization);
                     break;
                 case ImageRepresentationMethod.VlFeatFisherVector:
                     irmParameters.CurrentImageRepresentationMethod = baseParameters.IrmParameters.IrmToUseDescriptors;
                     InitBeforeCluster(ref baseParameters);
 
-                    baseParameters.ExtractionFeature = new VlFeatFisherVector(baseParameters.ExtractionFeature);
+                    baseParameters.ExtractionFeature = new FisherVector(baseParameters.ExtractionFeature);
 
                     irmParameters.CurrentImageRepresentationMethod = baseParameters.IrmParameters.BasicImageRepresentationMethod;
                     break;
-                case ImageRepresentationMethod.VlFeatPhow:
-                    baseParameters.ExtractionFeature = new VlFeatPhow();
+                case ImageRepresentationMethod.Phow:
+                    baseParameters.ExtractionFeature = new Phow();
                     break;
-                case ImageRepresentationMethod.VlFeatSift:
-                    baseParameters.ExtractionFeature = new VlFeatSift(irmParameters.UseCombinedQuantization);
+                case ImageRepresentationMethod.Sift:
+                    baseParameters.ExtractionFeature = new Sift(irmParameters.UseCombinedQuantization);
                     break;
                 case ImageRepresentationMethod.TfIdf:
                     baseParameters.ExtractionFeature = new TfIdf();
@@ -94,35 +94,35 @@ namespace AutomaticImageClassification.Managers
                 case ImageRepresentationMethod.ColorCorrelogram:
                     baseParameters.ExtractionFeature = new ColorCorrelogram(irmParameters.ColorCorrelogramExtractionMethod);
                     break;
-                case ImageRepresentationMethod.MkLabSurf:
+                case ImageRepresentationMethod.Surf:
                     //extraction method
-                    baseParameters.ExtractionFeature = new MkLabSurf(irmParameters.ClusterModels[0], irmParameters.MkLabSurfExtractionMethod);
+                    baseParameters.ExtractionFeature = new Surf(irmParameters.ClusterModels[0], irmParameters.MkLabSurfExtractionMethod);
                     break;
-                case ImageRepresentationMethod.MkLabVlad:
+                case ImageRepresentationMethod.Vlad:
                     //ifeatures
                     irmParameters.CurrentImageRepresentationMethod = baseParameters.IrmParameters.IrmToUseDescriptors;
                     InitBeforeCluster(ref baseParameters);
 
-                    baseParameters.ExtractionFeature = new MkLabVlad(irmParameters.ClusterModels[0], baseParameters.ExtractionFeature);
+                    baseParameters.ExtractionFeature = new Vlad(irmParameters.ClusterModels[0], baseParameters.ExtractionFeature);
 
                     irmParameters.CurrentImageRepresentationMethod = baseParameters.IrmParameters.BasicImageRepresentationMethod;
                     break;
-                case ImageRepresentationMethod.VlFeatDenseSift:
-                    baseParameters.ExtractionFeature = new VlFeatDenseSift(irmParameters.ClusterModels[0], irmParameters.UseCombinedQuantization);
+                case ImageRepresentationMethod.DenseSift:
+                    baseParameters.ExtractionFeature = new DenseSift(irmParameters.ClusterModels[0], irmParameters.UseCombinedQuantization);
                     break;
                 case ImageRepresentationMethod.VlFeatFisherVector:
                     irmParameters.CurrentImageRepresentationMethod = baseParameters.IrmParameters.IrmToUseDescriptors;
                     InitBeforeCluster(ref baseParameters);
 
-                    baseParameters.ExtractionFeature = new VlFeatFisherVector(irmParameters.ClusterModels[0], baseParameters.ExtractionFeature);
+                    baseParameters.ExtractionFeature = new FisherVector(irmParameters.ClusterModels[0], baseParameters.ExtractionFeature);
 
                     irmParameters.CurrentImageRepresentationMethod = baseParameters.IrmParameters.BasicImageRepresentationMethod;
                     break;
-                case ImageRepresentationMethod.VlFeatPhow:
-                    baseParameters.ExtractionFeature = new VlFeatPhow(irmParameters.ClusterModels[0]);
+                case ImageRepresentationMethod.Phow:
+                    baseParameters.ExtractionFeature = new Phow(irmParameters.ClusterModels[0]);
                     break;
-                case ImageRepresentationMethod.VlFeatSift:
-                    baseParameters.ExtractionFeature = new VlFeatSift(irmParameters.ClusterModels[0], irmParameters.UseCombinedQuantization);
+                case ImageRepresentationMethod.Sift:
+                    baseParameters.ExtractionFeature = new Sift(irmParameters.ClusterModels[0], irmParameters.UseCombinedQuantization);
                     break;
                 case ImageRepresentationMethod.TfIdf:
                     baseParameters.ExtractionFeature = new TfIdf(irmParameters.TfidfApproach);
@@ -145,7 +145,7 @@ namespace AutomaticImageClassification.Managers
 
         public ColorCorrelogram.ColorCorrelogramExtractionMethod ColorCorrelogramExtractionMethod;
         
-        public MkLabSurf.MkLabSurfExtractionMethod MkLabSurfExtractionMethod;
+        public Surf.MkLabSurfExtractionMethod MkLabSurfExtractionMethod;
 
         //some extraction methods need another feature to extract features
         public ImageRepresentationMethod BasicImageRepresentationMethod;

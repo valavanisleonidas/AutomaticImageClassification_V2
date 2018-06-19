@@ -35,10 +35,10 @@ namespace AutomaticImageClassification.Cluster.ClusterModels
 
         public override string ToString()
         {
-            var clusterModel = "Gmm";
+            var clusterModel = "GMM";
             if (Priors == null || Covariances.Count == 0)
             {
-                clusterModel = "Kmeans";
+                clusterModel = "K-Means";
             }
             clusterModel += "_" + ClusterNum;
             return clusterModel;

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using java.util;
 
 
 namespace AutomaticImageClassification.Utilities
@@ -17,31 +16,9 @@ namespace AutomaticImageClassification.Utilities
 
         public static List<T[]> ConvertArrayToList<T>(ref T[,] array)
         {
-            return Arrays.ToJaggedArray(ref array).ToList().Select(floatset => floatset.ToList().Select(i => i).ToArray()).ToList();
+            return ToJaggedArray(ref array).ToList().Select(floatset => floatset.ToList().Select(i => i).ToArray()).ToList();
         }
-
-        //public static List ConvertGenericListToArrayList<T>(ref List<T[]> list)
-        //{
-        //    ArrayList arrayList = new ArrayList();
-        //    foreach (var descriptorFeature in list)
-        //    {
-        //        arrayList.add(descriptorFeature);
-        //    }
-        //    return arrayList;
-        //}
-
-        //public static List<T[]> ConvertArrayListToGenericList<T>(ref List arraylist)
-        //{
-        //    var list = new List<T[]>();
-
-        //    var it = arraylist.iterator();
-        //    while (it.hasNext())
-        //    {
-        //        list.Add( (T[])it.next());
-        //    }
-        //    return list;
-        //}
-
+        
         public static void GetDistinctObjects<T>(ref List<T[]> objects)
         {
             if (objects.Count == 0)

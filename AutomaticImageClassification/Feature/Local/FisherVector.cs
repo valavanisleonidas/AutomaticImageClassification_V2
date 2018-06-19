@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AutomaticImageClassification.Cluster.ClusterModels;
 using AutomaticImageClassification.Utilities;
 using MathWorks.MATLAB.NET.Arrays;
 
 namespace AutomaticImageClassification.Feature.Local
 {
-    public class VlFeatFisherVector : IFeatures
+    //from vlfeat
+    public class FisherVector : IFeatures
     {
         private readonly IFeatures _featureExtractor;
         private readonly ClusterModel _model;
@@ -19,23 +17,23 @@ namespace AutomaticImageClassification.Feature.Local
             get { return true; }
         }
 
-        public VlFeatFisherVector()
+        public FisherVector()
         {
-            _featureExtractor = new MkLabSurf();
+            _featureExtractor = new Surf();
         }
 
-        public VlFeatFisherVector(IFeatures extractor)
+        public FisherVector(IFeatures extractor)
         {
             _featureExtractor = extractor;
         }
 
-        public VlFeatFisherVector(ClusterModel model)
+        public FisherVector(ClusterModel model)
         {
-            _featureExtractor = new MkLabSurf();
+            _featureExtractor = new Surf();
             _model = model;
         }
 
-        public VlFeatFisherVector(ClusterModel model,IFeatures extractor)
+        public FisherVector(ClusterModel model,IFeatures extractor)
         {
             _featureExtractor = extractor;
             _model = model;

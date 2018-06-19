@@ -5,7 +5,8 @@ using AutomaticImageClassification.Utilities;
 
 namespace AutomaticImageClassification.Feature.Local
 {
-    public class MkLabVlad : IFeatures
+    //from mklab 
+    public class Vlad : IFeatures
     {
         private readonly IFeatures _featureExtractor;
         private readonly ClusterModel _clusterModel;
@@ -18,24 +19,24 @@ namespace AutomaticImageClassification.Feature.Local
             get { return true; }
         }
 
-        public MkLabVlad()
+        public Vlad()
         {
-            _featureExtractor = new MkLabSurf();
+            _featureExtractor = new Surf();
         }
 
-        public MkLabVlad(IFeatures extractor)
+        public Vlad(IFeatures extractor)
         {
             _featureExtractor = extractor;
         }
 
-        public MkLabVlad(ClusterModel clusterModel)
+        public Vlad(ClusterModel clusterModel)
         {
-            _featureExtractor = new MkLabSurf();
+            _featureExtractor = new Surf();
             _clusterModel = clusterModel;
             // _vlad = new VladAggregator(codebook.ToArray());
         }
 
-        public MkLabVlad(ClusterModel clusterModel, IFeatures extractor)
+        public Vlad(ClusterModel clusterModel, IFeatures extractor)
         {
             _featureExtractor = extractor;
             _clusterModel = clusterModel;

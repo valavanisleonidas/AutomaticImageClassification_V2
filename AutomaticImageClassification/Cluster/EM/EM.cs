@@ -7,16 +7,17 @@ using MathWorks.MATLAB.NET.Arrays;
 
 namespace AutomaticImageClassification.Cluster.EM
 {
-    public class VlFeatEm : ICluster
+    //from vlfeat
+    public class EM : ICluster
     {
         private readonly bool _isRandomInit;
        
-        public VlFeatEm()
+        public EM()
         {
             _isRandomInit = false;
         }
         
-        public VlFeatEm( bool isRandomInit)
+        public EM( bool isRandomInit)
         {
             _isRandomInit = isRandomInit;
         }

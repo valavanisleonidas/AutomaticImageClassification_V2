@@ -164,7 +164,57 @@ namespace AutomaticImageClassification.Utilities
                              (T)Convert.ChangeType(scolors[2], typeof(T))
                         };
         }
-        
+
+
+        public static Bitmap getPaletteImg(int[][] palette, int imgSize, ColorSpace cs)
+        {
+            //int rows = sizeHW / colsPerRow;
+            int colsPerRow = (int)Math.Round((Math.Sqrt(palette.Length)));
+            int sizeHW = imgSize;
+            int w = (int)Math.Round((decimal)sizeHW / colsPerRow);//Math.round(Math.sqrt(sizeHW)/colsPerRow);
+            int h = w;
+
+            Bitmap bmp = new Bitmap(sizeHW, sizeHW, PixelFormat.Format24bppRgb);
+
+
+            Graphics g = Graphics.FromImage(bmp);
+            int col = 0;
+            int row = 0;
+
+            //int[][] palete = getPalleteFromClusters(clusterFile, true, cs);
+            foreach (int[] cl in palette)
+            {
+                var converted_color = ConvertFromRGB(cs, cl[0], cl[1], cl[2]);
+
+                //g.setColor(new Color(cl[0], cl[1], cl[2]));
+                //g.fillRect(w * row, h * col, w, h);
+                //g.setColor(Color.white);
+                //g.drawRect(w * row, h * col, w, h);
+
+
+                Rectangle rect = new Rectangle(w * row, h * col, w, h);
+                //palette color
+                Color color = Color.FromArgb(cl[0], cl[1], cl[2]);
+                Color white = Color.FromArgb(255, 255, 255);
+
+                SolidBrush b = new SolidBrush(color);
+                g.FillRectangle(b, rect);
+                g.DrawRectangle(new Pen(white), rect);
+
+
+                row++;
+                if (row >= colsPerRow)
+                {
+                    col++;
+                    row = 0;
+                }
+            }
+            g.Dispose();
+
+            return bmp;
+        }
+
+
 
     }
 }

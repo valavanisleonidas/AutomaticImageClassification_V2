@@ -17,6 +17,20 @@ namespace AutomaticImageClassificationTests
     {
 
         [TestMethod]
+        public void CanCreatePaletteImage()
+        {
+            string paletteFile = @"Data\palettes\boc_palette.txt";
+            var palette = Files.ReadFileToListArrayList<double>(paletteFile);
+            int[][] intPalette = Arrays.ConvertDoubleListToIntArray(ref palette);
+
+            Bitmap paletteIm = ImageProcessing.getPaletteImg(intPalette, 512, ColorConversion.ColorSpace.RGB);
+
+            ImageProcessing.SaveImage(paletteIm, @"Data\paletteIm.jpg");    
+        }
+
+
+
+        [TestMethod]
         public void CanGetImagePixelRGBSameAsJava()
         {
             string sourceImage = @"Data\database\dogInNeed.jpg";

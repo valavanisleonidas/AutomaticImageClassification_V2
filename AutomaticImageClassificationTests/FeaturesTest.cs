@@ -46,7 +46,7 @@ namespace AutomaticImageClassificationTests
             }
             ClusterModel model = cluster.CreateClusters(colors, numOfClusters);
 
-            IKdTree tree = new VlFeatKdTree();
+            IKdTree tree = new KdTree();
             tree.CreateTree(model.Means);
             phow = new Phow(model, true);
 
@@ -79,7 +79,7 @@ namespace AutomaticImageClassificationTests
             }
             ClusterModel model = cluster.CreateClusters(colors, numOfClusters);
 
-            IKdTree tree = new VlFeatKdTree();
+            IKdTree tree = new KdTree();
             tree.CreateTree(model.Means);
             model.Tree = tree;
 
@@ -121,7 +121,7 @@ namespace AutomaticImageClassificationTests
 
             IFeatures boc = new Boc(colorspace);
             ICluster cluster = new Kmeans();
-            IKdTree tree = new VlFeatKdTree();
+            IKdTree tree = new KdTree();
 
             const bool isDistinctColors = true;
             const int numOfcolors = 512;
@@ -246,7 +246,7 @@ namespace AutomaticImageClassificationTests
 
             ICluster cluster = new Kmeans();
             IFeatures boc = new Boc(colorspace);
-            IKdTree lboctree = new VlFeatKdTree();
+            IKdTree lboctree = new KdTree();
 
             var resizeImages = 256;
             const bool isDistinctColors = true;
@@ -399,7 +399,7 @@ namespace AutomaticImageClassificationTests
 
             ICluster cluster = new Kmeans();
             IFeatures feature = new Surf(MkLabSurfExtractionMethod.Surf);
-            IKdTree tree = new VlFeatKdTree();
+            IKdTree tree = new KdTree();
 
             const string baseFolder = @"C:\Users\l.valavanis\Desktop\Clef2013";
             var trainPath = Path.Combine(baseFolder, "TrainSet");
@@ -496,7 +496,7 @@ namespace AutomaticImageClassificationTests
 
             ICluster cluster = new Kmeans();
             IFeatures feature = new Phow();
-            IKdTree tree = new VlFeatKdTree();
+            IKdTree tree = new KdTree();
 
             //const string baseFolder = @"C:\Users\l.valavanis\Desktop\personal\dbs\Clef2013\Compound";
             //var trainPath = Path.Combine(baseFolder, "Train");
@@ -615,7 +615,7 @@ namespace AutomaticImageClassificationTests
             clusters.Clear();
             List<double[]> finalClusters = model.Means;
 
-            IKdTree tree = new VlFeatKdTree();
+            IKdTree tree = new KdTree();
             tree.CreateTree(finalClusters);
             model.Tree = tree;
 

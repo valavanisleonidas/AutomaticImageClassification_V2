@@ -11,7 +11,6 @@ namespace AutomaticImageClassification.KDTree
 
     public enum KdTreeMethod
     {
-        AccordKdTree,
-        VlFeatKdTree
+        KdTree
     }
 }

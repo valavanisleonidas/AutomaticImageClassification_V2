@@ -12,11 +12,8 @@ namespace AutomaticImageClassification.Managers
             var model = baseParameters.IrmParameters.ClusterModels.Last();
             switch (baseParameters.KdTreeParameters.Kdtree)
             {
-                case KdTreeMethod.AccordKdTree:
-                    model.Tree = new AccordKdTree();
-                    break;
-                case KdTreeMethod.VlFeatKdTree:
-                    model.Tree = new VlFeatKdTree();
+                case KdTreeMethod.KdTree:
+                    model.Tree = new KdTree();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(baseParameters.KdTreeParameters.Kdtree), baseParameters.KdTreeParameters.Kdtree, null);

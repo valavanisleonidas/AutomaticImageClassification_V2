@@ -215,7 +215,6 @@ namespace AutomaticImageClassification.Utilities
 
         public static void RemoveIndexes(ref List<int> indexes, ref List<double[]> trainList, ref List<double[]> testList)
         {
-
             //transpose features in order to remove Columns ( features ) not Rows ( images )
             var transposedTrain = Arrays.TransposeMatrix(trainList.ToArray()).ToList();
             var transposedTest = Arrays.TransposeMatrix(testList.ToArray()).ToList();
@@ -230,110 +229,7 @@ namespace AutomaticImageClassification.Utilities
             testList = Arrays.TransposeMatrix(transposedTest.ToArray()).ToList();
             transposedTest.Clear();
         }
-
-        /*matlab methods for feature selection ( they are faster but consume more memory !!!!!!!!!!!!!!!) for 5000 images of 32.000 features it is 10 seconds faster
-         14 secons instead of 24 but needs 4-5 GB memory */
-
-        //[X, test, IG, indices] = TermSelectionK(X, test, labels, k_first)
-        public static void MatlabInformationGainKFirst(ref List<double[]> trainList, ref List<double[]> testList, ref int[] trainLabels, int kFirst)
-        {
-            try
-            {
-                var featureSelection = new FeatureSelectionAPI.FeatureSelection();
-
-                MWArray[] result = featureSelection.TermSelectionK(4,
-                    new MWNumericArray(trainList.ToArray()),
-                    new MWNumericArray(testList.ToArray()),
-                    new MWNumericArray(new[] { trainLabels }),
-                    new MWNumericArray(kFirst));
-
-                //features train
-                trainList = Arrays.ToJaggedArray((double[,])result[0].ToArray()).ToList();
-                //features test
-                testList = Arrays.ToJaggedArray((double[,])result[1].ToArray()).ToList();
-
-                featureSelection.Dispose();
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-
-        //[X, test, IG, indices] = TermSelectionThreshold(X, test, labels, threshold)
-        public static void MatlabInformationGainUsingThreshold(ref List<double[]> trainList, ref List<double[]> testList, ref int[] trainLabels, double threshold)
-        {
-            try
-            {
-                var featureSelection = new FeatureSelectionAPI.FeatureSelection();
-
-                MWArray[] result = featureSelection.TermSelectionThreshold(4,
-                    new MWNumericArray(trainList.ToArray()),
-                    new MWNumericArray(testList.ToArray()),
-                    new MWNumericArray(new [] { trainLabels }),
-                    new MWNumericArray(threshold));
-
-                //features train
-                trainList = Arrays.ToJaggedArray((double[,])result[0].ToArray()).ToList();
-                //features test
-                testList = Arrays.ToJaggedArray((double[,])result[1].ToArray()).ToList();
-
-                featureSelection.Dispose();
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-
-
-        public static void MatlabRemoveMostFrequentFeaturesUsingThreshold(ref List<double[]> trainList, ref List<double[]> testList, double threshold)
-        {
-            try
-            {
-                var featureSelection = new FeatureSelectionAPI.FeatureSelection();
-
-                MWArray[] result = featureSelection.RemoveMostFrequentFeaturesUsingThreshold(2,
-                    new MWNumericArray(threshold),
-                    new MWNumericArray(trainList.ToArray()),
-                    new MWNumericArray(testList.ToArray()));
-
-                //features train
-                trainList = Arrays.ToJaggedArray((double[,])result[0].ToArray()).ToList();
-                //features test
-                testList = Arrays.ToJaggedArray((double[,])result[1].ToArray()).ToList();
-
-                featureSelection.Dispose();
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-
-        public static void MatlabRemoveKMostFrequentFeatures(ref List<double[]> trainList, ref List<double[]> testList, int kMostFrequent)
-        {
-            try
-            {
-                var featureSelection = new FeatureSelectionAPI.FeatureSelection();
-
-                MWArray[] result = featureSelection.RemoveMostFrequentFeatures(2,
-                    new MWNumericArray(kMostFrequent),
-                    new MWNumericArray(trainList.ToArray()),
-                    new MWNumericArray(testList.ToArray()));
-
-                //features train
-                trainList = Arrays.ToJaggedArray((double[,])result[0].ToArray()).ToList();
-                //features test
-                testList = Arrays.ToJaggedArray((double[,])result[1].ToArray()).ToList();
-
-                featureSelection.Dispose();
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
+    
 
     }
 }

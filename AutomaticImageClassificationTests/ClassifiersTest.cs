@@ -131,11 +131,11 @@ namespace AutomaticImageClassificationTests
         {
             Stopwatch stopwatch = Stopwatch.StartNew(); //creates and start the instance of Stopwatch
 
-            var trainDataPath = @"Data\Features\lboc_50_1024_train_libsvm_test.txt";
-            var testDataPath = @"Data\Features\lboc_50_1024_test_libsvm_test.txt";
+            var trainDataPath = @"Data\Features\MkLabSurf_VlFeatEm_RandomInit_512_VlFeatKdTree_Randomized_train.txt";
+            var testDataPath = @"Data\Features\MkLabSurf_VlFeatEm_RandomInit_512_VlFeatKdTree_Randomized_test.txt";
 
-            var trainlabelsPath = @"Data\Features\boc_labels_train_libsvm_test.txt";
-            var testlabelsPath = @"Data\Features\boc_labels_test_libsvm_test.txt";
+            var trainlabelsPath = @"Data\Features\boc_labels_train.txt";
+            var testlabelsPath = @"Data\Features\boc_labels_test.txt";
 
             var trainFeat = Files.ReadFileToListArrayList<double>(trainDataPath).ToList();
             var testFeat = Files.ReadFileToListArrayList<double>(testDataPath).ToList();
@@ -148,23 +148,23 @@ namespace AutomaticImageClassificationTests
                 Type = SVMType.C_SVC,
                 Kernel = SVMKernelType.RBF,
                 C = 32,
-                Gamma = 2,
+                Gamma = 4,
                 Probability = true
             };
 
             //normalize 
-            Normalization.SqrtList(ref trainFeat);
-            Normalization.SqrtList(ref testFeat);
+            //Normalization.SqrtList(ref trainFeat);
+            //Normalization.SqrtList(ref testFeat);
 
-            trainFeat = Normalization.Tfidf(trainFeat);
-            testFeat = Normalization.Tfidf(testFeat);
+            //trainFeat = Normalization.Tfidf(trainFeat);
+            //testFeat = Normalization.Tfidf(testFeat);
 
             Normalization.ComputeL1Features(ref trainFeat);
             Normalization.ComputeL1Features(ref testFeat);
 
 
             IClassifier classifier = new LibSvm(parameter);
-            //classifier.GridSearch(ref trainFeat, ref trainlabels);
+            classifier.GridSearch(ref trainFeat, ref trainlabels);
             classifier.Train(ref trainFeat, ref trainlabels);
             classifier.Predict(ref testFeat);
 

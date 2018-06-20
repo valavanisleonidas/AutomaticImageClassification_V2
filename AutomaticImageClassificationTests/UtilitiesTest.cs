@@ -19,7 +19,7 @@ namespace AutomaticImageClassificationTests
         [TestMethod]
         public void CanCreatePaletteImage()
         {
-            string paletteFile = @"Data\palettes\boc_palette.txt";
+            string paletteFile = @"Data\palettes\Boc.txt";
             var palette = Files.ReadFileToListArrayList<double>(paletteFile);
             int[][] intPalette = Arrays.ConvertDoubleListToIntArray(ref palette);
 
@@ -620,8 +620,8 @@ namespace AutomaticImageClassificationTests
             {
                 CollectionAssert.AreEqual(train[i], results[i]);
             }
-            
         }
+        
 
         [TestMethod]
         public void CanRemoveKFeaturesWithTheLeastInformationGain()
@@ -700,87 +700,6 @@ namespace AutomaticImageClassificationTests
             ig = ig.Select(d => Math.Truncate(d * 1000d) / 1000d ).ToArray();
 
             CollectionAssert.AreEqual(ig,resultIg);
-        }
-
-        [TestMethod]
-        public void CanPerformFeatureSelectionUsingThresholdCompareMatlabCSharp()
-        {
-
-            var trainDataPath = @"Data\Features\lboc_50_1024_train_libsvm_test.txt";
-            var testDataPath = @"Data\Features\lboc_50_1024_test_libsvm_test.txt";
-            var trainlabelsPath = @"Data\Features\boc_labels_train_libsvm_test.txt";
-            
-            //MkLabRootSift_Lire_JavaML_512_test
-            var trainFeat = Files.ReadFileToListArrayList<double>(trainDataPath).ToList();
-            var testFeat = Files.ReadFileToListArrayList<double>(testDataPath).ToList();
-
-            var trainlabels = Files.ReadFileTo1DArray<int>(trainlabelsPath);
-
-            var threshold = 0.1;
-            var train = trainFeat;
-            var test = testFeat;
-            //all features ( columns ) that have more than half non zero elements are removed with threshold 0.1
-            Stopwatch wat = new Stopwatch();
-            wat.Start();
-            FeatureSelection.InformationGainThreshold(ref trainFeat, ref testFeat, ref trainlabels, threshold);
-            wat.Stop();
-
-            Stopwatch _wat = new Stopwatch();
-            _wat.Start();
-            FeatureSelection.MatlabInformationGainUsingThreshold(ref train, ref test, ref trainlabels, threshold);
-            _wat.Stop();
-
-            for (int i = 0; i < trainFeat.Count; i++)
-            {
-                CollectionAssert.AreEqual(trainFeat[i], train[i]);
-            }
-
-            for (int i = 0; i < test.Count; i++)
-            {
-                CollectionAssert.AreEqual(testFeat[i], test[i]);
-            }
-
-        }
-
-        [TestMethod]
-        public void CanPerformFeatureSelectionKFirstCompareMatlabCSharp()
-        {
-
-            var trainDataPath = @"Data\Features\lboc_50_1024_train_libsvm_test.txt";
-            var testDataPath = @"Data\Features\lboc_50_1024_test_libsvm_test.txt";
-
-            var trainlabelsPath = @"Data\Features\boc_labels_train_libsvm_test.txt";
-           
-            
-            var trainFeat = Files.ReadFileToListArrayList<double>(trainDataPath).ToList();
-            var testFeat = Files.ReadFileToListArrayList<double>(testDataPath).ToList();
-
-            var trainlabels = Files.ReadFileTo1DArray<int>(trainlabelsPath);
-
-            var kFirst = 100;
-            var train = trainFeat;
-            var test = testFeat;
-            //all features ( columns ) that have more than half non zero elements are removed with threshold 0.5
-            Stopwatch wat = new Stopwatch();
-            wat.Start();
-            FeatureSelection.InformationGainKFirst(ref trainFeat, ref testFeat, ref trainlabels, kFirst);
-            wat.Stop();
-
-            Stopwatch _wat = new Stopwatch();
-            _wat.Start();
-            FeatureSelection.MatlabInformationGainKFirst(ref train, ref test, ref trainlabels, kFirst);
-            _wat.Stop();
-
-            for (int i = 0; i < trainFeat.Count; i++)
-            {
-                CollectionAssert.AreEqual(trainFeat[i], train[i]);
-            }
-
-            for (int i = 0; i < test.Count; i++)
-            {
-                CollectionAssert.AreEqual(testFeat[i], test[i]);
-            }
-
         }
 
         [TestMethod]

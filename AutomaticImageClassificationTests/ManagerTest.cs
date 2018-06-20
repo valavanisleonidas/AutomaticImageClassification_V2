@@ -45,7 +45,7 @@ namespace AutomaticImageClassificationTests
         private readonly int _maxNumberClusterFeatures = 200000;
 
         private readonly ClusterMethod _clusterMethod = ClusterMethod.KMeans;
-        private readonly KdTreeMethod _kdTreeMethod = KdTreeMethod.VlFeatKdTree;
+        private readonly KdTreeMethod _kdTreeMethod = KdTreeMethod.KdTree;
         private readonly ImageRepresentationMethod _imageRepresentationMethod = ImageRepresentationMethod.Surf;
 
         private readonly bool _lite = true;

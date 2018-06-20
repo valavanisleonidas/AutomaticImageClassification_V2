@@ -30,7 +30,7 @@ namespace AutomaticImageClassificationTests
             centers.Add(new[] { 1000.0, 2000.0, 3000.0 });
             centers.Add(new[] { 10000.0, 20000.0, 30000.0 });
 
-            IKdTree kdtree = new AccordKdTree();
+            IKdTree kdtree = new KdTree();
             kdtree.CreateTree(centers);
             double[] search = { 50000.0, 50000.0, 50000.0 };
 
@@ -50,7 +50,7 @@ namespace AutomaticImageClassificationTests
             centers.Add(new[] { 1000.0, 2000.0, 3000.0 });
             centers.Add(new[] { 10000.0, 20000.0, 30000.0 });
 
-            IKdTree kdtree = new VlFeatKdTree();
+            IKdTree kdtree = new KdTree();
             kdtree.CreateTree(centers);
             double[] search = { 50000.0, 50000.0, 50000.0 };
 
@@ -179,7 +179,7 @@ namespace AutomaticImageClassificationTests
 
             Console.WriteLine("creating tree");
 
-            IKdTree tree = new VlFeatKdTree();
+            IKdTree tree = new KdTree();
             tree.CreateTree(model.Means);
 
             string imaging = @"Data\database\einstein.jpg";
@@ -209,7 +209,7 @@ namespace AutomaticImageClassificationTests
                 new double[] {2000, 1200, 200, 2000}
             };
 
-            IKdTree tree = new VlFeatKdTree();
+            IKdTree tree = new KdTree();
             tree.CreateTree(vocab);
 
             double[] query = new double[] { 1, 2, 3, 1 };

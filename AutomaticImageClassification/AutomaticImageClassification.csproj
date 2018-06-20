@@ -71,10 +71,6 @@
       <HintPath>..\packages\Accord.Statistics.3.8.0\lib\net46\Accord.Statistics.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FeatureSelectionAPI, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libs\FeatureSelectionAPI.dll</HintPath>
-    </Reference>
     <Reference Include="IKVM.OpenJDK.Core, Version=8.1.5717.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\ikvm-8.1.5717.0\bin\IKVM.OpenJDK.Core.dll</HintPath>
@@ -89,9 +85,6 @@
     </Reference>
     <Reference Include="LibSVMsharp">
       <HintPath>..\Libs\LibSvmSharp\LibSVMsharp.dll</HintPath>
-    </Reference>
-    <Reference Include="MathNet.Iridium">
-      <HintPath>..\Libs\JOpenSurf\MathNet.Iridium.dll</HintPath>
     </Reference>
     <Reference Include="MatlabAPI">
       <HintPath>..\Libs\MatlabAPI.dll</HintPath>
@@ -141,13 +134,11 @@
     <Compile Include="Feature\IFeatures.cs" />
     <Compile Include="Feature\Local\Surf.cs" />
     <Compile Include="Feature\Local\Vlad.cs" />
-    <Compile Include="Feature\Local\Surf\ColorSurf.cs" />
     <Compile Include="Feature\Local\DenseSift.cs" />
     <Compile Include="Feature\Local\FisherVector.cs" />
     <Compile Include="Feature\Local\Phow.cs" />
     <Compile Include="Feature\Local\Sift.cs" />
     <Compile Include="KDTree\IKdTree.cs" />
-    <Compile Include="KDTree\AccordKdTree.cs" />
     <Compile Include="Cluster\EM\EM.cs" />
     <Compile Include="Cluster\Kmeans\Kmeans.cs" />
     <Compile Include="Evaluation\Measures.cs" />
@@ -158,7 +149,7 @@
     <Compile Include="FusionTypes\EarlyFusion.cs" />
     <Compile Include="FusionTypes\IFusion.cs" />
     <Compile Include="FusionTypes\LateFusion.cs" />
-    <Compile Include="KDTree\VlFeatKdTree.cs" />
+    <Compile Include="KDTree\KdTree.cs" />
     <Compile Include="Managers\ClassifierManager.cs" />
     <Compile Include="Managers\ClusterManager.cs" />
     <Compile Include="Managers\ImageRepresentationManager.cs" />

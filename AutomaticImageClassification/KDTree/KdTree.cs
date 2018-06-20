@@ -5,29 +5,30 @@ using MathWorks.MATLAB.NET.Arrays;
 
 namespace AutomaticImageClassification.KDTree
 {
-    public class VlFeatKdTree : IKdTree
+    //from vlfeat
+    public class KdTree : IKdTree
     {
         private bool _isRandomizedTree;
         private MWStructArray _kdtree;
         private List<double[]> _vocab;
 
-        public VlFeatKdTree()
+        public KdTree()
         {
             _isRandomizedTree = true;
         }
 
-        public VlFeatKdTree(bool isRandomizedTree)
+        public KdTree(bool isRandomizedTree)
         {
             _isRandomizedTree = isRandomizedTree;
         }
 
-        public VlFeatKdTree(List<double[]> vocab)
+        public KdTree(List<double[]> vocab)
         {
             _isRandomizedTree = true;
             _vocab = vocab;
         }
 
-        public VlFeatKdTree(MWStructArray kdtree, List<double[]> vocab)
+        public KdTree(MWStructArray kdtree, List<double[]> vocab)
         {
             _kdtree = kdtree;
             _vocab = vocab;

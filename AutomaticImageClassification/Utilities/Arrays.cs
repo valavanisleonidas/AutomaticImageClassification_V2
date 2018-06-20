@@ -119,36 +119,12 @@ namespace AutomaticImageClassification.Utilities
             }
             return jaggedArray;
         }
-
-        //public static void GetSubsetOfFeatures(ref List<double[]> descriptorFeatures, int numberOfFeatures)
-        //{
-        //    try
-        //    {
-        //        MatlabAPI.VlFeatPhow phow = new MatlabAPI.VlFeatPhow();
-
-        //        MWArray[] result = phow.getSubsetDescriptors(
-        //            1,
-        //            new MWNumericArray(descriptorFeatures.ToArray()),
-        //            new MWNumericArray(numberOfFeatures));
-
-        //        descriptorFeatures.Clear();
-        //        var features = (Single[,]) result[0].ToArray();
-        //        descriptorFeatures = ConvertSingleToDoubleArray(ref features).ToList();
-
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        throw e;
-        //    }
-        //}
+        
         public static void GetSubsetOfFeatures<T>(ref List<T[]> descriptorFeatures, int numberOfFeatures)
         {
             descriptorFeatures = descriptorFeatures.OrderBy(x => Guid.NewGuid()).Take(numberOfFeatures).ToList();
         }
 
     }
-
-
-
-
+    
 }

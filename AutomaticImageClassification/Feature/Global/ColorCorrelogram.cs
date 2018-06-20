@@ -26,11 +26,14 @@ namespace AutomaticImageClassification.Feature.Global
             {
                 case ColorCorrelogramExtractionMethod.LireAlgorithm:
                     _extractionAlgorithm = new MLuxAutoCorrelogramExtraction();
+                    _colorCorrelogramExtractionMethod = ColorCorrelogramExtractionMethod.LireAlgorithm;
                     break;
                 case ColorCorrelogramExtractionMethod.NaiveHuangAlgorithm:
                     _extractionAlgorithm = new NaiveAutoCorrelogramExtraction();
+                    _colorCorrelogramExtractionMethod = ColorCorrelogramExtractionMethod.NaiveHuangAlgorithm;
                     break;
                 default:
+                    _extractionAlgorithm = new NaiveAutoCorrelogramExtraction();
                     _colorCorrelogramExtractionMethod = ColorCorrelogramExtractionMethod.NaiveHuangAlgorithm;
                     break;
             }

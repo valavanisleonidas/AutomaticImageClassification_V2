@@ -11,10 +11,9 @@ namespace AutomaticImageClassification.Cluster
 
     public enum ClusterMethod
     {
-        VlFeatEm,
-        VlFeatGmm,
-        VlFeatKmeans,
-        LireKmeans
+        EM,
+        GMM,
+        KMeans
     }
 
 }

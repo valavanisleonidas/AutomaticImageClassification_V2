@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutomaticImageClassification.Cluster;
-using AutomaticImageClassification.Cluster.ClusterModels;
-using AutomaticImageClassification.Utilities;
 using MathWorks.MATLAB.NET.Arrays;
 
 namespace AutomaticImageClassification.KDTree
@@ -18,7 +13,7 @@ namespace AutomaticImageClassification.KDTree
 
         public VlFeatKdTree()
         {
-            _isRandomizedTree = false;
+            _isRandomizedTree = true;
         }
 
         public VlFeatKdTree(bool isRandomizedTree)
@@ -28,7 +23,7 @@ namespace AutomaticImageClassification.KDTree
 
         public VlFeatKdTree(List<double[]> vocab)
         {
-            _isRandomizedTree = false;
+            _isRandomizedTree = true;
             _vocab = vocab;
         }
 

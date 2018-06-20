@@ -44,9 +44,9 @@ namespace AutomaticImageClassificationTests
         private readonly int _extractImage = int.MaxValue;
         private readonly int _maxNumberClusterFeatures = 200000;
 
-        private readonly ClusterMethod _clusterMethod = ClusterMethod.LireKmeans;
+        private readonly ClusterMethod _clusterMethod = ClusterMethod.KMeans;
         private readonly KdTreeMethod _kdTreeMethod = KdTreeMethod.VlFeatKdTree;
-        private readonly ImageRepresentationMethod _imageRepresentationMethod = ImageRepresentationMethod.MkLabSurf;
+        private readonly ImageRepresentationMethod _imageRepresentationMethod = ImageRepresentationMethod.Surf;
 
         private readonly bool _lite = true;
 
@@ -69,10 +69,10 @@ namespace AutomaticImageClassificationTests
                 {
                     BasicImageRepresentationMethod = _imageRepresentationMethod,
                     CurrentImageRepresentationMethod = _imageRepresentationMethod,
-                    IrmToUseDescriptors = ImageRepresentationMethod.MkLabSift,
+                    IrmToUseDescriptors = ImageRepresentationMethod.Sift,
 
                     ColorCorrelogramExtractionMethod = ColorCorrelogram.ColorCorrelogramExtractionMethod.LireAlgorithm,
-                    MkLabSurfExtractionMethod = MkLabSurf.MkLabSurfExtractionMethod.ColorSurf,
+                    MkLabSurfExtractionMethod = Surf.MkLabSurfExtractionMethod.ColorSurf,
 
                     ColorSpace = ColorConversion.ColorSpace.RGB,
                     UseCombinedQuantization = true
@@ -157,7 +157,7 @@ namespace AutomaticImageClassificationTests
 
                     //Fisher Vector
                     _baseParameters.ClusterParameters.ClusterMethod = method == ImageRepresentationMethod.VlFeatFisherVector
-                                        ? ClusterMethod.VlFeatGmm
+                                        ? ClusterMethod.GMM
                                         : _clusterMethod;
 
                     //LBOC

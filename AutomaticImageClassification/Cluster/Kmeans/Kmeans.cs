@@ -4,11 +4,11 @@ using System.Linq;
 using AutomaticImageClassification.Cluster.ClusterModels;
 using AutomaticImageClassification.Utilities;
 using MathWorks.MATLAB.NET.Arrays;
-using MatlabAPI;
 
 namespace AutomaticImageClassification.Cluster.Kmeans
 {
-    public class VlFeatKmeans : ICluster
+    //from vlfeat
+    public class Kmeans : ICluster
     {
        
         public ClusterModel CreateClusters(List<double[]> descriptorFeatures, int clustersNum)
@@ -35,7 +35,7 @@ namespace AutomaticImageClassification.Cluster.Kmeans
 
         public override string ToString()
         {
-            return "VlFeatKmeans";
+            return "K-Means";
         }
 
     }

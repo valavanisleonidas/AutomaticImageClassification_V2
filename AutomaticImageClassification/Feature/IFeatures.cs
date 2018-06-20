@@ -22,15 +22,15 @@ namespace AutomaticImageClassification.Feature
 
 
         //bovw model
-        MkLabVlad,
-        VlFeatSift,
-        VlFeatDenseSift,
-        VlFeatPhow,
+        Vlad,
+        
+        DenseSift,
+        Phow,
         //AccordSurf,
         ColorCorrelogram,
         //JOpenSurf,
-        MkLabSift,
-        MkLabSurf,
+        Sift,
+        Surf,
         
 
         //textual model

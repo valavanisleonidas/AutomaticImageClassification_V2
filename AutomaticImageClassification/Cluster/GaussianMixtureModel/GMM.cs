@@ -9,7 +9,8 @@ using MathWorks.MATLAB.NET.Arrays;
 
 namespace AutomaticImageClassification.Cluster.GaussianMixtureModel
 {
-    public class VlFeatGmm : ICluster
+    //from vlfeat
+    public class GMM : ICluster
     {
       
         public ClusterModel CreateClusters(List<double[]> descriptorFeatures, int clustersNum)
@@ -42,7 +43,7 @@ namespace AutomaticImageClassification.Cluster.GaussianMixtureModel
 
         public override string ToString()
         {
-            return "VlFeatGmm";
+            return "GMM";
         }
 
     }

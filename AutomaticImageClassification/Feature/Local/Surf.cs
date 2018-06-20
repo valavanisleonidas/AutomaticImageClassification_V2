@@ -7,7 +7,8 @@ using AutomaticImageClassification.Utilities;
 
 namespace AutomaticImageClassification.Feature.Local
 {
-    public class MkLabSurf : IFeatures
+    //from mklab
+    public class Surf : IFeatures
     {
         private AbstractFeatureExtractor _surf;
         private readonly MkLabSurfExtractionMethod _mkLabSurfExtractionMethod;
@@ -18,27 +19,27 @@ namespace AutomaticImageClassification.Feature.Local
             get { return true; }
         }
 
-        public MkLabSurf(ClusterModel clusterModel)
+        public Surf(ClusterModel clusterModel)
         {
             _clusterModel = clusterModel;
             _mkLabSurfExtractionMethod = MkLabSurfExtractionMethod.ColorSurf;
             GetType();
         }
 
-        public MkLabSurf(ClusterModel clusterModel, MkLabSurfExtractionMethod mkLabSurfExtractionMethod)
+        public Surf(ClusterModel clusterModel, MkLabSurfExtractionMethod mkLabSurfExtractionMethod)
         {
             _clusterModel = clusterModel;
             _mkLabSurfExtractionMethod = mkLabSurfExtractionMethod;
             GetType();
         }
 
-        public MkLabSurf()
+        public Surf()
         {
             _mkLabSurfExtractionMethod = MkLabSurfExtractionMethod.ColorSurf;
             GetType();
         }
 
-        public MkLabSurf(MkLabSurfExtractionMethod mkLabSurfExtractionMethod)
+        public Surf(MkLabSurfExtractionMethod mkLabSurfExtractionMethod)
         {
             _mkLabSurfExtractionMethod = mkLabSurfExtractionMethod;
             GetType();

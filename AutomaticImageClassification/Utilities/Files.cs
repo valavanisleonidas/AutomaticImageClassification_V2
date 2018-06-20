@@ -4,12 +4,14 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AutomaticImageClassification.Utilities
 {
     public class Files
     {
+        
         //default for pictures
         public static string[] GetFilesFrom(string searchFolder, string[] filters = null, bool isRecursive = true)
         {
@@ -92,6 +94,9 @@ namespace AutomaticImageClassification.Utilities
         //write each line of List into a new line in file
         public static void WriteFile<T>(string fileToWrite, List<T[]> contentList)
         {
+            CultureInfo oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+
             var encoderShouldEmitUtf8Identifier = false;
             using (
                 StreamWriter sw = new StreamWriter(File.Open(fileToWrite, FileMode.Create),
@@ -102,11 +107,16 @@ namespace AutomaticImageClassification.Utilities
                     sw.WriteLine(string.Join(" ", features.Select(p => p.ToString()).ToArray()));
                 }
             }
+            Thread.CurrentThread.CurrentCulture = oldCulture;
+
         }
 
         //write each line of List into a new line in file
         public static void WriteFile<T>(string fileToWrite, List<T> contentList, bool writeInOneLine = false)
         {
+            CultureInfo oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+
             var encoderShouldEmitUtf8Identifier = false;
             using (
                 StreamWriter sw = new StreamWriter(File.Open(fileToWrite, FileMode.Create),
@@ -119,11 +129,16 @@ namespace AutomaticImageClassification.Utilities
                 }
                 sw.Write(string.Join(separator, contentList.Select(p => p.ToString()).ToArray()));
             }
+            Thread.CurrentThread.CurrentCulture = oldCulture; 
+
         }
 
         //appends array to end of line in file or if file does not exists it creates a new file
         public static void WriteAppendFile<T>(string fileToWrite, T[] contentArray)
         {
+            CultureInfo oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+
             var encoderShouldEmitUtf8Identifier = false;
             using (
                 StreamWriter sw = new StreamWriter(File.Open(fileToWrite, FileMode.Append),
@@ -131,6 +146,8 @@ namespace AutomaticImageClassification.Utilities
             {
                 sw.WriteLine(string.Join(" ", contentArray.Select(p => p.ToString()).ToArray()));
             }
+            Thread.CurrentThread.CurrentCulture = oldCulture; 
+
         }
 
         //appends array to end of line in file or if file does not exists it creates a new file
@@ -155,18 +172,33 @@ namespace AutomaticImageClassification.Utilities
 
         public static T[][] ReadFileTo2DArray<T>(string path)
         {
-            return File.ReadAllLines(path)
+            CultureInfo oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+
+            T[][] array = File.ReadAllLines(path)
                 .Select(
                     l =>
                         l.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
-                            .Select(i => (T)Convert.ChangeType(i, typeof(T),CultureInfo.CurrentCulture))
+                            .Select(i => (T)Convert.ChangeType(i, typeof(T)))
                             .ToArray())
                 .ToArray();
+
+            Thread.CurrentThread.CurrentCulture = oldCulture; 
+
+            return array;
         }
 
         public static T[] ReadFileTo1DArray<T>(string path)
         {
-            return File.ReadAllLines(path).Select(i => (T)Convert.ChangeType(i, typeof(T))).ToArray();
+            CultureInfo oldCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+
+            T[] array = File.ReadAllLines(path).Select(i => (T)Convert.ChangeType(i, typeof(T))).ToArray();
+
+            Thread.CurrentThread.CurrentCulture = oldCulture; 
+
+            return array;
+
         }
 
     }

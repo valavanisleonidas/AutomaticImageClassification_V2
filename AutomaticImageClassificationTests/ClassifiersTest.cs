@@ -17,8 +17,8 @@ namespace AutomaticImageClassificationTests
         {
             Stopwatch stopwatch = Stopwatch.StartNew(); //creates and start the instance of Stopwatch
 
-            var trainDataPath = @"Data\Features\Vlad_MkLabColorSurf_K-Means_500_VlFeatKdTree_Randomized_train.txt";
-            var testDataPath = @"Data\Features\Vlad_MkLabColorSurf_K-Means_500_VlFeatKdTree_Randomized_test.txt";
+            var trainDataPath = @"Data\Features\MkLabSurf_VlFeatEm_RandomInit_512_VlFeatKdTree_Randomized_train.txt";
+            var testDataPath = @"Data\Features\MkLabSurf_VlFeatEm_RandomInit_512_VlFeatKdTree_Randomized_test.txt";
 
             var trainlabelsPath = @"Data\Features\boc_labels_train.txt";
             var testlabelsPath = @"Data\Features\boc_labels_test.txt";
@@ -124,77 +124,6 @@ namespace AutomaticImageClassificationTests
             Console.WriteLine("program run for : " + stopwatch.Elapsed);
 
         }
-
-        //pass libsvm
-        [TestMethod]
-        public void CanUseLibSvm()
-        {
-            Stopwatch stopwatch = Stopwatch.StartNew(); //creates and start the instance of Stopwatch
-
-            var trainDataPath = @"Data\Features\Vlad_MkLabColorSurf_K-Means_500_VlFeatKdTree_Randomized_train.txt";
-            var testDataPath = @"Data\Features\Vlad_MkLabColorSurf_K-Means_500_VlFeatKdTree_Randomized_test.txt";
-
-            var trainlabelsPath = @"Data\Features\boc_labels_train.txt";
-            var testlabelsPath = @"Data\Features\boc_labels_test.txt";
-
-            var trainFeat = Files.ReadFileToListArrayList<double>(trainDataPath).ToList();
-            var testFeat = Files.ReadFileToListArrayList<double>(testDataPath).ToList();
-
-            var trainlabels = Files.ReadFileTo1DArray<double>(trainlabelsPath);
-            var testlabels = Files.ReadFileTo1DArray<double>(testlabelsPath);
-
-            var parameter = new SVMParameter
-            {
-                Type = SVMType.C_SVC,
-                Kernel = SVMKernelType.RBF,
-                C = 32,
-                Gamma = 4,
-                Probability = true
-            };
-
-            //normalize 
-            //Normalization.SqrtList(ref trainFeat);
-            //Normalization.SqrtList(ref testFeat);
-
-            //trainFeat = Normalization.Tfidf(trainFeat);
-            //testFeat = Normalization.Tfidf(testFeat);
-
-            Normalization.ComputeL1Features(ref trainFeat);
-            Normalization.ComputeL1Features(ref testFeat);
-
-
-            IClassifier classifier = new LibSvm(parameter);
-            //classifier.GridSearch(ref trainFeat, ref trainlabels);
-            classifier.Train(ref trainFeat, ref trainlabels);
-            classifier.Predict(ref testFeat);
-
-            var predictedLabelsText = @"Data\Results\LibSVMBocPredictedLabels.txt";
-            var predictedprobstext = @"Data\Results\LibSVMBocPredictedProbabilities.txt";
-
-            Files.WriteFile(predictedLabelsText, classifier.GetPredictedCategories().ToList());
-            Files.WriteFile(predictedprobstext, classifier.GetPredictedProbabilities().ToList());
-
-            //compute accuracy
-            int[] predictedLabels = Array.ConvertAll(classifier.GetPredictedCategories(), x => (int)x);
-            int[] trueLabels = Array.ConvertAll(testlabels, x => (int)x);
-
-            var accuracy = AutomaticImageClassification.Evaluation.Measures.Accuracy(trueLabels, predictedLabels);
-            var macrof1 = AutomaticImageClassification.Evaluation.Measures.MacroF1(trueLabels, predictedLabels, trainlabels.Distinct().Select(a => (int)a).ToArray());
-            Console.WriteLine(@"Accuracy is : " + accuracy + " , macro f1 : " + macrof1);
-
-            stopwatch.Stop();
-            Console.WriteLine("program run for : " + stopwatch.Elapsed);
-
-            // Normalize the datasets if you want: L2 Norm => x / ||x||
-
-            //trainingSet = trainingSet.Normalize(SVMNormType.L2);
-            //testSet = testSet.Normalize(SVMNormType.L2);
-
-            //// Evaluate the test results
-            //int[,] confusionMatrix;
-            //double testAccuracy = testSet.EvaluateClassificationProblem(testResults, model.Labels, out confusionMatrix);
-
-        }
-
+        
     }
 }

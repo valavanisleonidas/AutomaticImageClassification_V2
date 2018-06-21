@@ -17,8 +17,8 @@ namespace AutomaticImageClassificationTests
         {
             Stopwatch stopwatch = Stopwatch.StartNew(); //creates and start the instance of Stopwatch
 
-            var trainDataPath = @"Data\Features\lboc__K-Means_50_1024_Lire_AccordKDTree_train.txt";
-            var testDataPath = @"Data\Features\lboc__K-Means_50_1024_Lire_AccordKDTree_test.txt";
+            var trainDataPath = @"Data\Features\Vlad_MkLabColorSurf_K-Means_500_VlFeatKdTree_Randomized_train.txt";
+            var testDataPath = @"Data\Features\Vlad_MkLabColorSurf_K-Means_500_VlFeatKdTree_Randomized_test.txt";
 
             var trainlabelsPath = @"Data\Features\boc_labels_train.txt";
             var testlabelsPath = @"Data\Features\boc_labels_test.txt";
@@ -47,7 +47,7 @@ namespace AutomaticImageClassificationTests
             };
 
             //liblinear
-            var classifier = new LibLinearLib(_params);
+            var classifier = new AutomaticImageClassification.Classifiers.SVM(_params);
 
             //normalize 
             if (sqrt)
@@ -131,8 +131,8 @@ namespace AutomaticImageClassificationTests
         {
             Stopwatch stopwatch = Stopwatch.StartNew(); //creates and start the instance of Stopwatch
 
-            var trainDataPath = @"Data\Features\MkLabSurf_VlFeatEm_RandomInit_512_VlFeatKdTree_Randomized_train.txt";
-            var testDataPath = @"Data\Features\MkLabSurf_VlFeatEm_RandomInit_512_VlFeatKdTree_Randomized_test.txt";
+            var trainDataPath = @"Data\Features\Vlad_MkLabColorSurf_K-Means_500_VlFeatKdTree_Randomized_train.txt";
+            var testDataPath = @"Data\Features\Vlad_MkLabColorSurf_K-Means_500_VlFeatKdTree_Randomized_test.txt";
 
             var trainlabelsPath = @"Data\Features\boc_labels_train.txt";
             var testlabelsPath = @"Data\Features\boc_labels_test.txt";
@@ -164,7 +164,7 @@ namespace AutomaticImageClassificationTests
 
 
             IClassifier classifier = new LibSvm(parameter);
-            classifier.GridSearch(ref trainFeat, ref trainlabels);
+            //classifier.GridSearch(ref trainFeat, ref trainlabels);
             classifier.Train(ref trainFeat, ref trainlabels);
             classifier.Predict(ref testFeat);
 

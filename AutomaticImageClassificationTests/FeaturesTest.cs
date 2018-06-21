@@ -68,7 +68,7 @@ namespace AutomaticImageClassificationTests
             var numOfClusters = 10;
             var sampleImgs = Files.GetFilesFrom(baseFolder, 2);
 
-            IFeatures phow = new Vlad();
+            IFeatures phow = new Phow();
             ICluster cluster = new Kmeans();
             List<double[]> colors = new List<double[]>();
 
@@ -83,7 +83,7 @@ namespace AutomaticImageClassificationTests
             tree.CreateTree(model.Means);
             model.Tree = tree;
 
-            phow = new Vlad(model);
+            phow = new Phow(model);
 
             foreach (var image in sampleImgs)
             {
@@ -394,11 +394,11 @@ namespace AutomaticImageClassificationTests
         {
             Stopwatch stopwatch = Stopwatch.StartNew(); //creates and start the instance of Stopwatch
 
-            const int clusterNum = 512;
+            const int clusterNum = 500;
             const int sampleImages = 2;
 
             ICluster cluster = new Kmeans();
-            IFeatures feature = new Surf(MkLabSurfExtractionMethod.Surf);
+            IFeatures feature = new Vlad();
             IKdTree tree = new KdTree();
 
             const string baseFolder = @"C:\Users\l.valavanis\Desktop\Clef2013";
@@ -456,7 +456,7 @@ namespace AutomaticImageClassificationTests
             
             #endregion
 
-            feature = new Surf(model, MkLabSurfExtractionMethod.Surf);
+            feature = new Vlad(model);
 
 
             #region features extraction

@@ -48,7 +48,7 @@ namespace AutomaticImageClassificationTests
             };
 
             //liblinear
-            var classifier = new LibLinearLib(_params);
+            var classifier = new SVM(_params);
             // APPLY KERNEL MAPPING
             classifier.ApplyKernelMapping(ref features);
             //Files.WriteFile("liblinear_ApplyKernelMap_bocTrain.txt", features);
@@ -78,7 +78,7 @@ namespace AutomaticImageClassificationTests
             };
 
             //liblinear
-            var classifier = new LibLinearLib(_params);
+            var classifier = new SVM(_params);
 
             // APPLY KERNEL MAPPING
             classifier.ApplyKernelMapping(ref trainFeat);
@@ -116,7 +116,7 @@ namespace AutomaticImageClassificationTests
             };
 
             //liblinear
-            var classifier = new LibLinearLib(_params);
+            var classifier = new SVM(_params);
 
             // APPLY KERNEL MAPPING
             classifier.ApplyKernelMapping(ref trainFeat);
@@ -155,7 +155,7 @@ namespace AutomaticImageClassificationTests
             };
 
             //liblinear
-            var classifier = new LibLinearLib(_params);
+            var classifier = new SVM(_params);
 
             // APPLY KERNEL MAPPING
             classifier.ApplyKernelMapping(ref trainFeat);

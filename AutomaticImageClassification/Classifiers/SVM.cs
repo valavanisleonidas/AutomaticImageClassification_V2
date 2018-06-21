@@ -7,14 +7,15 @@ using MatlabAPI;
 
 namespace AutomaticImageClassification.Classifiers
 {
-    public class LibLinearLib : IClassifier
+    //from matlab liblinear
+    public class SVM : IClassifier
     {
 
         private readonly LibLinearModel _libLinearModel = new LibLinearModel();
         private readonly LibLinearResults _results = new LibLinearResults();
         private readonly LibLinearParameters _params = new LibLinearParameters();
 
-        public LibLinearLib()
+        public SVM()
         {
             //default parameters
             _params.Gamma = 0.5;
@@ -26,7 +27,7 @@ namespace AutomaticImageClassification.Classifiers
             _params.SolverType = 2;
         }
 
-        public LibLinearLib(LibLinearParameters _params)
+        public SVM(LibLinearParameters _params)
         {
             this._params = _params;
         }

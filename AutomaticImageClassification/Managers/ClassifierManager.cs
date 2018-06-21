@@ -14,10 +14,10 @@ namespace AutomaticImageClassification.Managers
         {
             switch (baseParameters.ClassifierParameters.ClassifierMethod)
             {
-                case ClassifierMethod.LibLinear:
-                    baseParameters.ClassifierParameters.Classifier = new LibLinearLib(baseParameters.ClassifierParameters.LibLinearParameters);
+                case ClassifierMethod.SVM:
+                    baseParameters.ClassifierParameters.Classifier = new Classifiers.SVM(baseParameters.ClassifierParameters.LibLinearParameters);
                     break;
-                case ClassifierMethod.LibSvm:
+                case ClassifierMethod.LibSVM:
                     baseParameters.ClassifierParameters.Classifier = new LibSvm(baseParameters.ClassifierParameters.SvmParameter);
                     break;
                 default:

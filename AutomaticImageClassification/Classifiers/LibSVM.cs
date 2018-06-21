@@ -58,7 +58,7 @@ namespace AutomaticImageClassification.Classifiers
             // Train the model, If your parameter set gives good result on cross validation
             _model = trainSet.Train(_parameter);
             // Save the model
-            SVM.SaveModel(_model, _filePath);
+            _model.SaveModel(_filePath);
         }
 
         public void GridSearch(ref List<double[]> features, ref double[] labels)

@@ -17,8 +17,9 @@ namespace AutomaticImageClassification.Classifiers
 
     public enum ClassifierMethod
     {
-        LibLinear,
-        LibSvm
+        SVM,
+        LibSVM
+
     }
 
 

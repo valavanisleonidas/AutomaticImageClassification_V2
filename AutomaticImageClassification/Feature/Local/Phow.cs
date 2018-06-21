@@ -28,7 +28,9 @@ namespace AutomaticImageClassification.Feature.Local
             get { return true; }
         }
 
-        public Phow() { }
+        public Phow() {
+            _isFastPhow = true;
+        }
 
         public Phow(ClusterModel clusterModel)
         {
@@ -180,7 +182,7 @@ namespace AutomaticImageClassification.Feature.Local
 
         public override string ToString()
         {
-            return "Phow_" + _extractionColor + "_" + string.Join("_", Arrays.ToJaggedArray(ref _numSpatialX)[0]);
+            return "Phow_" + (_isFastPhow ? "_fast" : "")+ "_" + _extractionColor + "_" + string.Join("_", Arrays.ToJaggedArray(ref _numSpatialX)[0]);
         }
     }
 }

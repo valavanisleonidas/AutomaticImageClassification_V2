@@ -35,7 +35,7 @@ namespace AutomaticImageClassification.Cluster.Kmeans
 
         public override string ToString()
         {
-            return "K-Means";
+            return "KMeans";
         }
 
     }

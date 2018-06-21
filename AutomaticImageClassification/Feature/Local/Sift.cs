@@ -15,9 +15,9 @@ namespace AutomaticImageClassification.Feature.Local
     {
         private int _width;
         private int _height;
-        private readonly bool _useCombinedQuantization;
-        private readonly int[,] _numSpatialX = { { 1, 2, 4 } };
-        private readonly int[,] _numSpatialY = { { 1, 2, 4 } };
+        private bool _useCombinedQuantization;
+        private int[,] _numSpatialX = { { 1, 2, 4 } };
+        private int[,] _numSpatialY = { { 1, 2, 4 } };
         private readonly ClusterModel _clusterModel;
 
         public bool CanCluster
@@ -140,7 +140,7 @@ namespace AutomaticImageClassification.Feature.Local
 
         public override string ToString()
         {
-            return "VlFeatSift";
+            return "Sift" + (_useCombinedQuantization ? "_combined" : "") + "_" + string.Join("_", Arrays.ToJaggedArray(ref _numSpatialX)[0]);
         }
 
     }

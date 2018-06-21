@@ -11,7 +11,7 @@ namespace AutomaticImageClassification.Feature.Local
     public class Surf : IFeatures
     {
         private AbstractFeatureExtractor _surf;
-        private readonly MkLabSurfExtractionMethod _mkLabSurfExtractionMethod;
+        private readonly SurfExtractionMethod _SurfExtractionMethod;
         private readonly ClusterModel _clusterModel;
 
         public bool CanCluster
@@ -22,37 +22,37 @@ namespace AutomaticImageClassification.Feature.Local
         public Surf(ClusterModel clusterModel)
         {
             _clusterModel = clusterModel;
-            _mkLabSurfExtractionMethod = MkLabSurfExtractionMethod.ColorSurf;
+            _SurfExtractionMethod = SurfExtractionMethod.ColorSurf;
             GetType();
         }
 
-        public Surf(ClusterModel clusterModel, MkLabSurfExtractionMethod mkLabSurfExtractionMethod)
+        public Surf(ClusterModel clusterModel, SurfExtractionMethod mkLabSurfExtractionMethod)
         {
             _clusterModel = clusterModel;
-            _mkLabSurfExtractionMethod = mkLabSurfExtractionMethod;
+            _SurfExtractionMethod = mkLabSurfExtractionMethod;
             GetType();
         }
 
         public Surf()
         {
-            _mkLabSurfExtractionMethod = MkLabSurfExtractionMethod.ColorSurf;
+            _SurfExtractionMethod = SurfExtractionMethod.ColorSurf;
             GetType();
         }
 
-        public Surf(MkLabSurfExtractionMethod mkLabSurfExtractionMethod)
+        public Surf(SurfExtractionMethod mkLabSurfExtractionMethod)
         {
-            _mkLabSurfExtractionMethod = mkLabSurfExtractionMethod;
+            _SurfExtractionMethod = mkLabSurfExtractionMethod;
             GetType();
         }
 
         public new void GetType()
         {
-            switch (_mkLabSurfExtractionMethod)
+            switch (_SurfExtractionMethod)
             {
-                case MkLabSurfExtractionMethod.Surf:
+                case SurfExtractionMethod.Surf:
                     _surf = new SURFExtractor();
                     break;
-                case MkLabSurfExtractionMethod.ColorSurf:
+                case SurfExtractionMethod.ColorSurf:
                     _surf = new ColorSURFExtractor();
                     break;
                 default:
@@ -83,7 +83,7 @@ namespace AutomaticImageClassification.Feature.Local
             return imgVocVector;
         }
 
-        public enum MkLabSurfExtractionMethod
+        public enum SurfExtractionMethod
         {
             Surf,
             ColorSurf
@@ -91,7 +91,7 @@ namespace AutomaticImageClassification.Feature.Local
 
         public override string ToString()
         {
-            return "MkLab" + _mkLabSurfExtractionMethod;
+            return "MkLab" + _SurfExtractionMethod;
         }
     }
 }

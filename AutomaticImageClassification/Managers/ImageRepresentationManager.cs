@@ -145,7 +145,7 @@ namespace AutomaticImageClassification.Managers
 
         public ColorCorrelogram.ColorCorrelogramExtractionMethod ColorCorrelogramExtractionMethod;
         
-        public Surf.MkLabSurfExtractionMethod MkLabSurfExtractionMethod;
+        public Surf.SurfExtractionMethod MkLabSurfExtractionMethod;
 
         //some extraction methods need another feature to extract features
         public ImageRepresentationMethod BasicImageRepresentationMethod;

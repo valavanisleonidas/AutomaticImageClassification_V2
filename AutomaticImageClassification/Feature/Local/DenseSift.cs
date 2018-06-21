@@ -20,7 +20,7 @@ namespace AutomaticImageClassification.Feature.Local
         private readonly int[,] _numSpatialY = { { 1, 2, 4 } };
         private readonly bool _rootSift = true;
         private readonly bool _normalizeSift = true;
-        private readonly bool _useCombinedQuantization;
+        private readonly bool _useCombinedQuantization = false;
         private readonly ClusterModel _clusterModel;
 
         public bool CanCluster
@@ -30,7 +30,7 @@ namespace AutomaticImageClassification.Feature.Local
 
         public DenseSift()
         {
-            _useCombinedQuantization = true;
+            //_useCombinedQuantization = true;
         }
 
         public DenseSift(bool useCombinedQuantization)

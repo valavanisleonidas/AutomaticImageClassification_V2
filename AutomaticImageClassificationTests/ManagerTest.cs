@@ -72,7 +72,7 @@ namespace AutomaticImageClassificationTests
                     IrmToUseDescriptors = ImageRepresentationMethod.Sift,
 
                     ColorCorrelogramExtractionMethod = ColorCorrelogram.ColorCorrelogramExtractionMethod.LireAlgorithm,
-                    MkLabSurfExtractionMethod = Surf.MkLabSurfExtractionMethod.ColorSurf,
+                    MkLabSurfExtractionMethod = Surf.SurfExtractionMethod.ColorSurf,
 
                     ColorSpace = ColorConversion.ColorSpace.RGB,
                     UseCombinedQuantization = true

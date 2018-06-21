@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutomaticImageClassification.Classifiers;
-using LibSVMsharp;
 
 namespace AutomaticImageClassification.Managers
 {
@@ -17,9 +16,6 @@ namespace AutomaticImageClassification.Managers
                 case ClassifierMethod.SVM:
                     baseParameters.ClassifierParameters.Classifier = new Classifiers.SVM(baseParameters.ClassifierParameters.LibLinearParameters);
                     break;
-                case ClassifierMethod.LibSVM:
-                    baseParameters.ClassifierParameters.Classifier = new LibSvm(baseParameters.ClassifierParameters.SvmParameter);
-                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -30,7 +26,6 @@ namespace AutomaticImageClassification.Managers
     {
         public ClassifierMethod ClassifierMethod;
         public LibLinearParameters LibLinearParameters;
-        public SVMParameter SvmParameter;
         public IClassifier Classifier;
 
     }

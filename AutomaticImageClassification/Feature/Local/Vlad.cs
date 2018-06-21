@@ -10,10 +10,7 @@ namespace AutomaticImageClassification.Feature.Local
     {
         private readonly IFeatures _featureExtractor;
         private readonly ClusterModel _clusterModel;
-        /*
-                private VladAggregator _vlad;
-        */
-
+        
         public bool CanCluster
         {
             get { return true; }
@@ -33,19 +30,16 @@ namespace AutomaticImageClassification.Feature.Local
         {
             _featureExtractor = new Surf();
             _clusterModel = clusterModel;
-            // _vlad = new VladAggregator(codebook.ToArray());
         }
 
         public Vlad(ClusterModel clusterModel, IFeatures extractor)
         {
             _featureExtractor = extractor;
             _clusterModel = clusterModel;
-            //_vlad = new VladAggregator(codebook.ToArray());
         }
 
         public double[] ExtractHistogram(LocalBitmap input)
         {
-            //return _vlad.aggregate(_featureExtractor.ExtractDescriptors(input).ToArray());
             var codebookDimensions = _clusterModel.Means[0].Length;
             var clusterNum = _clusterModel.Means.Count;
 

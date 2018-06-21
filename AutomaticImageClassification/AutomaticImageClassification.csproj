@@ -71,9 +71,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\ikvm-8.1.5717.0\bin\IKVM.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="LibSVMsharp">
-      <HintPath>..\Libs\LibSvmSharp\LibSVMsharp.dll</HintPath>
-    </Reference>
     <Reference Include="MatlabAPI">
       <HintPath>..\Libs\MatlabAPI.dll</HintPath>
     </Reference>
@@ -108,7 +105,6 @@
   <ItemGroup>
     <Compile Include="Classifiers\IClassifier.cs" />
     <Compile Include="Classifiers\SVM.cs" />
-    <Compile Include="Classifiers\LibSVM.cs" />
     <Compile Include="Cluster\ClusterModels\ClusterModel.cs" />
     <Compile Include="Cluster\ClusterModels\GmmModel.cs" />
     <Compile Include="Cluster\ClusterModels\KmeansModel.cs" />

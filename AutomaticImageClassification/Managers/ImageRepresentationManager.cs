@@ -53,7 +53,7 @@ namespace AutomaticImageClassification.Managers
                     irmParameters.CurrentImageRepresentationMethod = baseParameters.IrmParameters.BasicImageRepresentationMethod;
                     break;
                 case ImageRepresentationMethod.DenseSift:
-                    baseParameters.ExtractionFeature = new DenseSift(irmParameters.UseCombinedQuantization);
+                    baseParameters.ExtractionFeature = new DenseSift();
                     break;
                 case ImageRepresentationMethod.VlFeatFisherVector:
                     irmParameters.CurrentImageRepresentationMethod = baseParameters.IrmParameters.IrmToUseDescriptors;
@@ -67,7 +67,7 @@ namespace AutomaticImageClassification.Managers
                     baseParameters.ExtractionFeature = new Phow();
                     break;
                 case ImageRepresentationMethod.Sift:
-                    baseParameters.ExtractionFeature = new Sift(irmParameters.UseCombinedQuantization);
+                    baseParameters.ExtractionFeature = new Sift();
                     break;
                 case ImageRepresentationMethod.TfIdf:
                     baseParameters.ExtractionFeature = new TfIdf();
@@ -108,7 +108,7 @@ namespace AutomaticImageClassification.Managers
                     irmParameters.CurrentImageRepresentationMethod = baseParameters.IrmParameters.BasicImageRepresentationMethod;
                     break;
                 case ImageRepresentationMethod.DenseSift:
-                    baseParameters.ExtractionFeature = new DenseSift(irmParameters.ClusterModels[0], irmParameters.UseCombinedQuantization);
+                    baseParameters.ExtractionFeature = new DenseSift(irmParameters.ClusterModels[0]);
                     break;
                 case ImageRepresentationMethod.VlFeatFisherVector:
                     irmParameters.CurrentImageRepresentationMethod = baseParameters.IrmParameters.IrmToUseDescriptors;
@@ -122,7 +122,7 @@ namespace AutomaticImageClassification.Managers
                     baseParameters.ExtractionFeature = new Phow(irmParameters.ClusterModels[0]);
                     break;
                 case ImageRepresentationMethod.Sift:
-                    baseParameters.ExtractionFeature = new Sift(irmParameters.ClusterModels[0], irmParameters.UseCombinedQuantization);
+                    baseParameters.ExtractionFeature = new Sift(irmParameters.ClusterModels[0]);
                     break;
                 case ImageRepresentationMethod.TfIdf:
                     baseParameters.ExtractionFeature = new TfIdf(irmParameters.TfidfApproach);

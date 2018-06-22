@@ -11,9 +11,9 @@ namespace AutomaticImageClassification.Classifiers
     public class SVM : IClassifier
     {
 
-        private readonly LibLinearModel _libLinearModel = new LibLinearModel();
-        private readonly LibLinearResults _results = new LibLinearResults();
-        private readonly LibLinearParameters _params = new LibLinearParameters();
+        private readonly SvmModel _libLinearModel = new SvmModel();
+        private readonly SvmResults _results = new SvmResults();
+        private readonly SvmParameters _params = new SvmParameters();
 
         public SVM()
         {
@@ -27,7 +27,7 @@ namespace AutomaticImageClassification.Classifiers
             _params.SolverType = 2;
         }
 
-        public SVM(LibLinearParameters _params)
+        public SVM(SvmParameters _params)
         {
             this._params = _params;
         }
@@ -200,20 +200,21 @@ namespace AutomaticImageClassification.Classifiers
 
     }
 
-    public class LibLinearModel
+    public class SvmModel
     {
         public double[][] Weights;
         public double[] Bias;
     }
     
-    public class LibLinearParameters
+    public class SvmParameters
     {
         public string Kernel, Homker, Solver;
         public bool IsManualCv;
         public double BiasMultiplier, Gamma, Cost, CvAccuracy = 0;
         public int SolverType;
-}
-    public class LibLinearResults
+    }
+
+    public class SvmResults
     {
         public double[] Probabilities;
         public double[] PredictedLabels;

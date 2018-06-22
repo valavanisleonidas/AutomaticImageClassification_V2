@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AutomaticImageClassification.Utilities
 {
@@ -23,6 +18,11 @@ namespace AutomaticImageClassification.Utilities
             if (!File.Exists(path)) return;
 
             Bitmap = new Bitmap(path);
+            if (Bitmap.Height > 480)
+            {
+                Bitmap = ImageProcessing.ResizeImage(Bitmap, 480);
+            }
+
             ImageHeight = Bitmap.Height;
             ImageWidth = Bitmap.Width;
         }
@@ -49,6 +49,14 @@ namespace AutomaticImageClassification.Utilities
             Bitmap = ImageProcessing.ResizeImage(new Bitmap(path), height, width);
             ImageHeight = height;
             ImageWidth = width;
+        }
+
+        public LocalBitmap(string path, int height)
+        {
+            Path = path;
+            Bitmap = ImageProcessing.ResizeImage(new Bitmap(path), height);
+            ImageHeight = Bitmap.Height;
+            ImageWidth = Bitmap.Width;
         }
 
         public LocalBitmap(string path, Bitmap bitmap, int height)

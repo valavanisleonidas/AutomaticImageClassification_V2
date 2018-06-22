@@ -104,24 +104,21 @@ namespace AutomaticImageClassification.Utilities
                 for (int x = 0; x < cols; x++)
                 {
                     Bitmap bmp = new Bitmap(w, h, PixelFormat.Format24bppRgb);
-                    
+
                     using (Graphics grp = Graphics.FromImage(bmp))
                     {
                         Rectangle dest = new Rectangle(0, 0, w, h);
                         Rectangle source = new Rectangle(w * x, h * y, w, h);
-                   
+
                         grp.DrawImage(img, dest, source, GraphicsUnit.Pixel);
-                      }
-                   
+                    }
+
                     res.Add(bmp);
                 }
             }
-
-
             return res;
-
         }
-        
+
         public static T[] GetDominantColor<T>(Bitmap img, ColorSpace cs)
         {
             T[] ret = new T[3];
@@ -131,7 +128,7 @@ namespace AutomaticImageClassification.Utilities
                 for (int y = 0; y < img.Height; y++)
                 {
                     Color cl = img.GetPixel(x, y);
-                    
+
                     int[] color = ColorConversion.ConvertFromRGB(cs, cl.R, cl.G, cl.B);
                     string key = string.Join(";", color);
 
@@ -145,7 +142,7 @@ namespace AutomaticImageClassification.Utilities
                     }
                 }
             }
-         
+
             string keyMax = "";
             int max = -1;
             foreach (var entry in domC.ToArray())
@@ -156,7 +153,7 @@ namespace AutomaticImageClassification.Utilities
                     keyMax = entry.Key;
                 }
             }
-          
+
             string[] scolors = keyMax.Split(';');
 
             return new T[] { (T)Convert.ChangeType(scolors[0], typeof(T)),
@@ -164,7 +161,6 @@ namespace AutomaticImageClassification.Utilities
                              (T)Convert.ChangeType(scolors[2], typeof(T))
                         };
         }
-
 
         public static Bitmap getPaletteImg(int[][] palette, int imgSize, ColorSpace cs)
         {

@@ -14,13 +14,11 @@ namespace AutomaticImageClassification.Feature.Local
     //From VLFeat
     public class DenseSift : IFeatures
     {
-        private int _width, _height;
         private readonly int _step = 4;
         private readonly int[,] _numSpatialX = { { 1, 2, 4 } };
         private readonly int[,] _numSpatialY = { { 1, 2, 4 } };
         private readonly bool _rootSift = true;
         private readonly bool _normalizeSift = true;
-        private readonly bool _useCombinedQuantization = false;
         private readonly ClusterModel _clusterModel;
 
         public bool CanCluster
@@ -28,41 +26,24 @@ namespace AutomaticImageClassification.Feature.Local
             get { return true; }
         }
 
-        public DenseSift()
-        {
-            //_useCombinedQuantization = true;
-        }
+        public DenseSift() {  }
+        
 
-        public DenseSift(bool useCombinedQuantization)
-        {
-            _useCombinedQuantization = useCombinedQuantization;
-        }
-
-        public DenseSift(int step, bool isRootSift, bool isNormalizedSift, bool useCombinedQuantization)
+        public DenseSift(int step, bool isRootSift, bool isNormalizedSift)
         {
             _step = step;
             _rootSift = isRootSift;
             _normalizeSift = isNormalizedSift;
-            _useCombinedQuantization = useCombinedQuantization;
         }
 
-        public DenseSift(ClusterModel clusterModel, int step, bool isRootSift, bool isNormalizedSift, bool useCombinedQuantization)
+        public DenseSift(ClusterModel clusterModel, int step, bool isRootSift, bool isNormalizedSift)
         {
             _clusterModel = clusterModel;
             _step = step;
             _rootSift = isRootSift;
             _normalizeSift = isNormalizedSift;
-            _useCombinedQuantization = useCombinedQuantization;
         }
-
-        public DenseSift(ClusterModel clusterModel, bool useCombinedQuantization)
-        {
-            _clusterModel = clusterModel;
-            _step = 4;
-            _rootSift = true;
-            _normalizeSift = true;
-            _useCombinedQuantization = useCombinedQuantization;
-        }
+        
 
         public DenseSift(ClusterModel clusterModel)
         {
@@ -71,31 +52,18 @@ namespace AutomaticImageClassification.Feature.Local
 
         public double[] ExtractHistogram(LocalBitmap input)
         {
-            _width = input.ImageWidth;
-            _height = input.ImageHeight;
+            
 
             double[] imgVocVector = new double[_clusterModel.ClusterNum];//num of clusters
 
-            if (!_useCombinedQuantization)
-            {
-                List<double[]> features;
-                ExtractDenseSift(input.Path, out features);
+            List<double[]> features;
+            ExtractDenseSift(input.Path, input.ImageHeight, input.ImageWidth, out features);
 
-                //for each centroid find min position in tree and increase corresponding index
-                List<int> indexes = _clusterModel.Tree.SearchTree(features);
-                foreach (var index in indexes)
-                {
-                    imgVocVector[index]++;
-                }
-            }
-            else
+            //for each centroid find min position in tree and increase corresponding index
+            List<int> indexes = _clusterModel.Tree.SearchTree(features);
+            foreach (var index in indexes)
             {
-                List<double[]> features;
-                List<double[]> frames;
-                ExtractDenseSift(input.Path, out features, out frames);
-                List<int> indexes = _clusterModel.Tree.SearchTree(features);
-
-                imgVocVector = Quantization.CombineQuantizations(frames, indexes, _width, _height, _clusterModel.ClusterNum, _numSpatialX, _numSpatialY);
+                imgVocVector[index]++;
             }
 
             return imgVocVector;
@@ -103,15 +71,12 @@ namespace AutomaticImageClassification.Feature.Local
 
         public List<double[]> ExtractDescriptors(LocalBitmap input)
         {
-            _width = input.ImageWidth;
-            _height = input.ImageHeight;
-
             List<double[]> descriptors;
-            ExtractDenseSift(input.Path, out descriptors);
+            ExtractDenseSift(input.Path, input.ImageHeight, input.ImageWidth, out descriptors);
             return descriptors;
         }
 
-        public void ExtractDenseSift(string input, out List<double[]> descriptors)
+        public void ExtractDenseSift(string input, int height, int width, out List<double[]> descriptors)
         {
             try
             {
@@ -122,43 +87,14 @@ namespace AutomaticImageClassification.Feature.Local
                     new MWLogicalArray(_rootSift),
                     new MWLogicalArray(_normalizeSift),
                     _step,
-                    new MWNumericArray(_height),
-                    new MWNumericArray(_width));
+                    new MWNumericArray(height),
+                    new MWNumericArray(width));
 
                 var features = (double[,])result[1].ToArray();
 
                 phow.Dispose();
 
                 descriptors = Arrays.ToJaggedArray(ref features).ToList();
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-
-        public void ExtractDenseSift(string input, out List<double[]> descriptors, out List<double[]> frames)
-        {
-            try
-            {
-                var phow = new MatlabAPI.DenseSift();
-
-                //return frames, descriptors( features ), contrast
-                MWArray[] result = phow.GetDenseSIFT(3, new MWCharArray(input),
-                    new MWLogicalArray(_rootSift),
-                    new MWLogicalArray(_normalizeSift),
-                    _step,
-                    new MWNumericArray(_height),
-                    new MWNumericArray(_width));
-
-
-                var fr = (double[,])result[0].ToArray();
-                var features = (double[,])result[1].ToArray();
-
-                phow.Dispose();
-
-                descriptors = Arrays.ToJaggedArray(ref features).ToList();
-                frames = Arrays.ToJaggedArray(ref fr).ToList();
             }
             catch (Exception e)
             {

@@ -13,12 +13,12 @@ namespace AutomaticImageClassificationTests
     {
         //pass liblinear
         [TestMethod]
-        public void CanUseLibLinear()
+        public void CanUseSVM()
         {
             Stopwatch stopwatch = Stopwatch.StartNew(); //creates and start the instance of Stopwatch
 
-            var trainDataPath = @"Data\Features\MkLabSurf_VlFeatEm_RandomInit_512_VlFeatKdTree_Randomized_train.txt";
-            var testDataPath = @"Data\Features\MkLabSurf_VlFeatEm_RandomInit_512_VlFeatKdTree_Randomized_test.txt";
+            var trainDataPath = @"Data\Features\DenseSift_root_normalized_KMeans_4096_VlFeatKdTree_Randomized_train.txt";
+            var testDataPath = @"Data\Features\DenseSift_root_normalized_KMeans_4096_VlFeatKdTree_Randomized_test.txt";
 
             var trainlabelsPath = @"Data\Features\boc_labels_train.txt";
             var testlabelsPath = @"Data\Features\boc_labels_test.txt";
@@ -26,7 +26,7 @@ namespace AutomaticImageClassificationTests
             var trainFeat = Files.ReadFileToListArrayList<double>(trainDataPath).ToList();
             var trainlabels = Files.ReadFileTo1DArray<double>(trainlabelsPath);
 
-            const bool doCrossVal = true;
+            const bool doCrossVal = false;
 
             //normalize
             const bool sqrt = false;
@@ -34,12 +34,12 @@ namespace AutomaticImageClassificationTests
             const bool l1 = true;
             const bool l2 = false;
 
-            var _params = new LibLinearParameters
+            var _params = new SvmParameters
             {
                 Gamma = 0.5,
                 Homker = "KCHI2",
                 Kernel = "chi2",
-                Cost = 64,
+                Cost = 512,
                 BiasMultiplier = 1,
                 Solver = "liblinear",
                 SolverType = 0,

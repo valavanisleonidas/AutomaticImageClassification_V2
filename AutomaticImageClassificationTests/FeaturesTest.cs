@@ -48,7 +48,7 @@ namespace AutomaticImageClassificationTests
 
             IKdTree tree = new KdTree();
             tree.CreateTree(model.Means);
-            phow = new Phow(model, true);
+            phow = new Phow(model);
 
             foreach (var image in sampleImgs)
             {
@@ -394,11 +394,11 @@ namespace AutomaticImageClassificationTests
         {
             Stopwatch stopwatch = Stopwatch.StartNew(); //creates and start the instance of Stopwatch
 
-            const int clusterNum = 500;
+            const int clusterNum = 100;
             const int sampleImages = 2;
 
             ICluster cluster = new Kmeans();
-            IFeatures feature = new Vlad();
+            IFeatures feature = new Sift();
             IKdTree tree = new KdTree();
 
             const string baseFolder = @"C:\Users\l.valavanis\Desktop\Clef2013";
@@ -456,7 +456,7 @@ namespace AutomaticImageClassificationTests
             
             #endregion
 
-            feature = new Vlad(model);
+            feature = new Sift(model);
 
 
             #region features extraction
@@ -490,25 +490,25 @@ namespace AutomaticImageClassificationTests
         {
             Stopwatch stopwatch = Stopwatch.StartNew(); //creates and start the instance of Stopwatch
 
-            const int clusterNum = 10;
-            const int sampleImages = 10;
-            const int maxNumberClusterFeatures = 100000;
+            const int clusterNum = 4096;
+            const int sampleImages = 2;
+            const int maxNumberClusterFeatures = 300000;
 
             ICluster cluster = new Kmeans();
             IFeatures feature = new Phow();
             IKdTree tree = new KdTree();
 
-            //const string baseFolder = @"C:\Users\l.valavanis\Desktop\personal\dbs\Clef2013\Compound";
-            //var trainPath = Path.Combine(baseFolder, "Train");
-            //var testPath = Path.Combine(baseFolder, "Test");
+            const string baseFolder = @"C:\Users\l.valavanis\Desktop\Clef2013";
+            var trainPath = Path.Combine(baseFolder, "TrainSet");
+            var testPath = Path.Combine(baseFolder, "TestSet");
 
-            const string baseFolder = @"Data\database";
-            var trainPath = baseFolder;
-            var testPath = baseFolder;
+            //const string baseFolder = @"Data\database";
+            //var trainPath = baseFolder;
+            //var testPath = baseFolder;
 
-            var trainFile = @"Data\Features\" + feature + "_Tree" + tree + "_Cluster" + cluster + "_" + clusterNum + "_train.txt";
-            var testFile = @"Data\Features\" + feature + "_Tree" + tree + "_Cluster" + cluster + "_" + clusterNum + "_test.txt";
-            var clustersFile = @"Data\Palettes\" + feature + "_" + clusterNum + "_clusters.txt";
+            var trainFile = @"Data\Features\" + feature + "_" + cluster + "_" + clusterNum + "_" + tree + "_train.txt";
+            var testFile = @"Data\Features\" + feature + "_" + cluster + "_" + clusterNum + "_" + tree + "_test.txt";
+            var clustersFile = @"Data\Palettes\" + feature + "_" + cluster + "_" + clusterNum + "_" + tree + "_clusters.txt";
 
             ClusterModel model;
             List<double[]> finalClusters;
@@ -525,7 +525,7 @@ namespace AutomaticImageClassificationTests
             {
                 #region Cluster
 
-                var sampleImgs = Files.GetFilesFrom(trainPath);
+                var sampleImgs = Files.GetFilesFrom(trainPath, sampleImages);
                 var clusterFeaturesPerImage = maxNumberClusterFeatures / sampleImgs.Length;
 
                 var clusters = new List<double[]>();
@@ -544,8 +544,10 @@ namespace AutomaticImageClassificationTests
 
                 #endregion
             }
+            
+            tree.CreateTree(finalClusters);
+            model.Tree = tree;
 
-            //tree.CreateTree(finalClusters);
             feature = new Phow(model);
 
             #region features extraction
@@ -579,49 +581,63 @@ namespace AutomaticImageClassificationTests
         {
             Stopwatch stopwatch = Stopwatch.StartNew(); //creates and start the instance of Stopwatch
 
-            const int clusterNum = 100;
-            const int sampleImages = 10;
-            const int maxNumberClusterFeatures = 200000;
+            const int clusterNum = 4096;
+            const int sampleImages = 2;
+            const int maxNumberClusterFeatures = 300000;
 
             ICluster cluster = new Kmeans();
             IFeatures feature = new DenseSift();
-
-            //const string baseFolder = @"C:\Users\leonidas\Desktop\libsvm\databases\Clef2013\Compound";
-            //var trainPath = Path.Combine(baseFolder, "TrainSet");
-            //var testPath = Path.Combine(baseFolder, "TestSet");
-
-            const string baseFolder = @"Data\database";
-            var trainPath = baseFolder;
-            var testPath = baseFolder;
-
-            var trainFile = @"Data\Features\" + feature + "_Lire_JavaML_" + clusterNum + "_train.txt";
-            var testFile = @"Data\Features\" + feature + "_Lire_JavaML_" + clusterNum + "_test.txt";
-            var clustersFile = @"Data\Palettes\" + feature + "_" + clusterNum + "_clusters.txt";
-
-            #region Cluster
-
-            //var sampleImgs = Files.GetFilesFrom(trainPath, sampleImages);
-            var sampleImgs = Files.GetFilesFrom(trainPath);
-            var clusterFeaturesPerImage = maxNumberClusterFeatures / sampleImgs.Length;
-
-            var clusters = new List<double[]>();
-            foreach (var image in sampleImgs)
-            {
-                LocalBitmap bitmap = new LocalBitmap(image);
-                clusters.AddRange(feature.ExtractDescriptors(bitmap).OrderBy(x => Guid.NewGuid()).Take(clusterFeaturesPerImage));
-            }
-            sampleImgs = null;
-            ClusterModel model = cluster.CreateClusters(clusters, clusterNum);
-            clusters.Clear();
-            List<double[]> finalClusters = model.Means;
-
             IKdTree tree = new KdTree();
+
+            const string baseFolder = @"C:\Users\l.valavanis\Desktop\Clef2013";
+            var trainPath = Path.Combine(baseFolder, "TrainSet");
+            var testPath = Path.Combine(baseFolder, "TestSet");
+
+            //const string baseFolder = @"Data\database";
+            //var trainPath = baseFolder;
+            //var testPath = baseFolder;
+
+            var trainFile = @"Data\Features\" + feature + "_" + cluster + "_" + clusterNum + "_" + tree + "_train.txt";
+            var testFile = @"Data\Features\" + feature + "_" + cluster + "_" + clusterNum + "_" + tree + "_test.txt";
+            var clustersFile = @"Data\Palettes\" + feature + "_" + cluster + "_" + clusterNum + "_" + tree + "_clusters.txt";
+
+            ClusterModel model;
+            List<double[]> finalClusters;
+            if (File.Exists(clustersFile))
+            {
+                #region read Clusters from File
+
+                finalClusters = Files.ReadFileToListArrayList<double>(clustersFile);
+                model = new KmeansModel(finalClusters);
+
+                #endregion
+            }
+            else
+            {
+                #region Cluster
+
+                var sampleImgs = Files.GetFilesFrom(trainPath, sampleImages);
+                var clusterFeaturesPerImage = maxNumberClusterFeatures / sampleImgs.Length;
+
+                var clusters = new List<double[]>();
+                foreach (var image in sampleImgs)
+                {
+                    LocalBitmap bitmap = new LocalBitmap(image);
+                    clusters.AddRange(feature.ExtractDescriptors(bitmap).OrderBy(x => Guid.NewGuid()).Take(clusterFeaturesPerImage));
+                }
+                sampleImgs = null;
+                model = cluster.CreateClusters(clusters, clusterNum);
+                clusters.Clear();
+                finalClusters = model.Means;
+
+
+                Files.WriteFile(clustersFile, finalClusters);
+
+                #endregion
+            }
+
             tree.CreateTree(finalClusters);
             model.Tree = tree;
-
-            Files.WriteFile(clustersFile, finalClusters);
-
-            #endregion
 
             feature = new DenseSift(model);
 

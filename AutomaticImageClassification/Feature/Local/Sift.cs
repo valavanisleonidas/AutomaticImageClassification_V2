@@ -13,9 +13,6 @@ namespace AutomaticImageClassification.Feature.Local
     //From vlfeat
     public class Sift : IFeatures
     {
-        private int _width;
-        private int _height;
-        private bool _useCombinedQuantization;
         private int[,] _numSpatialX = { { 1, 2, 4 } };
         private int[,] _numSpatialY = { { 1, 2, 4 } };
         private readonly ClusterModel _clusterModel;
@@ -27,68 +24,41 @@ namespace AutomaticImageClassification.Feature.Local
 
         public Sift()
         {
-            _useCombinedQuantization = true;
         }
-
-        public Sift(bool useCombinedQuantization)
-        {
-            _useCombinedQuantization = useCombinedQuantization;
-        }
+        
 
         public Sift(ClusterModel clusterModel)
         {
             _clusterModel = clusterModel;
-            _useCombinedQuantization = true;
         }
-
-        public Sift(ClusterModel clusterModel, bool useCombinedQuantization)
-        {
-            _clusterModel = clusterModel;
-            _useCombinedQuantization = useCombinedQuantization;
-        }
+        
 
         public double[] ExtractHistogram(LocalBitmap input)
         {
-            _width = input.ImageWidth;
-            _height = input.ImageHeight;
+            double[] imgVocVector = new double[_clusterModel.ClusterNum];
 
-            double[] imgVocVector = new double[_clusterModel.ClusterNum];//num of clusters
+            List<double[]> features;
+            ExtractSift(input.Path, input.ImageWidth, input.ImageHeight, out features);
 
-            if (!_useCombinedQuantization)
+            //for each centroid find min position in tree and increase corresponding index
+            List<int> indexes = _clusterModel.Tree.SearchTree(features);
+            foreach (var index in indexes)
             {
-                List<double[]> features;
-                ExtractSift(input.Path, out features);
-
-                //for each centroid find min position in tree and increase corresponding index
-                List<int> indexes = _clusterModel.Tree.SearchTree(features);
-                foreach (var index in indexes)
-                {
-                    imgVocVector[index]++;
-                }
+                imgVocVector[index]++;
             }
-            else
-            {
-                List<double[]> features;
-                List<double[]> frames;
-                ExtractSift(input.Path, out features, out frames);
-                List<int> indexes = _clusterModel.Tree.SearchTree(features);
-
-                imgVocVector = Quantization.CombineQuantizations(frames, indexes, _width, _height, _clusterModel.ClusterNum, _numSpatialX, _numSpatialY);
-            }
+            
             return imgVocVector;            
         }
 
         public List<double[]> ExtractDescriptors(LocalBitmap input)
         {
-            _width = input.ImageWidth;
-            _height = input.ImageHeight;
 
             List<double[]> descriptors;
-            ExtractSift(input.Path, out descriptors);
+            ExtractSift(input.Path, input.ImageWidth, input.ImageHeight, out descriptors);
             return descriptors;
         }
 
-        public void ExtractSift(string input, out List<double[]> descriptors)
+        public void ExtractSift(string input, int width, int height, out List<double[]> descriptors)
         {
             try
             {
@@ -97,40 +67,14 @@ namespace AutomaticImageClassification.Feature.Local
                 //return frames descriptors( features )
                 MWArray[] result = sift.GetSift(2,
                     new MWCharArray(input),
-                    new MWNumericArray(_height),
-                    new MWNumericArray(_width));
+                    new MWNumericArray(height),
+                    new MWNumericArray(width));
 
                 var _descriptors = (double[,])result[1].ToArray();
 
                 sift.Dispose();
 
                 descriptors = Arrays.ToJaggedArray(ref _descriptors).ToList();
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-
-        public void ExtractSift(string input, out List<double[]> descriptors, out List<double[]> frames)
-        {
-            try
-            {
-                var sift = new MatlabAPI.Sift();
-
-                //return frames descriptors( features )
-                MWArray[] result = sift.GetSift(2,
-                    new MWCharArray(input),
-                    new MWNumericArray(_height),
-                    new MWNumericArray(_width));
-
-                var _frames = (double[,])result[0].ToArray();
-                var _descriptors = (double[,])result[1].ToArray();
-
-                sift.Dispose();
-
-                descriptors = Arrays.ToJaggedArray(ref _descriptors).ToList();
-                frames = Arrays.ToJaggedArray(ref _frames).ToList();
             }
             catch (Exception e)
             {
@@ -140,7 +84,7 @@ namespace AutomaticImageClassification.Feature.Local
 
         public override string ToString()
         {
-            return "Sift" + (_useCombinedQuantization ? "_combined" : "") + "_" + string.Join("_", Arrays.ToJaggedArray(ref _numSpatialX)[0]);
+            return "Sift" + "_" + string.Join("_", Arrays.ToJaggedArray(ref _numSpatialX)[0]);
         }
 
     }

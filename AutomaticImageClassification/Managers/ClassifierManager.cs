@@ -25,7 +25,7 @@ namespace AutomaticImageClassification.Managers
     public class ClassifierParameters
     {
         public ClassifierMethod ClassifierMethod;
-        public LibLinearParameters LibLinearParameters;
+        public SvmParameters LibLinearParameters;
         public IClassifier Classifier;
 
     }

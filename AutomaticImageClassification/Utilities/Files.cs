@@ -5,10 +5,16 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace AutomaticImageClassification.Utilities
 {
+    /*
+     * 
+     * Important Comment
+     * write and read files has culture info ENGLISH so that they have the same format of read write 
+     * 
+     */
+
     public class Files
     {
         
@@ -149,17 +155,7 @@ namespace AutomaticImageClassification.Utilities
             Thread.CurrentThread.CurrentCulture = oldCulture; 
 
         }
-
-        //appends array to end of line in file or if file does not exists it creates a new file
-        //public static void WriteAppendBinaryFile<T>(string fileToWrite, T[] contentArray)
-        //{
-        //    var encoderShouldEmitUtf8Identifier = false;
-        //    using (BinaryWriter sw = new BinaryWriter(File.Open(fileToWrite, FileMode.Append), new UTF8Encoding(encoderShouldEmitUtf8Identifier)))
-        //    {
-        //        sw.Write(string.Join(" ", contentArray.Select(p => p.ToString()).ToArray()) + "\r\n");
-        //    }
-        //}
-
+        
         public static List<T[]> ReadFileToListArrayList<T>(string path)
         {
             return ReadFileTo2DArray<T>(path).ToList();

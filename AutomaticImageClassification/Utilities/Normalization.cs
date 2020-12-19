@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using MathWorks.MATLAB.NET.Arrays;
-using MatlabAPI;
 
 namespace AutomaticImageClassification.Utilities
 {
@@ -21,7 +19,7 @@ namespace AutomaticImageClassification.Utilities
             double[] columnSums = Arrays.TransposeMatrix(ref powArray).ToList().Select(a => a.Sum()).ToArray();
 
             list = list
-                .Select(a => a.Select((b, i) => b != 0 ? b * 1 / Math.Sqrt(columnSums[i]) : b).ToArray())
+                .Select(a => a.Select((b, i) => b != 0 ? b * (1 / Math.Sqrt(columnSums[i])) : b).ToArray())
                 .ToList();
         }
 
@@ -60,32 +58,6 @@ namespace AutomaticImageClassification.Utilities
             return 0;
         }
 
-        public static void ExtendGeometricalyFeatures(ref List<double[]> descriptors, ref List<double[]> frames, string type, int width, int height)
-        {
-            try
-            {
-                var dataExtension = new ExtendFeatures();
-
-                MWArray[] result = dataExtension.ExtendDescriptorsWithGeometry(1,
-                    type,
-                    new MWNumericArray(frames.ToArray()),
-                    new MWNumericArray(descriptors.ToArray()),
-                    new MWNumericArray(width),
-                    new MWNumericArray(height));
-
-                var mappedFeatures = (double[,])((MWNumericArray)result[0]).ToArray();
-
-                result = null;
-                dataExtension.Dispose();
-                descriptors = Arrays.ToJaggedArray(ref mappedFeatures).ToList();
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-
-        //multiply array with given weight
         public static double[] WeightArray(double[] array, double weight)
         {
             var arraySize = array.Length;
@@ -178,9 +150,9 @@ namespace AutomaticImageClassification.Utilities
 
             for (var i = 0; i < imgVocVector.Length; i++)
             {
-
+                //worked better for gboc not for phow
+                //imgVocVector[i] = Math.Round(imgVocVector[i] / norm, 4);
                 imgVocVector[i] = imgVocVector[i] / norm;
-
             }
             return imgVocVector;
         }

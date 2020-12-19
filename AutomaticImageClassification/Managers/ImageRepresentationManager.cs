@@ -34,7 +34,7 @@ namespace AutomaticImageClassification.Managers
 
                     baseParameters.ExtractionFeature = new Lboc(irmParameters.ColorSpace, irmParameters.ClusterModels[0]);
                     break;
-                case ImageRepresentationMethod.ColorCorrelogram:
+                case ImageRepresentationMethod.Correlogram:
                     //extraction method
                     //throw new ArgumentException("Auto color correlogram returns the final histogram and not descriptors of an image!");
                     baseParameters.ExtractionFeature = new ColorCorrelogram(irmParameters.ColorCorrelogramExtractionMethod);
@@ -48,18 +48,20 @@ namespace AutomaticImageClassification.Managers
                     irmParameters.CurrentImageRepresentationMethod = baseParameters.IrmParameters.IrmToUseDescriptors;
                     InitBeforeCluster(ref baseParameters);
 
-                    baseParameters.ExtractionFeature = new Vlad(baseParameters.ExtractionFeature);
+                    var feature = baseParameters.ExtractionFeature as ILocalFeatures;
+                    baseParameters.ExtractionFeature = new Vlad(feature);
 
                     irmParameters.CurrentImageRepresentationMethod = baseParameters.IrmParameters.BasicImageRepresentationMethod;
                     break;
                 case ImageRepresentationMethod.DenseSift:
                     baseParameters.ExtractionFeature = new DenseSift();
                     break;
-                case ImageRepresentationMethod.VlFeatFisherVector:
+                case ImageRepresentationMethod.FisherVector:
                     irmParameters.CurrentImageRepresentationMethod = baseParameters.IrmParameters.IrmToUseDescriptors;
                     InitBeforeCluster(ref baseParameters);
 
-                    baseParameters.ExtractionFeature = new FisherVector(baseParameters.ExtractionFeature);
+                    var feature1 = baseParameters.ExtractionFeature as ILocalFeatures;
+                    baseParameters.ExtractionFeature = new FisherVector(feature1);
 
                     irmParameters.CurrentImageRepresentationMethod = baseParameters.IrmParameters.BasicImageRepresentationMethod;
                     break;
@@ -91,7 +93,7 @@ namespace AutomaticImageClassification.Managers
                 case ImageRepresentationMethod.Lboc:
                     baseParameters.ExtractionFeature = new Lboc(irmParameters.ColorSpace, irmParameters.ClusterModels[0], irmParameters.ClusterModels[1]);
                     break;
-                case ImageRepresentationMethod.ColorCorrelogram:
+                case ImageRepresentationMethod.Correlogram:
                     baseParameters.ExtractionFeature = new ColorCorrelogram(irmParameters.ColorCorrelogramExtractionMethod);
                     break;
                 case ImageRepresentationMethod.Surf:
@@ -103,18 +105,20 @@ namespace AutomaticImageClassification.Managers
                     irmParameters.CurrentImageRepresentationMethod = baseParameters.IrmParameters.IrmToUseDescriptors;
                     InitBeforeCluster(ref baseParameters);
 
-                    baseParameters.ExtractionFeature = new Vlad(irmParameters.ClusterModels[0], baseParameters.ExtractionFeature);
+                    var feature = baseParameters.ExtractionFeature as ILocalFeatures;
+                    baseParameters.ExtractionFeature = new Vlad(irmParameters.ClusterModels[0], feature);
 
                     irmParameters.CurrentImageRepresentationMethod = baseParameters.IrmParameters.BasicImageRepresentationMethod;
                     break;
                 case ImageRepresentationMethod.DenseSift:
                     baseParameters.ExtractionFeature = new DenseSift(irmParameters.ClusterModels[0]);
                     break;
-                case ImageRepresentationMethod.VlFeatFisherVector:
+                case ImageRepresentationMethod.FisherVector:
                     irmParameters.CurrentImageRepresentationMethod = baseParameters.IrmParameters.IrmToUseDescriptors;
                     InitBeforeCluster(ref baseParameters);
 
-                    baseParameters.ExtractionFeature = new FisherVector(irmParameters.ClusterModels[0], baseParameters.ExtractionFeature);
+                    var feature1 = baseParameters.ExtractionFeature as ILocalFeatures;
+                    baseParameters.ExtractionFeature = new FisherVector(irmParameters.ClusterModels[0], feature1);
 
                     irmParameters.CurrentImageRepresentationMethod = baseParameters.IrmParameters.BasicImageRepresentationMethod;
                     break;

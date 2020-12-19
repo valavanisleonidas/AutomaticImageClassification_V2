@@ -28,32 +28,32 @@ namespace AutomaticImageClassificationTests
         0.9272   -0.9215   -0.9461    0.9306   -0.8175   -0.9773         0         0         0
         0.2332    0.1984   -0.3240    0.2178    0.3591   -0.1034    0.5835    0.7394   -0.1632*/
         //same results as matlab (check results file)
-        [TestMethod]
-        public void CanApplyKernelMapping()
-        {
-            //works fine too
-            //var trainDataPath = @"Data\Features\boc_train.txt";
-            //var features = Files.ReadFileToListArrayList<double>(trainDataPath).ToList();
+        //[TestMethod]
+        //public void CanApplyKernelMapping()
+        //{
+        //    //works fine too
+        //    //var trainDataPath = @"Data\Features\boc_train.txt";
+        //    //var features = Files.ReadFileToListArrayList<double>(trainDataPath).ToList();
 
-            List<double[]> features = new List<double[]>();
-            features.Add(new double[] { 1, 2, 3 });
-            features.Add(new double[] { 100, 200, 300 });
-            features.Add(new double[] { 0.4, 0.6, 0.8 });
+        //    List<double[]> features = new List<double[]>();
+        //    features.Add(new double[] { 1, 2, 3 });
+        //    features.Add(new double[] { 100, 200, 300 });
+        //    features.Add(new double[] { 0.4, 0.6, 0.8 });
 
-            var _params = new SvmParameters
-            {
-                Gamma = 0.5,
-                Homker = "KCHI2",
-                Kernel = "chi2"
-            };
+        //    var _params = new SvmParameters
+        //    {
+        //        Gamma = 0.5,
+        //        Homker = "KCHI2",
+        //        Kernel = "chi2"
+        //    };
 
-            //liblinear
-            var classifier = new SVM(_params);
-            // APPLY KERNEL MAPPING
-            classifier.ApplyKernelMapping(ref features);
-            //Files.WriteFile("liblinear_ApplyKernelMap_bocTrain.txt", features);
+        //    //liblinear
+        //    var classifier = new SVM(_params);
+        //    // APPLY KERNEL MAPPING
+        //    classifier.ApplyKernelMapping(ref features);
+        //    //Files.WriteFile("liblinear_ApplyKernelMap_bocTrain.txt", features);
 
-        }
+        //}
 
         //same results as matlab (check results file)
         [TestMethod]
@@ -74,14 +74,12 @@ namespace AutomaticImageClassificationTests
                 BiasMultiplier = 1,
                 Solver = "liblinear",
                 SolverType = 2,
-                IsManualCv = false
+                IsManualCv = false,
+                applyKernelMap = true
             };
 
             //liblinear
             var classifier = new SVM(_params);
-
-            // APPLY KERNEL MAPPING
-            classifier.ApplyKernelMapping(ref trainFeat);
 
             //classifier.GridSearch(ref trainFeat, ref trainlabels);
             classifier.Train(ref trainFeat, ref trainlabels);
@@ -98,7 +96,7 @@ namespace AutomaticImageClassificationTests
             var trainDataPath = @"Data\Features\lboc_50_1024_train_libsvm_test.txt";
             var trainlabelsPath = @"Data\Features\boc_labels_train_libsvm_test.txt";
 
-          
+
             var trainFeat = Files.ReadFileToListArrayList<double>(trainDataPath).ToList();
 
             double[] trainlabels = Files.ReadFileTo1DArray<double>(trainlabelsPath);
@@ -112,14 +110,14 @@ namespace AutomaticImageClassificationTests
                 BiasMultiplier = 1,
                 Solver = "liblinear",
                 SolverType = 0,
-                IsManualCv = false
+                IsManualCv = false,
+                applyKernelMap = true
             };
 
             //liblinear
             var classifier = new SVM(_params);
 
             // APPLY KERNEL MAPPING
-            classifier.ApplyKernelMapping(ref trainFeat);
             classifier.GridSearch(ref trainFeat, ref trainlabels);
 
         }
@@ -151,15 +149,13 @@ namespace AutomaticImageClassificationTests
                 BiasMultiplier = 1,
                 Solver = "liblinear",
                 SolverType = 2,
-                IsManualCv = false
+                IsManualCv = false,
+                applyKernelMap = true
             };
 
             //liblinear
             var classifier = new SVM(_params);
 
-            // APPLY KERNEL MAPPING
-            classifier.ApplyKernelMapping(ref trainFeat);
-            classifier.ApplyKernelMapping(ref testFeat);
 
             //classifier.GridSearch(ref trainFeat, ref trainlabels);
             classifier.Train(ref trainFeat, ref trainlabels);
@@ -171,17 +167,55 @@ namespace AutomaticImageClassificationTests
 
             var accuracy = AutomaticImageClassification.Evaluation.Measures.Accuracy(labels, predictedLabels);
 
-            Assert.AreEqual(accuracy, 0.3969,0.001);
-            
+            Assert.AreEqual(accuracy, 0.3969, 0.001);
+
 
 
         }
 
-        
+        [TestMethod]
+        public void CanPlotLearninCurve()
+        {
+
+
+            var trainDataPath = @"Data\Features\EdgeHistogram_train.txt";
+            var testDataPath = @"Data\Features\EdgeHistogram_test.txt";
+
+            var trainlabelsPath = @"Data\Features\clef2013_train_labels.txt";
+            var testlabelsPath = @"Data\Features\clef2013_test_labels.txt";
+
+            var trainFeat = Files.ReadFileToListArrayList<double>(trainDataPath).ToList();
+            var testFeat = Files.ReadFileToListArrayList<double>(testDataPath).ToList();
+
+            double[] trainlabels = Files.ReadFileTo1DArray<double>(trainlabelsPath);
+            double[] testlabels = Files.ReadFileTo1DArray<double>(testlabelsPath);
+
+
+            var _params = new SvmParameters
+            {
+                Gamma = 1,
+                Homker = "KCHI2",
+                Kernel = "chi2",
+                Cost = 1,
+                BiasMultiplier = 1,
+                Solver = "liblinear",
+                SolverType = 1,
+                IsManualCv = false,
+                applyKernelMap = true
+            };
+
+
+            LearningCurves.PlotLearningCurve(trainFeat, testFeat, trainlabels, testlabels, _params);
+
+        }
+
+
+
+
         [TestMethod]
         public void CanPlotConfusionMatrix()
         {
-          
+
 
             // g1 = [3 2 2 3 1 1]';	% Known groups
             // g2 = [3 2 3 1 1 1]';
@@ -196,7 +230,7 @@ namespace AutomaticImageClassificationTests
 
 
 
-            var trueLabels =      new int[] { 3, 2, 2, 3, 1, 1 };
+            var trueLabels = new int[] { 3, 2, 2, 3, 1, 1 };
             var predictedLabels = new int[] { 3, 2, 3, 1, 1, 1 };
             int[] categories = trueLabels.Distinct().ToArray();
 
@@ -204,49 +238,11 @@ namespace AutomaticImageClassificationTests
             var accuracy = AutomaticImageClassification.Evaluation.Measures.Accuracy(trueLabels, predictedLabels);
             var macroF1 = AutomaticImageClassification.Evaluation.Measures.MacroF1(trueLabels, predictedLabels, categories);
             var conf = AutomaticImageClassification.Evaluation.Measures.
-                        ConfusionMatrix(trueLabels, predictedLabels, categories,true);
+                        ConfusionMatrix(trueLabels, predictedLabels, categories, true);
 
 
             Measures.PlotConfusionMatrix(ref conf, "plot", "a title" + accuracy + " " + macroF1, categories);
 
         }
-
-
-        [TestMethod]
-        public void CanExtendGeometricallyFeatures()
-        {
-            List<double[]> frames = new List<double[]>
-            {
-                new [] {0.8147, 0.9134, 0.2785, 0.9649, 0.9572, 0.1419},
-                new [] {0.9058, 0.6324, 0.5469, 0.1576, 0.4854, 0.4218},
-                new [] {0.1270, 0.0975, 0.9575, 0.9706, 0.8003, 0.9157}
-            };
-
-            List<double[]> descriptors = new List<double[]>
-            {
-                new[] {0.7094, 0.6797, 0.1190, 0.3404},
-                new[] {0.7547, 0.6551, 0.4984, 0.5853},
-                new[] {0.2760, 0.1626, 0.9597, 0.2238}
-            };
-
-            Normalization.ExtendGeometricalyFeatures(ref descriptors, ref frames, "xy", 600, 600);
-
-            List<double[]> finalResultdescriptors = new List<double[]>
-            {
-                new[] {0.7094, 0.6797, 0.1190, 0.3404, -0.4986, -0.4984},
-                new[] {0.7547, 0.6551, 0.4984, 0.5853, -0.4984, -0.4989},
-                new[] {0.2760, 0.1626, 0.9597, 0.2238, -0.4997, -0.4998}
-            };
-            
-            for (int i = 0; i < descriptors.Count; i++)
-            {
-                //keep only 3 digits 
-                descriptors[i] = descriptors[i].Select(d => Math.Truncate(d * 10000d) / 10000d).ToArray();
-
-                CollectionAssert.AreEqual(descriptors[i], finalResultdescriptors[i]);
-            }
-
-        }
-
     }
 }

@@ -13,7 +13,8 @@ namespace AutomaticImageClassification.Cluster
     {
         EM,
         GMM,
-        KMeans
+        KMeans,
+        SOM
     }
 
 }

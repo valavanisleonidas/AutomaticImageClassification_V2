@@ -6,6 +6,7 @@ using AutomaticImageClassification.Cluster.EM;
 using AutomaticImageClassification.Cluster.GaussianMixtureModel;
 using AutomaticImageClassification.Cluster.Kmeans;
 using AutomaticImageClassification.Utilities;
+using AutomaticImageClassification.Feature;
 
 namespace AutomaticImageClassification.Managers
 {
@@ -33,6 +34,10 @@ namespace AutomaticImageClassification.Managers
 
         public static void Cluster(ref BaseParameters baseParameters)
         {
+            var feature = baseParameters.ExtractionFeature as ILocalFeatures;
+            if(feature == null)
+                return;
+            
             var clusterParameters = baseParameters.ClusterParameters;
             GetClusterType(ref clusterParameters);
 
@@ -44,8 +49,7 @@ namespace AutomaticImageClassification.Managers
             {
                 var bitmap = new LocalBitmap(image, baseParameters.ImageHeight, baseParameters.ImageWidth);
 
-                descriptors.AddRange(
-                    baseParameters.ExtractionFeature.ExtractDescriptors(bitmap)
+                descriptors.AddRange(feature.ExtractDescriptors(bitmap)
                     .OrderBy(x => Guid.NewGuid())
                     .Take(featuresPerImage));
             }

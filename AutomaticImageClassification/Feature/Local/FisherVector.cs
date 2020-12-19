@@ -7,33 +7,29 @@ using MathWorks.MATLAB.NET.Arrays;
 namespace AutomaticImageClassification.Feature.Local
 {
     //from vlfeat
-    public class FisherVector : IFeatures
+    public class FisherVector : ILocalFeatures
     {
-        private readonly IFeatures _featureExtractor;
+        private readonly ILocalFeatures _featureExtractor;
         private readonly ClusterModel _model;
 
-        public bool CanCluster
-        {
-            get { return true; }
-        }
 
         public FisherVector()
         {
-            _featureExtractor = new Surf();
+            _featureExtractor = new Sift();
         }
 
-        public FisherVector(IFeatures extractor)
+        public FisherVector(ILocalFeatures extractor)
         {
             _featureExtractor = extractor;
         }
 
         public FisherVector(ClusterModel model)
         {
-            _featureExtractor = new Surf();
+            _featureExtractor = new Sift();
             _model = model;
         }
 
-        public FisherVector(ClusterModel model,IFeatures extractor)
+        public FisherVector(ClusterModel model, ILocalFeatures extractor)
         {
             _featureExtractor = extractor;
             _model = model;
@@ -46,11 +42,11 @@ namespace AutomaticImageClassification.Feature.Local
                 var fisher = new MatlabAPI.FisherVector();
                 //features of descriptor
                 var features = ExtractDescriptors(input);
-              
+
                 if (features[0].Length != _model.Means[0].Length)
                 {
-                    throw new ArgumentException("Incorrect dimension size.Features dimensions : " + features[0].Length 
-                        + ".Clusters dimensions : " + _model.Means[0].Length+".Please use features of the same dimensions!");
+                    throw new ArgumentException("Incorrect dimension size.Features dimensions : " + features[0].Length
+                        + ".Clusters dimensions : " + _model.Means[0].Length + ".Please use features of the same dimensions!");
                 }
 
                 if (_model.Covariances == null || _model.Priors == null)
@@ -73,6 +69,7 @@ namespace AutomaticImageClassification.Feature.Local
                 throw e;
             }
         }
+        
 
         public List<double[]> ExtractDescriptors(LocalBitmap input)
         {

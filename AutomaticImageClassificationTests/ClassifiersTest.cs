@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using AutomaticImageClassification.Classifiers;
 using AutomaticImageClassification.Utilities;
-using LibSVMsharp;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AutomaticImageClassificationTests
@@ -17,11 +17,15 @@ namespace AutomaticImageClassificationTests
         {
             Stopwatch stopwatch = Stopwatch.StartNew(); //creates and start the instance of Stopwatch
 
-            var trainDataPath = @"Data\Features\DenseSift_root_normalized_KMeans_4096_VlFeatKdTree_Randomized_train.txt";
-            var testDataPath = @"Data\Features\DenseSift_root_normalized_KMeans_4096_VlFeatKdTree_Randomized_test.txt";
+            var trainDataPath = @"Data\Features\PHOG_train.txt";
+            var testDataPath = @"Data\Features\PHOG_test.txt";
 
-            var trainlabelsPath = @"Data\Features\boc_labels_train.txt";
-            var testlabelsPath = @"Data\Features\boc_labels_test.txt";
+            //var trainDataPath = @"Data\Features\MkLabSurf_KMeans_512_VlFeatKdTree_Randomized_train.txt";
+            //var testDataPath = @"Data\Features\MkLabSurf_KMeans_512_VlFeatKdTree_Randomized_test.txt";
+
+
+            var trainlabelsPath = @"Data\Features\clef2013_train_labels.txt";
+            var testlabelsPath = @"Data\Features\clef2013_test_labels.txt";
             
             var trainFeat = Files.ReadFileToListArrayList<double>(trainDataPath).ToList();
             var trainlabels = Files.ReadFileTo1DArray<double>(trainlabelsPath);
@@ -31,7 +35,7 @@ namespace AutomaticImageClassificationTests
             //normalize
             const bool sqrt = false;
             const bool tfidf = false;
-            const bool l1 = true;
+            const bool l1 = false;
             const bool l2 = false;
 
             var _params = new SvmParameters
@@ -39,11 +43,12 @@ namespace AutomaticImageClassificationTests
                 Gamma = 0.5,
                 Homker = "KCHI2",
                 Kernel = "chi2",
-                Cost = 512,
+                Cost = 16,
                 BiasMultiplier = 1,
                 Solver = "liblinear",
                 SolverType = 0,
-                IsManualCv = false
+                IsManualCv = false,
+                applyKernelMap = true
             };
 
             //liblinear
@@ -61,6 +66,7 @@ namespace AutomaticImageClassificationTests
             if (l1)
             {
                 Normalization.ComputeL1Features(ref trainFeat);
+                //Files.WriteFile(@"Data\trainL1.txt", trainFeat);
             }
             if (l2)
             {
@@ -68,8 +74,8 @@ namespace AutomaticImageClassificationTests
             }
 
             // APPLY KERNEL MAPPING
-            classifier.ApplyKernelMapping(ref trainFeat);
-
+            //classifier.ApplyKernelMapping(ref trainFeat);
+            
             if (doCrossVal)
             {
                 classifier.GridSearch(ref trainFeat, ref trainlabels);
@@ -100,8 +106,8 @@ namespace AutomaticImageClassificationTests
             {
                 Normalization.ComputeL2Features(ref testFeat);
             }
-            classifier.ApplyKernelMapping(ref testFeat);
-
+            //classifier.ApplyKernelMapping(ref testFeat);
+            
             classifier.Predict(ref testFeat);
 
 
@@ -124,6 +130,13 @@ namespace AutomaticImageClassificationTests
             Console.WriteLine("program run for : " + stopwatch.Elapsed);
 
         }
-        
+
+
+      
+
+
+
+
+
     }
 }

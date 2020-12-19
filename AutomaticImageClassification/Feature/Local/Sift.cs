@@ -1,27 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AutomaticImageClassification.Cluster.ClusterModels;
-using AutomaticImageClassification.KDTree;
 using AutomaticImageClassification.Utilities;
 using MathWorks.MATLAB.NET.Arrays;
 
 namespace AutomaticImageClassification.Feature.Local
 {
     //From vlfeat
-    public class Sift : IFeatures
+    public class Sift : ILocalFeatures
     {
         private int[,] _numSpatialX = { { 1, 2, 4 } };
         private int[,] _numSpatialY = { { 1, 2, 4 } };
         private readonly ClusterModel _clusterModel;
 
-        public bool CanCluster
-        {
-            get { return true; }
-        }
-
+   
         public Sift()
         {
         }
@@ -49,7 +42,7 @@ namespace AutomaticImageClassification.Feature.Local
             
             return imgVocVector;            
         }
-
+        
         public List<double[]> ExtractDescriptors(LocalBitmap input)
         {
 
@@ -58,6 +51,7 @@ namespace AutomaticImageClassification.Feature.Local
             return descriptors;
         }
 
+       
         public void ExtractSift(string input, int width, int height, out List<double[]> descriptors)
         {
             try
@@ -84,7 +78,7 @@ namespace AutomaticImageClassification.Feature.Local
 
         public override string ToString()
         {
-            return "Sift" + "_" + string.Join("_", Arrays.ToJaggedArray(ref _numSpatialX)[0]);
+            return "Sift" + string.Join("_", Arrays.ToJaggedArray(ref _numSpatialX)[0]);
         }
 
     }

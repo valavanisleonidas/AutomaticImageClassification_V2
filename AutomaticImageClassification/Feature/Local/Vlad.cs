@@ -6,33 +6,29 @@ using AutomaticImageClassification.Utilities;
 namespace AutomaticImageClassification.Feature.Local
 {
     //from mklab 
-    public class Vlad : IFeatures
+    public class Vlad : ILocalFeatures
     {
-        private readonly IFeatures _featureExtractor;
+        private readonly ILocalFeatures _featureExtractor;
         private readonly ClusterModel _clusterModel;
         
-        public bool CanCluster
-        {
-            get { return true; }
-        }
 
         public Vlad()
         {
-            _featureExtractor = new Surf();
+            _featureExtractor = new Sift();
         }
 
-        public Vlad(IFeatures extractor)
+        public Vlad(ILocalFeatures extractor)
         {
             _featureExtractor = extractor;
         }
 
         public Vlad(ClusterModel clusterModel)
         {
-            _featureExtractor = new Surf();
+            _featureExtractor = new Sift();
             _clusterModel = clusterModel;
         }
 
-        public Vlad(ClusterModel clusterModel, IFeatures extractor)
+        public Vlad(ClusterModel clusterModel, ILocalFeatures extractor)
         {
             _featureExtractor = extractor;
             _clusterModel = clusterModel;

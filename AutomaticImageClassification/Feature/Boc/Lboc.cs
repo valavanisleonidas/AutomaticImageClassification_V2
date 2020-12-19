@@ -3,24 +3,19 @@ using System.Drawing;
 using System.Linq;
 using AutomaticImageClassification.Cluster.ClusterModels;
 using AutomaticImageClassification.Utilities;
-using System.Diagnostics;
 
 
 namespace AutomaticImageClassification.Feature.Boc
 {
-    public class Lboc : IFeatures
+    public class Lboc : ILocalFeatures
     {
 
         private readonly int _patches = 64;
-        private readonly Utilities.ColorConversion.ColorSpace _cs;
+        private readonly ColorConversion.ColorSpace _cs;
         private readonly ClusterModel _lbocClusterModel;
         private readonly ClusterModel _bocClusterModel;
 
-        public bool CanCluster
-        {
-            get { return true; }
-        }
-
+       
         public Lboc(ColorConversion.ColorSpace cs, ClusterModel bocClusterModel)
         {
             _cs = cs;

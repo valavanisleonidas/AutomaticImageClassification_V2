@@ -6,16 +6,11 @@ using AutomaticImageClassification.Utilities;
 
 namespace AutomaticImageClassification.Feature.Boc
 {
-    public class Boc : IFeatures
+    public class Boc : ILocalFeatures
     {
         private readonly int _patches = 64;
         private readonly ColorConversion.ColorSpace _cs;
         private readonly ClusterModel _clusterModel;
-
-        public bool CanCluster
-        {
-            get { return true; }
-        }
 
         public Boc(ColorConversion.ColorSpace cs)
         {

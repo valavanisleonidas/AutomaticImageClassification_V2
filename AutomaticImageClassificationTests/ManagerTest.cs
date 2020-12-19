@@ -156,7 +156,7 @@ namespace AutomaticImageClassificationTests
                     _baseParameters.IrmParameters.CurrentImageRepresentationMethod = method;
 
                     //Fisher Vector
-                    _baseParameters.ClusterParameters.ClusterMethod = method == ImageRepresentationMethod.VlFeatFisherVector
+                    _baseParameters.ClusterParameters.ClusterMethod = method == ImageRepresentationMethod.FisherVector
                                         ? ClusterMethod.GMM
                                         : _clusterMethod;
 
@@ -196,7 +196,8 @@ namespace AutomaticImageClassificationTests
 
             ImageRepresentationManager.InitAfterCluster(ref _baseParameters);
 
-            if (_baseParameters.ExtractionFeature.CanCluster)
+            var feature = _baseParameters.ExtractionFeature as ILocalFeatures;
+            if (feature != null)
             {
                 var clustersFile = @"Data\Palettes\" + _baseParameters.ExtractionFeature + "_" + _clusterNum +
                                                    "_clusters.txt";
@@ -207,15 +208,17 @@ namespace AutomaticImageClassificationTests
 
         public void ClusterManagerTest()
         {
-            if (!_baseParameters.ExtractionFeature.CanCluster)
+            var feature = _baseParameters.ExtractionFeature as ILocalFeatures;
+            if (feature == null)
                 return;
-
+          
             ClusterManager.Cluster(ref _baseParameters);
         }
 
         public void KdTreeManagerTest()
         {
-            if (!_baseParameters.ExtractionFeature.CanCluster)
+            var feature = _baseParameters.ExtractionFeature as ILocalFeatures;
+            if (feature == null)
                 return;
 
             KdTreeManager.CreateTree(ref _baseParameters);

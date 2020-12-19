@@ -8,16 +8,12 @@ using AutomaticImageClassification.Utilities;
 namespace AutomaticImageClassification.Feature.Local
 {
     //from mklab
-    public class Surf : IFeatures
+    public class Surf : ILocalFeatures
     {
         private AbstractFeatureExtractor _surf;
         private readonly SurfExtractionMethod _SurfExtractionMethod;
         private readonly ClusterModel _clusterModel;
 
-        public bool CanCluster
-        {
-            get { return true; }
-        }
 
         public Surf(ClusterModel clusterModel)
         {

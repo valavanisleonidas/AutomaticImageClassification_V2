@@ -1,41 +1,40 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using AutomaticImageClassification.Utilities;
+﻿using AutomaticImageClassification.Utilities;
 
 
 namespace AutomaticImageClassification.Feature
 {
     public interface IFeatures
     {
-        bool CanCluster { get; }
         double[] ExtractHistogram(LocalBitmap input);
-        List<double[]> ExtractDescriptors(LocalBitmap input);   
     }
 
     public enum ImageRepresentationMethod
     {
-        VlFeatFisherVector,
 
         //boc model
         Lboc,
         Boc,
+        GBoC,
 
-
-        //bovw model
         Vlad,
-        
+        FisherVector,
         DenseSift,
         Phow,
-        //AccordSurf,
-        ColorCorrelogram,
-        //JOpenSurf,
         Sift,
         Surf,
-        
 
         //textual model
         TfIdf,
         WordEmbeddings,
-        
+
+
+        BTDH,
+        CEDD,
+        Correlogram,
+        EdgeHistogram,
+        FCTH,
+        JCD,
+        PHOG
     }
+
 }

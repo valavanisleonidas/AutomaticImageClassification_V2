@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
-
 using System.Linq;
-
 using AutomaticImageClassification.FusionTypes;
 using AutomaticImageClassification.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -17,6 +14,237 @@ namespace AutomaticImageClassificationTests
     {
 
         [TestMethod]
+        public void UseHomogeneousKernelMapChi2KernelRectangular()
+        {
+            HomogeneousKernelMap.KernelType type = HomogeneousKernelMap.KernelType.Chi2;
+            HomogeneousKernelMap.WindowType wintype = HomogeneousKernelMap.WindowType.Rectangular;
+            int gamma = 1;
+
+            HomogeneousKernelMap map = new HomogeneousKernelMap(type, gamma, wintype);
+
+            double[] arr = { 1, 2, 3 };
+            var results = map.Evaluate(arr);
+
+            double[] correct = { 0.809014194474343, 0.5820673411764811, 0.0,
+                1.1441188459779605, 0.7019632059576546, 0.42994469040815864,
+                1.4012536888739706, 0.6493091695582675, 0.7712358726876802 };
+
+
+            CollectionAssert.AreEqual(results, correct);
+
+
+            double[] arr1 = { 10.5, 3, 7, 4.3, 5, 8.6 };
+            results = map.Evaluate(arr1);
+
+            double[] correct1 = { 2.621505607859763, -0.5455856866515175, 1.8054809193108916,
+                1.4012536888739706, 0.6493091695582675, 0.7712358726876802,
+                2.1404503657003566, 0.04312825624040376, 1.5394014035213393,
+                1.6774960443700697, 0.4858256223132969, 1.104600984010011,
+                1.8090107336068657, 0.37813144222832745, 1.2454029712183985,
+                2.372337656775372, -0.23001740047587285, 1.6909854327646632 };
+
+
+            CollectionAssert.AreEqual(results, correct1);
+
+
+
+
+        }
+
+        [TestMethod]
+        public void UseHomogeneousKernelMapKernelIntersectionRectangular()
+        {
+            HomogeneousKernelMap.KernelType type = HomogeneousKernelMap.KernelType.Intersection;
+            HomogeneousKernelMap.WindowType wintype = HomogeneousKernelMap.WindowType.Rectangular;
+            int gamma = 1;
+
+            HomogeneousKernelMap map = new HomogeneousKernelMap(type, gamma, wintype);
+
+            double[] arr = { 1, 2, 3 };
+            var results = map.Evaluate(arr);
+
+            double[] correct = { 0.7594333530689384, 0.5278956804833388, 0.0,
+                1.074000947628568, 0.4701891332918913, 0.5798878149091896,
+                1.3153771524777953, 0.14656617139247488, 0.9025186456922946 };
+
+
+            CollectionAssert.AreEqual(results, correct);
+
+
+            double[] arr1 = { 10.5, 3, 7, 4.3, 5, 8.6 };
+            results = map.Evaluate(arr1);
+
+            double[] correct1 = { 2.4608453194811077, -1.6974079880723023, 0.21185264099013534,
+                1.3153771524777953, 0.14656617139247488, 0.9025186456922946,
+                2.0092717895483223, -1.1165199417805645, 0.8391067666972395,
+                1.5746898564166596, -0.32435582326452495, 1.04493204253342,
+                1.698144601842745, -0.5602447414010686, 1.0389875249959868,
+                2.2269477514757816, -1.4367458767569214, 0.5744045898313581 };
+
+
+            CollectionAssert.AreEqual(results, correct1);
+
+
+
+
+        }
+
+        [TestMethod]
+        public void UseHomogeneousKernelMapKernelJensonRectangular()
+        {
+            HomogeneousKernelMap.KernelType type = HomogeneousKernelMap.KernelType.JensonShannon;
+            HomogeneousKernelMap.WindowType wintype = HomogeneousKernelMap.WindowType.Rectangular;
+            int gamma = 1;
+
+            HomogeneousKernelMap map = new HomogeneousKernelMap(type, gamma, wintype);
+
+            double[] arr = { 1, 2, 3 };
+            var results = map.Evaluate(arr);
+
+            double[] correct = { 0.8320999532621108, 0.5599542343920604, 0.0,
+                1.1767670391532956, 0.7270661505069388, 0.31380296686650105,
+                1.441239396025664, 0.7745605434425236, 0.5836970090576256};
+
+
+            CollectionAssert.AreEqual(results, correct);
+
+
+            double[] arr1 = { 10.5, 3, 7, 4.3, 5, 8.6 };
+            results = map.Evaluate(arr1);
+
+            double[] correct1 = { 2.6963120161245198, 0.3401817951343008, 1.78228453528105,
+                1.441239396025664, 0.7745605434425236, 0.5836970090576256,
+                2.2015295422800145, 0.6134735308779227, 1.3485145305881445,
+                1.7253645110944693, 0.759732328035786, 0.8778607707617091,
+                1.8606320595684778, 0.7323226231396441, 1.0156019391010744,
+                2.440033891627023, 0.4945053145290444, 1.5656085015458256};
+
+
+            CollectionAssert.AreEqual(results, correct1);
+
+
+
+
+        }
+
+
+        [TestMethod]
+        public void UseHomogeneousKernelMapChi2KernelUniform()
+        {
+            HomogeneousKernelMap.KernelType type = HomogeneousKernelMap.KernelType.Chi2;
+            HomogeneousKernelMap.WindowType wintype = HomogeneousKernelMap.WindowType.Uniform;
+            int gamma = 1;
+
+            HomogeneousKernelMap map = new HomogeneousKernelMap(type, gamma, wintype);
+
+            double[] arr = { 1, 2, 3 };
+            var results = map.Evaluate(arr);
+
+            double[] correct = {0.8128299092201114, 0.5713744403269218, 0.0,
+                 1.1495150815215733, 0.7247825055466717, 0.3572503628707671,
+                 1.407862700680831, 0.7401974041346449, 0.6568972949320483 };
+
+
+            CollectionAssert.AreEqual(results, correct);
+
+
+            double[] arr1 = { 10.5, 3, 7, 4.3, 5, 8.6 };
+            results = map.Evaluate(arr1);
+
+            double[] correct1 = {2.6338699367829714, 0.031955474406161546, 1.8511890054162377,
+                             1.407862700680831, 0.7401974041346449, 0.6568972949320483,
+                              2.150545797991622, 0.42524478247961806, 1.4506716142484433,
+                               1.6854079530067654, 0.6758081557086156, 0.9729268397876399,
+                                1.8175429311611522, 0.6208686840535625, 1.1166314667141137,
+                                 2.3835267852736437, 0.24893563968514265, 1.6566947953975826
+                         };
+
+
+            CollectionAssert.AreEqual(results, correct1);
+
+
+
+
+        }
+
+        [TestMethod]
+        public void UseHomogeneousKernelMapKernelIntersectionUniform()
+        {
+            HomogeneousKernelMap.KernelType type = HomogeneousKernelMap.KernelType.Intersection;
+            HomogeneousKernelMap.WindowType wintype = HomogeneousKernelMap.WindowType.Uniform;
+            int gamma = 1;
+
+            HomogeneousKernelMap map = new HomogeneousKernelMap(type, gamma, wintype);
+
+            double[] arr = { 1, 2, 3 };
+            var results = map.Evaluate(arr);
+
+            double[] correct = {0.7559866050224623, 0.5202139372062631, 0.0,
+                            1.0691265097951583, 0.597796562965758,
+                            .4288173856475622, 1.30940720974041,
+                            0.4972017952599525, 0.7514372869250006 };
+
+
+            CollectionAssert.AreEqual(results, correct);
+
+
+            double[] arr1 = { 10.5, 3, 7, 4.3, 5, 8.6 };
+            results = map.Evaluate(arr1);
+
+            double[] correct1 = { 2.4496765793101303, -0.8668382366583888, 1.4457275491375317,
+                    1.30940720974041, 0.4972017952599525, 0.7514372869250006,
+                    2.0001525513854483, -0.24114595453040763, 1.3550669399919366,
+                    1.567543002562432, 0.27865120386720454, 1.0418144171097976,
+                     1.6904374389095098, 0.14611975363604385, 1.154019809152144,
+                      2.2168405738268344, -0.5385695820482985, 1.4268813375755047 };
+
+
+            CollectionAssert.AreEqual(results, correct1);
+
+
+
+
+        }
+
+        [TestMethod]
+        public void UseHomogeneousKernelMapKernelJensonUniform()
+        {
+            HomogeneousKernelMap.KernelType type = HomogeneousKernelMap.KernelType.JensonShannon;
+            HomogeneousKernelMap.WindowType wintype = HomogeneousKernelMap.WindowType.Uniform;
+            int gamma = 1;
+
+            HomogeneousKernelMap map = new HomogeneousKernelMap(type, gamma, wintype);
+
+            double[] arr = { 1, 2, 3 };
+            var results = map.Evaluate(arr);
+
+            double[] correct = { 0.808132309856787, 0.5720372476838785, 0.0,
+                1.1428716727913646, 0.7694848476742163, 0.24969240011518581,
+                 1.39972621990995, 0.8707771675490831, 0.47268061382760046};
+
+
+            CollectionAssert.AreEqual(results, correct);
+
+
+            double[] arr1 = { 10.5, 3, 7, 4.3, 5, 8.6 };
+            results = map.Evaluate(arr1);
+
+            double[] correct1 = { 2.6186479750936154, 0.8990261125309554, 1.6209970643816174,
+            1.39972621990995, 0.8707771675490831, 0.47268061382760046,
+            2.13811711831725, 0.9632896133363562, 1.1673300347384719,
+            1.6756674510429745, 0.936770333488011, 0.727458226976224,
+            1.807038779653699, 0.9543914643209078, 0.8516278509537651,
+            2.3697516352921286, 0.9425781081138359, 1.3874490150999435};
+
+            CollectionAssert.AreEqual(results, correct1);
+
+        }
+
+
+
+
+
+        [TestMethod]
         public void CanCreatePaletteImage()
         {
             string paletteFile = @"Data\palettes\Boc.txt";
@@ -25,147 +253,147 @@ namespace AutomaticImageClassificationTests
 
             Bitmap paletteIm = ImageProcessing.getPaletteImg(intPalette, 512, ColorConversion.ColorSpace.RGB);
 
-            ImageProcessing.SaveImage(paletteIm, @"Data\paletteIm.jpg");    
+            ImageProcessing.SaveImage(paletteIm, @"Data\paletteIm.jpg");
         }
 
 
 
-        [TestMethod]
-        public void CanGetImagePixelRGBSameAsJava()
-        {
-            string sourceImage = @"Data\database\dogInNeed.jpg";
-            Bitmap image = new Bitmap(sourceImage);
+        //[TestMethod]
+        //public void CanGetImagePixelRGBSameAsJava()
+        //{
+        //    string sourceImage = @"Data\database\dogInNeed.jpg";
+        //    Bitmap image = new Bitmap(sourceImage);
 
-            var img = new java.awt.image.BufferedImage(image);
+        //    var img = new java.awt.image.BufferedImage(image);
 
-            List<int[]> list1 = new List<int[]>();
-            List<int[]> list2 = new List<int[]>();
+        //    List<int[]> list1 = new List<int[]>();
+        //    List<int[]> list2 = new List<int[]>();
 
-            //java code
-            for (var x = 0; x < img.getWidth(); x++)
-            {
-                for (var y = 0; y < img.getHeight(); y++)
-                {
-                    var color = new java.awt.Color(img.getRGB(x, y));
-                    list1.Add(new int[] { color.getRed(), color.getGreen(), color.getBlue() });
-                }
-            }
+        //    //java code
+        //    for (var x = 0; x < img.getWidth(); x++)
+        //    {
+        //        for (var y = 0; y < img.getHeight(); y++)
+        //        {
+        //            var color = new java.awt.Color(img.getRGB(x, y));
+        //            list1.Add(new int[] { color.getRed(), color.getGreen(), color.getBlue() });
+        //        }
+        //    }
 
-            //c# code
-            for (int x = 0; x < image.Width; x++)
-            {
-                for (int y = 0; y < image.Height; y++)
-                {
-                    System.Drawing.Color pxl = image.GetPixel(x, y);
-                    int red = pxl.R;
-                    int green = pxl.G;
-                    int blue = pxl.B;
-                    list2.Add(new int[] { red, green, blue });
-                }
-            }
+        //    //c# code
+        //    for (int x = 0; x < image.Width; x++)
+        //    {
+        //        for (int y = 0; y < image.Height; y++)
+        //        {
+        //            System.Drawing.Color pxl = image.GetPixel(x, y);
+        //            int red = pxl.R;
+        //            int green = pxl.G;
+        //            int blue = pxl.B;
+        //            list2.Add(new int[] { red, green, blue });
+        //        }
+        //    }
 
-            for (var i = 0; i < list1.Count; i++)
-            {
-                CollectionAssert.AreEqual(list1[i].ToArray(), list2[i].ToArray());
-            }
+        //    for (var i = 0; i < list1.Count; i++)
+        //    {
+        //        CollectionAssert.AreEqual(list1[i].ToArray(), list2[i].ToArray());
+        //    }
 
-        }
+        //}
 
-        [TestMethod]
-        public void CanConvertRGBtoHSVColorSpace()
-        {
-            string sourceImage = @"Data\database\einstein.jpg";
-            Bitmap image = new Bitmap(sourceImage);
+        //[TestMethod]
+        //public void CanConvertRGBtoHSVColorSpace()
+        //{
+        //    string sourceImage = @"Data\database\einstein.jpg";
+        //    Bitmap image = new Bitmap(sourceImage);
 
-            ColorConversion.ColorSpace _cs = ColorConversion.ColorSpace.HSV;
+        //    ColorConversion.ColorSpace _cs = ColorConversion.ColorSpace.HSV;
 
-            AutomaticImageClassification.Utilities.ColorConversion.ColorSpace _cs1 = 
-                AutomaticImageClassification.Utilities.ColorConversion.ColorSpace.HSV;
+        //    AutomaticImageClassification.Utilities.ColorConversion.ColorSpace _cs1 = 
+        //        AutomaticImageClassification.Utilities.ColorConversion.ColorSpace.HSV;
 
-            var img = new java.awt.image.BufferedImage(image);
+        //    var img = new java.awt.image.BufferedImage(image);
 
-            List<int[]> list1 = new List<int[]>();
-            List<int[]> list2 = new List<int[]>();
+        //    List<int[]> list1 = new List<int[]>();
+        //    List<int[]> list2 = new List<int[]>();
 
-            //java code
-            for (var x = 0; x < img.getWidth(); x++)
-            {
-                for (var y = 0; y < img.getHeight(); y++)
-                {
-                    var color = new java.awt.Color(img.getRGB(x, y));
-                    int[] cl = ColorConversion.ConvertFromRGB(_cs, color.getRed(), color.getGreen(), color.getBlue());
+        //    //java code
+        //    for (var x = 0; x < img.getWidth(); x++)
+        //    {
+        //        for (var y = 0; y < img.getHeight(); y++)
+        //        {
+        //            var color = new java.awt.Color(img.getRGB(x, y));
+        //            int[] cl = ColorConversion.ConvertFromRGB(_cs, color.getRed(), color.getGreen(), color.getBlue());
 
-                    list1.Add(cl);
-                }
-            }
+        //            list1.Add(cl);
+        //        }
+        //    }
 
-            //c# code
-            for (int x = 0; x < image.Width; x++)
-            {
-                for (int y = 0; y < image.Height; y++)
-                {
-                  
-                    System.Drawing.Color pxl = image.GetPixel(x, y);
+        //    //c# code
+        //    for (int x = 0; x < image.Width; x++)
+        //    {
+        //        for (int y = 0; y < image.Height; y++)
+        //        {
 
-                    int red = pxl.R;
-                    int green = pxl.G;
-                    int blue = pxl.B;
+        //            System.Drawing.Color pxl = image.GetPixel(x, y);
 
-                    int[] hsv = AutomaticImageClassification.Utilities.ColorConversion.ConvertFromRGB(_cs1, red, green, blue);
+        //            int red = pxl.R;
+        //            int green = pxl.G;
+        //            int blue = pxl.B;
 
-                    list2.Add(hsv);
-                }
-            }
+        //            int[] hsv = AutomaticImageClassification.Utilities.ColorConversion.ConvertFromRGB(_cs1, red, green, blue);
 
-            for (var i = 0; i < list1.Count; i++)
-            {
-                CollectionAssert.AreEqual(list1[i].ToArray(), list2[i].ToArray());
-            }
-         
-        }
+        //            list2.Add(hsv);
+        //        }
+        //    }
 
-        [TestMethod]
-        public void CanConvertRGBtoCieLabColorSpace()
-        {
-            string sourceImage = @"Data\database\einstein.jpg";
-            Bitmap image = new Bitmap(sourceImage);
+        //    for (var i = 0; i < list1.Count; i++)
+        //    {
+        //        CollectionAssert.AreEqual(list1[i].ToArray(), list2[i].ToArray());
+        //    }
 
-            ColorConversion.ColorSpace _cs = ColorConversion.ColorSpace.CIELab;
+        //}
 
-            AutomaticImageClassification.Utilities.ColorConversion.ColorSpace _cs1 =
-                AutomaticImageClassification.Utilities.ColorConversion.ColorSpace.CIELab;
+        //[TestMethod]
+        //public void CanConvertRGBtoCieLabColorSpace()
+        //{
+        //    string sourceImage = @"Data\database\einstein.jpg";
+        //    Bitmap image = new Bitmap(sourceImage);
 
-            var img = new java.awt.image.BufferedImage(image);
+        //    ColorConversion.ColorSpace _cs = ColorConversion.ColorSpace.CIELab;
 
-            List<int[]> list1 = new List<int[]>();
-            List<int[]> list2 = new List<int[]>();
+        //    AutomaticImageClassification.Utilities.ColorConversion.ColorSpace _cs1 =
+        //        AutomaticImageClassification.Utilities.ColorConversion.ColorSpace.CIELab;
 
-           
+        //    var img = new java.awt.image.BufferedImage(image);
 
-            //c# code
-            for (int x = 0; x < image.Width; x++)
-            {
-                for (int y = 0; y < image.Height; y++)
-                {
+        //    List<int[]> list1 = new List<int[]>();
+        //    List<int[]> list2 = new List<int[]>();
 
-                    System.Drawing.Color pxl = image.GetPixel(x, y);
 
-                    int red = pxl.R;
-                    int green = pxl.G;
-                    int blue = pxl.B;
 
-                    int[] hsv = AutomaticImageClassification.Utilities.ColorConversion.ConvertFromRGB(_cs1, red, green, blue);
+        //    //c# code
+        //    for (int x = 0; x < image.Width; x++)
+        //    {
+        //        for (int y = 0; y < image.Height; y++)
+        //        {
 
-                    list2.Add(hsv);
-                }
-            }
+        //            System.Drawing.Color pxl = image.GetPixel(x, y);
 
-            //for (var i = 0; i < list1.Count; i++)
-            //{
-            //    CollectionAssert.AreEqual(list1[i].ToArray(), list2[i].ToArray());
-            //}
+        //            int red = pxl.R;
+        //            int green = pxl.G;
+        //            int blue = pxl.B;
 
-        }
+        //            int[] hsv = AutomaticImageClassification.Utilities.ColorConversion.ConvertFromRGB(_cs1, red, green, blue);
+
+        //            list2.Add(hsv);
+        //        }
+        //    }
+
+        //    //for (var i = 0; i < list1.Count; i++)
+        //    //{
+        //    //    CollectionAssert.AreEqual(list1[i].ToArray(), list2[i].ToArray());
+        //    //}
+
+        //}
 
         //einstein image has a color in a subimage that has the same max value but its ok
         [TestMethod]
@@ -226,7 +454,7 @@ namespace AutomaticImageClassificationTests
         {
             var list = new List<double[]> { new double[] { 0, 1, 1 }, new double[] { 0, 2, 2 }, new double[] { 0, 4, 5 } };
             Normalization.Normalize(ref list);
-  
+
             var results = new List<double[]> {
                 new double[] { 0, 0.2182, 0.1826 },
                 new double[] { 0, 0.4364, 0.3651 },
@@ -235,7 +463,7 @@ namespace AutomaticImageClassificationTests
 
             for (var i = 0; i < list.Count; i++)
             {
-                list[i] = list[i].Select(d => Math.Round(d,4)).ToArray();
+                list[i] = list[i].Select(d => Math.Round(d, 4)).ToArray();
                 CollectionAssert.AreEqual(list[i].ToArray(), results[i].ToArray());
             }
 
@@ -247,7 +475,7 @@ namespace AutomaticImageClassificationTests
             var list = new List<double[]> { new double[] { 0, 1, 1 }, new double[] { 0, 2, 2 }, new double[] { 0, 4, 5 } };
             var sigmoid = 0.2;
             Normalization.ReNormalize(ref list, sigmoid);
-            
+
             var results = new List<double[]> {
                 new double[] { 0.5000, 0.5498, 0.5498 },
                 new double[] { 0.5000, 0.5987, 0.5987 },
@@ -285,9 +513,9 @@ namespace AutomaticImageClassificationTests
         {
             var searchFolder = @"Data\Database";
             string[] files = Files.GetFilesFrom(searchFolder);
-            
+
             Assert.AreEqual(files.Length, 5);
-            
+
         }
 
         [TestMethod]
@@ -307,9 +535,9 @@ namespace AutomaticImageClassificationTests
 
             Dictionary<string, int> results = new Dictionary<string, int>();
             results.Add("Comparison", 1);
-            results.Add("database",2);
+            results.Add("database", 2);
             results.Add("Dictionaries", 3);
-            results.Add("Features",4);
+            results.Add("Features", 4);
             results.Add("Palettes", 5);
             results.Add("test results", 6);
             results.Add("textData", 7);
@@ -346,7 +574,7 @@ namespace AutomaticImageClassificationTests
             categories.Add(3);
             string fileToWrite2 = @"Data\categories.txt";
             Files.WriteFile(fileToWrite2, categories);
-            
+
             //TODO
         }
 
@@ -364,7 +592,7 @@ namespace AutomaticImageClassificationTests
             list.Add(new double[] { 3, 2, 3 });
 
             string path = @"Data\test_listFile.txt";
-            Files.WriteFile(path,list);
+            Files.WriteFile(path, list);
 
             var result = Files.ReadFileToListArrayList<double>(path);
 
@@ -621,7 +849,7 @@ namespace AutomaticImageClassificationTests
                 CollectionAssert.AreEqual(train[i], results[i]);
             }
         }
-        
+
 
         [TestMethod]
         public void CanRemoveKFeaturesWithTheLeastInformationGain()
@@ -667,7 +895,7 @@ namespace AutomaticImageClassificationTests
             {
                 CollectionAssert.AreEqual(train[i], results[i]);
             }
-            
+
         }
 
         [TestMethod]
@@ -695,11 +923,11 @@ namespace AutomaticImageClassificationTests
 
             //correct results
             double[] resultIg = { 0.845, 0.444, 0.194, 0.012, 0.433, 0.311, 0.183, 0.242, 0.189 };
-            
-            //keep only 3 digits 
-            ig = ig.Select(d => Math.Truncate(d * 1000d) / 1000d ).ToArray();
 
-            CollectionAssert.AreEqual(ig,resultIg);
+            //keep only 3 digits 
+            ig = ig.Select(d => Math.Truncate(d * 1000d) / 1000d).ToArray();
+
+            CollectionAssert.AreEqual(ig, resultIg);
         }
 
         [TestMethod]
@@ -713,10 +941,10 @@ namespace AutomaticImageClassificationTests
 
             var a = new double[] { 10, 200, 7, 150 };
             var b = new double[] { 0.001, 0.450, 0.007, 0.200 };
-            
+
             var result = PearsonCorrelationCoefficient.Compute(ref a, ref b);
-            
-            Assert.AreEqual(result, 0.956,0.001);
+
+            Assert.AreEqual(result, 0.956, 0.001);
         }
 
         [TestMethod]
@@ -794,8 +1022,8 @@ namespace AutomaticImageClassificationTests
                     res.Add(bmp);
                 }
             }
-            
-            
+
+
         }
 
         [TestMethod]

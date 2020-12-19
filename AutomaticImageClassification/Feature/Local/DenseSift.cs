@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AutomaticImageClassification.Cluster.ClusterModels;
-using AutomaticImageClassification.KDTree;
 using AutomaticImageClassification.Utilities;
 using MathWorks.MATLAB.NET.Arrays;
 
 namespace AutomaticImageClassification.Feature.Local
 {
     //From VLFeat
-    public class DenseSift : IFeatures
+    public class DenseSift : ILocalFeatures
     {
         private readonly int _step = 4;
         private readonly int[,] _numSpatialX = { { 1, 2, 4 } };
@@ -20,14 +16,15 @@ namespace AutomaticImageClassification.Feature.Local
         private readonly bool _rootSift = true;
         private readonly bool _normalizeSift = true;
         private readonly ClusterModel _clusterModel;
+        
+        public DenseSift() {  }
 
-        public bool CanCluster
+        public DenseSift(bool isRootSift, bool isNormalizedSift)
         {
-            get { return true; }
+            _rootSift = isRootSift;
+            _normalizeSift = isNormalizedSift;
         }
 
-        public DenseSift() {  }
-        
 
         public DenseSift(int step, bool isRootSift, bool isNormalizedSift)
         {
@@ -68,6 +65,7 @@ namespace AutomaticImageClassification.Feature.Local
 
             return imgVocVector;
         }
+        
 
         public List<double[]> ExtractDescriptors(LocalBitmap input)
         {
@@ -76,6 +74,7 @@ namespace AutomaticImageClassification.Feature.Local
             return descriptors;
         }
 
+  
         public void ExtractDenseSift(string input, int height, int width, out List<double[]> descriptors)
         {
             try
@@ -101,7 +100,7 @@ namespace AutomaticImageClassification.Feature.Local
                 throw e;
             }
         }
-
+        
         public override string ToString()
         {
             return "DenseSift" + (_rootSift ? "_root" : "") + (_normalizeSift ? "_normalized" : "");

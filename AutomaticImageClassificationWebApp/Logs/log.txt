@@ -1,0 +1,2 @@
+﻿2016-11-11 15:33:31,186 [7] WARN  HomeController fuge
+2016-11-11 15:33:31,193 [7] DEBUG AutomaticImageClassificationWebApp.Controllers.HomeController Error parsing WSDL

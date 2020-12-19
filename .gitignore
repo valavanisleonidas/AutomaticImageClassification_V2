@@ -9,3 +9,6 @@ AutomaticImageClassificationWebApp/obj/
 AutomaticImageClassificationWebApp.Tests/obj/
 .vs/AutomaticImageClassification/v14/.suo
 AutomaticImageClassificationTests/Data/
+.vs/AutomaticImageClassification/v15/Server/sqlite3/
+AutomaticImageClassificationWindowsFormsApp/obj/
+AutomaticImageClassificationWindowsFormsApp/bin/

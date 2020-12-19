@@ -1,0 +1,16 @@
+** color corregram from java has been converted into c#.. not exactly same results but really really close...minor thing
+
+** cluster from lire kmeans converted to c#. i saw code and it does absolutely nothing like a kmeans algorithm should do. not sure what to do... and not only that. it has better results in boc than the vlfeat k means...
+
+
+
+
+
+
+
+//todo check if mklab can be integrated into c# and not as a dll.
+//todo add more global features...
+
+
+-----check fast phow and the other...with accuracy
+-----check dense sift with resizable images, root sift and normalize
